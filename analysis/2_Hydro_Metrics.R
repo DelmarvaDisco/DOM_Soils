@@ -15,27 +15,21 @@ remove(list=ls())
 library(lubridate)
 library(tidyverse)
 
-#output location
-dir<-"/nfs/palmer-group-data/Choptank/Nate/DepthToWaterTable/"
-
 #Read data
-df<-read_csv('data/DepthToWaterTable.csv')
-
-#Select SC sites
-df<-df %>% filter(str_detect(station,'SC'))
+df<-read_csv('data/waterLevel_at_sampling_location.csv')
 
 #Identify threshold of interest
-threshold<-0.3
+threshold<- -1
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#2.0 Download data--------------------------------------------------------------
+#2.0 Estimate metrics-----------------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.1 Estimate Annual Metrics----------------------------------------------------
 #Sort based on site & station
-annual <- df %>% arrange(wetland, station, day)
+annual <- df %>% arrange(wetland, station, Timestamp)
 
 #Create collumn with bianary indicator of saturation
-annual<-annual %>% mutate(inun = if_else(d_n<threshold, 1,0))
+annual<-annual %>% mutate(inun = if_else(y_n>threshold, 1,0))
 
 #Identify individual periods of saturation
 annual<-annual %>% 
@@ -50,19 +44,19 @@ annual<-annual %>%
   #Group by wetland and sampling station
   group_by(wetland, station) %>% 
   #Summarise!
-  summarise(max_depth_m = max(d_n), 
-            mean_depth_m = mean(d_n), 
-            median_depth_m = median(d_n), 
-            min_depth_m = min(d_n), 
-            dur_day = sum(inun),
-            n_events = sum(event))
+  summarise(min_waterLevel    = min(y_n,    na.rm = T), 
+            mean_waterLevel   = mean(y_n,   na.rm = T), 
+            median_waterLevel = median(y_n, na.rm = T), 
+            min_waterLevel    = min(y_n,    na.rm = T), 
+            dur_day           = sum(inun,   na.rm=T),
+            n_events          = sum(event,  na.rm = T))
 
 #2.2 Estimate Monthly Metrics---------------------------------------------------
 #Sort based on site & station
-monthly <- df %>% arrange(wetland, station, day)
+monthly <- df %>% arrange(wetland, station, Timestamp)
 
 #Create collumn with bianary indicator of saturation
-monthly<-monthly %>% mutate(inun = if_else(d_n<threshold, 1,0))
+monthly<-monthly %>% mutate(inun = if_else(y_n>threshold, 1,0))
 
 #Identify individual events of saturation
 monthly<-monthly %>% mutate(event = if_else(wetland == lead(wetland) &
@@ -72,17 +66,17 @@ monthly<-monthly %>% mutate(event = if_else(wetland == lead(wetland) &
                                             1, 0))
 
 #Filter to November!
-monthly<-monthly %>% mutate(month = lubridate::month(day)) %>% filter(month==11)
+monthly<-monthly %>% mutate(month = lubridate::month(Timestamp)) %>% filter(month==11)
 
 #Summarise data
 monthly<-monthly %>% 
   #Group by wetland and sampling station
   group_by(wetland, station) %>% 
   #Summarise!
-  summarise(max_depth_m = max(d_n), 
-            mean_depth_m = mean(d_n), 
-            median_depth_m = median(d_n), 
-            min_depth_m = min(d_n), 
+  summarise(max_depth_m = max(y_n), 
+            mean_depth_m = mean(y_n), 
+            median_depth_m = median(y_n), 
+            min_depth_m = min(y_n), 
             dur_day = sum(inun),
             n_events = sum(event))
 

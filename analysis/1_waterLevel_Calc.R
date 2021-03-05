@@ -17,29 +17,34 @@ library(tidyverse)
 df<-read_csv("data/waterLevel.csv")
 survey<-read_csv("data/xs_survey.csv")
 
-#3.0 Estimate Deth to Water Table-----------------------------------------------
-#3.1 Depth to water table function----------------------------------------------
-depth_fun<-function(wetland_code){
+#Filter data to Site_Names of interest
+df<- df %>%  filter(str_detect(Site_Name, "QB|TB|DB|ND")) 
+
+#2.0 Estimate Deth to Water Table-----------------------------------------------
+#2.1 Depth to water table function----------------------------------------------
+waterLevel_fun<-function(wetland_code){
   
   #Organize data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #Create wide df of wetland and upland water level data
   temp<-df %>%
     #Select time series of interest
-    filter(site == paste0(wetland_code, ' Wetland Well Shallow') |
-             site == paste0(wetland_code, ' Upland Well 1')) %>%
+    filter(Site_Name == paste0(wetland_code, ' Wetland Well Shallow') |
+           Site_Name == paste0(wetland_code, ' Upland Well 1')) %>%
     #Create wide dataframe
-    spread(site, -day) %>% 
+    pivot_wider(names_from = Site_Name, 
+                values_from = waterLevel) %>% 
     rename(y_sw = paste0(wetland_code, ' Wetland Well Shallow'),
            y_gw = paste0(wetland_code, ' Upland Well 1'))
   
   #Cross section data
-  xs<-survey %>% filter(wetland == wetland_code) %>% select(distance, elevation)
+  xs<-survey %>% 
+    filter(wetland == wetland_code) %>% 
+    select(distance, elevation)
   
   #Define points of interest
   sample<- survey %>% 
     filter(wetland == wetland_code) %>% 
-    filter(str_detect(station,"AIK") |
-             str_detect(station, 'SC')) %>% 
+    filter(str_detect(station,"KW"))%>% 
     select(station, distance, elevation)
   
   #Define Wells [for now, assume wetladn well x = 0]
@@ -81,14 +86,16 @@ depth_fun<-function(wetland_code){
                                (y_gw-y_sw)*(x_n-x_sw)/(x_gw-x_sw) + y_sw)))
     
     #Estimate depth
-    temp<-temp %>% mutate(d_n = sample$elevation - y_n, 
-                          station = sample$station)
+    temp<-temp %>% 
+      mutate(
+        y_n=y_n, 
+        station = sample$station)
     
     #Organize and export
-    temp %>% select(day, d_n, station)
+    temp %>% select(Timestamp, y_n, station)
   }
   
-  #Apply function to all sites                   
+  #Apply function to all Site_Names                   
   output<-lapply(seq(1, nrow(sample)),inner_fun) %>% bind_rows(.)
   
   #Add wetland code
@@ -99,8 +106,8 @@ depth_fun<-function(wetland_code){
 }
 
 #3.2 Apply Functions------------------------------------------------------------
-sites<-c("BB", "DB", "DK", "GN", "ND","QB", "TB")
-df<-lapply(sites, depth_fun) %>% bind_rows(.)
+Site_Names<-c("QB","TB","DB","ND")
+df<-lapply(Site_Names, waterLevel_fun) %>% bind_rows(.)
 
 #3.3 Export file----------------------------------------------------------------
-write.csv(df, "data/DepthToWaterTable.csv")
+write.csv(df, "data/waterLevel_at_sampling_location.csv")
