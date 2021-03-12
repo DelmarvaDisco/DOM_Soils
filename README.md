@@ -1,4 +1,4 @@
-# Drivers of wetland microbrial communities
+# Drivers of wetland soil dissolved organic matter
 
 ### Repository Purpose
 This repository contains calculations supporting Wardinski et al., a study of soil organic matter in seasonally inundated Delmarva Bay wetlands in the Mid-Atlantic US. The study specifically quantifies the extractable dissolved organic matter (DOM) accross gradients in soil moisture and associated redox conditions.
