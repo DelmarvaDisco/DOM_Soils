@@ -19,7 +19,7 @@ library(tidyverse)
 df<-read_csv('data/waterLevel_at_sampling_location.csv')
 
 #Identify threshold of interest
-threshold<- -1
+threshold<- -0.3
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Estimate metrics-----------------------------------------------------------
@@ -47,7 +47,7 @@ annual<-annual %>%
   summarise(min_waterLevel    = min(y_n,    na.rm = T), 
             mean_waterLevel   = mean(y_n,   na.rm = T), 
             median_waterLevel = median(y_n, na.rm = T), 
-            min_waterLevel    = min(y_n,    na.rm = T), 
+            max_waterLevel    = max(y_n,    na.rm = T), 
             dur_day           = sum(inun,   na.rm=T),
             n_events          = sum(event,  na.rm = T))
 
@@ -65,22 +65,22 @@ monthly<-monthly %>% mutate(event = if_else(wetland == lead(wetland) &
                                               lead(inun) == 0, 
                                             1, 0))
 
-#Filter to November!
-monthly<-monthly %>% mutate(month = lubridate::month(Timestamp)) %>% filter(month==11)
+#Filter to Steptember!
+monthly<-monthly %>% mutate(month = lubridate::month(Timestamp)) %>% filter(month==9)
 
 #Summarise data
 monthly<-monthly %>% 
   #Group by wetland and sampling station
   group_by(wetland, station) %>% 
   #Summarise!
-  summarise(max_depth_m = max(y_n), 
+  summarise(min_depth_m = min(y_n), 
             mean_depth_m = mean(y_n), 
             median_depth_m = median(y_n), 
-            min_depth_m = min(y_n), 
+            max_depth_m = max(y_n), 
             dur_day = sum(inun),
             n_events = sum(event))
 
-#Add 1 event if november ended in saturation...
+#Add 1 event if month ended in saturation...
 monthly<-monthly %>% mutate(n_events = if_else(dur_day>0 & n_events==0, 1, n_events))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
