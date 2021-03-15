@@ -17,12 +17,12 @@ library(lubridate)
 library(tidyverse)
 
 #load data
-depth<-read_csv("data//DepthToWaterTable.csv")
+depth<-read_csv("data//waterLevel_at_sampling_location.csv")
 metrics<-read_csv("data//annual_metrics.csv")
 
 #Remove SC-A because it was inundaded and not samples
-depth<-depth %>% filter(!(station == 'SC-A' & wetland == 'QB'))
-metrics<-metrics %>% filter(!(station == 'SC-A' & wetland == 'QB'))
+#depth<-depth %>% filter(!(station == 'KW-4U' & wetland == 'QB'))
+#metrics<-metrics %>% filter(!(station == 'KW-4U' & wetland == 'QB'))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 2.0 Hydrologic Regime Plots-------------------------------
@@ -30,15 +30,15 @@ metrics<-metrics %>% filter(!(station == 'SC-A' & wetland == 'QB'))
 #2.1 Hydrograph---------------------------------------------
 df<-depth %>% 
   #Convert to cm
-  mutate(d_n = d_n*100) %>% 
+  mutate(d_n = y_n*100) %>% 
   #seleect wetland well data
-  filter(str_detect(station, 'SC')) %>% 
+  filter(str_detect(station, 'KW')) %>% 
   #create Hydrologic Zone col
   mutate(loc = substr(station, 4,4)) %>% 
   #Convert from depth to waterLevel
   mutate(waterLevel = -1*d_n) %>% 
   #Group by date & loc
-  group_by(day, loc) %>% 
+  group_by(Timestamp, loc) %>% 
   #Summarise water level data
   summarise(
     mean = mean(waterLevel, na.rm = T),
@@ -46,63 +46,65 @@ df<-depth %>%
     upr    = mean + sd(waterLevel, na.rm = T)/sqrt(n()))
 
 #Subset by Hydrologic Zone
-a<-df %>% filter(loc=='A')
-b<-df %>% filter(loc=='B')
-c<-df %>% filter(loc=='C')
-d<-df %>% filter(loc=='D')
-e<-df %>% filter(loc=="E")
+Wetland<-df %>% filter(loc=='1')
+Edge<-df %>% filter(loc=='2')
+Transition<-df %>% filter(loc=='3')
+Upland<-df %>% filter(loc=='4')
+#e<-df %>% filter(loc=="E")
 
 #Define ribbon tranparency
 ribbon_alpha<-0.90
 
 #Define colors
 cols<-c(
-  'A' = '#045a8d', 
-  'B' = '#2b8cbe', 
-  'C' = '#74a9cf', 
-  'D' = '#bdc9e1',
-  'E' = '#f1eef6')
+  'Wetland' = '#045a8d', 
+  'Edge' = '#2b8cbe', 
+  'Transition' = '#74a9cf', 
+  'Upland' = '#bdc9e1') #,
+  #'E' = '#f1eef6')
 line_col<-"grey50"
 
 #Start ggplot
 hyd<-ggplot() + 
   geom_rect(
     aes(
-      xmin = as.Date('2017-09-01'), 
-      xmax = as.Date('2018-10-31'), 
+      xmin = as.Date('2017-09-30'), 
+      xmax = as.Date('2020-10-18'), 
       ymin = -30, 
       ymax = 0), 
     fill='grey70', alpha = 0.9) +
-  #D
-  geom_ribbon(aes(ymin = d$lwr, ymax = d$upr, x = d$day, fill='D'),
-              alpha=ribbon_alpha) +
-  geom_line(aes(x=d$day, y=d$mean), 
-            col=line_col) +
+ 
   #E
-  geom_ribbon(aes(ymin = e$lwr, ymax = e$upr, x = e$day, fill='E'), 
-              col='grey90', lwd=0.25) +
-  geom_line(aes(x=e$day, y=e$mean), 
+  #geom_ribbon(aes(ymin = e$lwr, ymax = e$upr, x = e$day, fill='E'), 
+  #col='grey90', lwd=0.25) +
+  #geom_line(aes(x=e$day, y=e$mean), 
+  #col=line_col) +
+   
+  #Upland
+  geom_ribbon(aes(ymin = Upland$lwr, ymax = Upland$upr, x = Upland$Timestamp, fill='Upland'),
+              alpha=ribbon_alpha) +
+  geom_line(aes(x=Upland$Timestamp, y=Upland$mean), 
             col=line_col) +
   
-  #C
-  geom_ribbon(aes(ymin = c$lwr, ymax = c$upr, x = c$day, fill='C'),
+  #Transition
+  geom_ribbon(aes(ymin = Transition$lwr, ymax = Transition$upr, x = Transition$Timestamp, fill='Transition'),
               alpha=ribbon_alpha) +
-  geom_line(aes(x=c$day, y=c$mean), 
+  geom_line(aes(x=Transition$Timestamp, y=Transition$mean), 
             col=line_col) +
-  #B
-  geom_ribbon(aes(ymin = b$lwr, ymax = b$upr, x = b$day, fill="B"), 
+  #Edge
+  geom_ribbon(aes(ymin = Edge$lwr, ymax = Edge$upr, x = Edge$Timestamp, fill='Edge'), 
               alpha=ribbon_alpha) +
-  geom_line(aes(x=b$day, y=b$mean), 
+  geom_line(aes(x=Edge$Timestamp, y=Edge$mean), 
             col=line_col) +
-  #A
-  geom_ribbon(aes(ymin = a$lwr, ymax = a$upr, x = a$day, fill='A'),
+  #Wetland
+  geom_ribbon(aes(ymin = Wetland$lwr, ymax = Wetland$upr, x = Wetland$Timestamp, fill='Wetland'),
               alpha=ribbon_alpha) +
-  geom_line(aes(x=a$day, y=a$mean), 
+  geom_line(aes(x=Wetland$Timestamp, y=Wetland$mean), 
             col=line_col) +
   #Legend/color
   scale_fill_manual(name=NULL, values=cols) +
   #Clip to water year
-  coord_cartesian(xlim=as.Date(c("2017-10-01", "2018-09-30"))) +
+  coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
   #theme options
   theme_bw() + 
   ylab("Water Level [cm]") + 
@@ -114,13 +116,14 @@ hyd<-ggplot() +
         legend.margin = margin(t=-2, unit="lines")) +
   plot_annotation(tag_levels = 'A', tag_suffix = ".  ")
 
+hyd
 
 #2.2 Water Level Plot---------------------------------------
 dep<-depth %>%
   #Convert depth-to-water-table to water level
   mutate(d_n = -1*d_n) %>% 
   #Select SC stations
-  filter(str_detect(station, 'SC')) %>% 
+  filter(str_detect(station, 'KW')) %>% 
   #Summarise duration by transect and station
   mutate(transect = substr(station,4,4)) %>% 
   group_by(transect, wetland) %>%
@@ -151,8 +154,8 @@ dep<-depth %>%
 #2.3 Duration ----------------------------------------------
 #Duration plot
 dur<-metrics %>% 
-  #Select SC stations
-  filter(str_detect(station, 'SC')) %>% 
+  #Select KW stations
+  filter(str_detect(station, 'KW')) %>% 
   #Summarise duration by transect
   mutate(transect = substr(station,4,4)) %>% 
   group_by(transect, wetland) %>%
@@ -178,10 +181,12 @@ dur<-metrics %>%
   theme(axis.title = element_text(size = 14),
         axis.text = element_text(size = 12)) 
 
+dur
+
 #2.4 Frequency----------------------------------------------
 freq<-metrics %>% 
   #Select SC stations
-  filter(str_detect(station, 'SC')) %>% 
+  filter(str_detect(station, 'KW')) %>% 
   #Summarise duration by transect
   mutate(transect = substr(station,4,4)) %>% 
   group_by(transect, wetland) %>%
@@ -206,6 +211,7 @@ freq<-metrics %>%
   xlab("Hydrologic Zone") + 
   theme(axis.title = element_text(size = 14),
         axis.text = element_text(size = 12)) 
+freq
 
 #2.5 Print plot---------------------------------------------
 tiff("docs/hydro_regime.tiff", res=285, width = 7, height = 6, units = 'in')
