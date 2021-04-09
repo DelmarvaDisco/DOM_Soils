@@ -15,9 +15,11 @@ remove(list=ls())
 library(lubridate)
 library(tidyverse)
 library(ggplot2)
+library(dplyr)
 
 #Read data
-df<-read_csv("data/R_Extraction_Results_All.csv")
+df<-read_csv("data/R_Extraction_Results_All.csv") #extraction data
+synoptic <- read_csv("data/R_Extraction_Synoptic_Combined.csv") #extraction combined with synoptic
 
 #Separate months
 JanMar <- df %>% filter(Month %in% c('2020-01','2020-03'))
@@ -25,27 +27,31 @@ Sept <- df %>% filter(Month == '2020-09')
 Nov <- df %>% filter(Month == "2020-11")
 
 #Separate wetland sites
-QB <- df %>% filter(Wetland_ID == "QB")
-TB <- df %>% filter(Wetland_ID == "TB")
-DB <- df %>% filter(Wetland_ID == "DB")
-ND <- df %>% filter(Wetland_ID == "ND")
+QB <- df %>% filter(wetland == "QB")
+TB <- df %>% filter(wetland == "TB")
+DB <- df %>% filter(wetland == "DB")
+ND <- df %>% filter(wetland == "ND")
 
 #Filter out Channel and Forested Flat
-Wetlands <- df %>% filter(Wetland_ID %in% c("QB","TB","DB","ND"))
+Wetlands <- df %>% filter(wetland %in% c("QB","TB","DB","ND"))
+WetSynoptic <- synoptic %>% filter(Wetland_ID %in% c("QB","TB","DB","ND")) 
 #Filter out Leaf Litter
-WetlandsNoLL <- Wetlands %>% filter(Point != "LL")
+WetlandsNoLL <- Wetlands %>% filter(Point != "5 LL")
+
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Plots-----------------------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#2.1 Plots of EOC vs other variables---------------------------------------
+
 #EOC Boxplot along Transect Points
-ggplot(Wetlands,aes(EOC_mgC_L,Generic_Name,col=Generic_Horizon))+
+ggplot(Wetlands,aes(EOC_mgC_L,Number_Name,col=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
   ggtitle("EOC by Horizon and Transect Spot")
 
-#FI by Horizon - All wetland sites, No LL
+#FI by Horizon - All wetland sites, no LL
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   #stat_ellipse()+
@@ -75,6 +81,10 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+
+
+#2.2 Compare months --------------------------------------------------
+
 #QB EOC over the 3 sampling campaigns
 ggplot(data=QB,aes(x=Generic_Horizon,y=EOC_mgC_L)) + 
   geom_boxplot()+
@@ -83,6 +93,38 @@ ggplot(data=QB,aes(x=Generic_Horizon,y=EOC_mgC_L)) +
   xlab("Soil Horizon")+
   ggtitle("QB EOC vs Month") + 
   facet_wrap(~Month)
+
+#FI by horizon and month - shape is point on transect
+ggplot(data=QB,aes(x=Generic_Horizon,y=FI,shape=Point,size=0.25)) + 
+  geom_point() +
+  ylab("SUVA254") +
+  xlab("Soil Horizon")+
+  theme_bw() +
+  facet_wrap(~Month)
+
+#SUVA vs Month colored by horizon
+ggplot(data=QB,aes(x=Month,y=SUVA254_L_mgm,col=Generic_Horizon)) + 
+  geom_point(size=4) +
+  ylab("SUVA254") +
+  ggtitle("QB SUVA vs Month") +
+  theme_bw() 
+
+#SUVA by horizon and month - shape is point on transect
+ggplot(data=QB,aes(x=Generic_Horizon,y=SUVA254_L_mgm,shape=Point,size=0.25)) + 
+  geom_point() +
+  ylab("SUVA254") +
+  xlab("Soil Horizon")+
+  theme_bw() +
+  facet_wrap(~Month)
+
+#Moisture by horizon and month - shape is point on transect
+ggplot(data=QB,aes(x=Point,y=Percent_Soil_Moisture_notin,color=Generic_Horizon)) + 
+  geom_point(size=4) +
+  ylab("Soil Moisture Content (%)")+
+  theme_bw() + 
+  facet_wrap(~Month)
+
+#2.3 Cory and McKnight PARAFAC Results--------------------------------
 
 #Cory and McKnight Component Loadings across all sites
 boxplot(WetlandsNoLL$C1, 
@@ -102,3 +144,119 @@ boxplot(WetlandsNoLL$C1,
         names=c("C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13"),
         ylab="Loading (%)",
         xlab="Component")
+#C4
+#EOC
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=EOC_mgC_L,y=C4_HQ,col=Generic_Horizon)) +
+  xlab("EOC (mg/L)") +
+  ylab("%C4")+
+  ggtitle("%C4 vs EOC")
+#SUVA
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=SUVA254_L_mgm,y=C4_HQ,col=Generic_Horizon)) +
+  xlab("SUVA254 (L/mg-m)") +
+  ylab("%C4")+
+  ggtitle("%C4 vs SUVA254")
+
+#C8
+#EOC
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=EOC_mgC_L,y=C8_Trypto,col=Generic_Horizon)) +
+  xlab("EOC (mg/L)") +
+  ylab("%C8")+
+  ggtitle("%C8 vs EOC")
+#FI
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=FI,y=C8_Trypto,col=Generic_Horizon)) +
+  xlab("FI") +
+  ylab("%C8")+
+  ggtitle("%C8 vs FI")
+#Transect Location
+ggplot(data=WetlandsNoLL) +
+  geom_boxplot(aes(x=Point,y=C8_Trypto,col=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C8")+
+  ggtitle("%C8 by Transect Location")+
+  theme_bw()
+
+#C12
+#EOC
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=EOC_mgC_L,y=C12_Q3,col=Generic_Horizon)) +
+  xlab("EOC (mg/L)") +
+  ylab("%C12")+
+  ggtitle("%C12 vs EOC")
+#FI
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=FI,y=C12_Q3,col=Generic_Horizon)) +
+  xlab("FI") +
+  ylab("%C12")+
+  ggtitle("%C12 vs FI")
+#SUVA
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=SUVA254_L_mgm,y=C12_Q3,col=Generic_Horizon)) +
+  xlab("SUVA254 (L/mg-m)") +
+  ylab("%C12")+
+  ggtitle("%C12 vs SUVA254")
+#Transect Location
+ggplot(data=WetlandsNoLL) +
+  geom_boxplot(aes(x=Point,y=C12_Q3,col=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C12")+
+  ggtitle("%C12 by Transect Location")+
+  theme_bw()
+
+#2.4 ESOM and Synoptic Data Together-----------------------------------
+
+#EOC Boxplot along Transect Points
+ggplot(WetSynoptic,aes(EOC_mgC_L,Number_Name,col=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  ggtitle("EOC by Horizon and Transect Spot")
+
+#FI by Horizon - All wetland sites, no LL
+ggplot(WetSynoptic, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  #stat_ellipse()+
+  xlab("EOC (mg/L)") +
+  ylab("FI") + 
+  ggtitle("All Sites FI")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#FI vs Location
+ggplot(WetSynoptic,aes(x=Point,y=FI,col=Generic_Horizon)) + 
+  geom_boxplot() +
+  xlab("Transect Point") +
+  ylab("FI")+
+  ggtitle("FI vs Horizon") +
+  theme_bw()
+
+#FI vs Month boxplot by transect point
+ggplot(WetSynoptic,aes(x=Point,y=FI,col=Generic_Horizon)) + 
+  geom_boxplot()+
+  theme_bw()+
+  ylab("FI") +
+  xlab("Point")+
+  facet_wrap(~Month)
+
+ggplot(WetSynoptic,aes(x=Point,y=FI)) + 
+  geom_boxplot()+
+  theme_bw()+
+  ylab("FI") +
+  xlab("Point")+
+  facet_wrap(~Month)
+
+#SSR vs FI colored by horizon
+ggplot(WetSynoptic,aes(x=FI,y=SSR,col=Generic_Horizon)) + 
+  geom_point(size=2) +
+  xlab("FI")+
+  ylab("SSR") +
+  ggtitle("SSR vs FI") +
+  theme_bw()
+
