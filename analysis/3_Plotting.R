@@ -140,10 +140,10 @@ dep<-depth %>%
                 width = 0, 
                 col='grey30') + 
   geom_point(aes(x = transect, y = mean), 
-             pch=c(21,22,23,24,25),
+             pch=c(21,22,23,24),
              cex=4,
              col = 'grey30', 
-             fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3','#ff7f00'), 
+             fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3'), 
              alpha = 70) + 
   theme_bw() + 
   ylab("Water Level [cm]") + 
@@ -151,6 +151,7 @@ dep<-depth %>%
   theme(axis.title = element_text(size = 14),
         axis.text = element_text(size = 12)) 
 
+dep
 #2.3 Duration ----------------------------------------------
 #Duration plot
 dur<-metrics %>% 
@@ -170,10 +171,10 @@ dur<-metrics %>%
                 width = 0, 
                 col='grey30') + 
   geom_point(aes(x = transect, y = mean), 
-             pch=c(21,22,23,24,25),
+             pch=c(21,22,23,24),
              cex=4,
              col = 'grey30', 
-             fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3','#ff7f00'),
+             fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3'),
              alpha = 70) + 
   theme_bw() +
   ylab("Saturation Duration [Days]") + 
@@ -201,10 +202,10 @@ freq<-metrics %>%
                 width = 0, 
                 col='grey30') + 
   geom_point(aes(x = transect, y = mean), 
-             pch=c(21,22,23,24,25),
+             pch=c(21,22,23,24),
              cex=4,
              col = 'grey30', 
-             fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3','#ff7f00'),
+             fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3'),
              alpha = 70) + 
   theme_bw() + 
   ylab("Saturation Frequency [Events]") + 

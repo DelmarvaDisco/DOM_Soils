@@ -1,7 +1,8 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Title: ESOM Data
 #Coder: Katie Wardinski (wardinskik@vt.edu)
-#Date: 4/1/2021
+#Created: 4/1/2021
+#Updated: 4/9/2021
 #Purpose: Explore ESOM results by horizon and transect location
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

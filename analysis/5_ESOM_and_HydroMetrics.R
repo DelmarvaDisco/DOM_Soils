@@ -1,7 +1,8 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Title: ESOM and Hydro Metrics
 #Coder: Katie Wardinski (wardinskik@vt.edu)
-#Date: 4/1/2021
+#Created: 4/1/2021
+#Updated: 4/9/2021
 #Purpose: How do hydrologic metrics influence ESOM?
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -44,14 +45,68 @@ ggplot(data, aes(mean_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw()
 
+#FI vs Mean WL
+#By horizon
+ggplot(data, aes(mean_waterLevel,FI,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Mean WL") + 
+  theme_bw()
+#By transect point
+ggplot(data, aes(mean_waterLevel,FI,col=station)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Mean WL") + 
+  theme_bw()
+
+#SUVA vs Mean WL
+#By horizon
+ggplot(data, aes(mean_waterLevel,SUVA254_L_mgm,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA (L/mg-m)") + 
+  ggtitle("Wetland SUVA vs Mean WL") + 
+  theme_bw()
+#By transect point
+ggplot(data, aes(mean_waterLevel,SUVA254_L_mgm,col=station)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA (L/mg-m)") + 
+  ggtitle("Wetland SUVA vs Mean WL") + 
+  theme_bw()
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 Duration Inundation and ESOM ----------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#EOC
 ggplot(data, aes(dur_day,EOC_mgC_L,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   xlab("Duration (d)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw()
+
+#FI
+ggplot(data, aes(dur_day,FI,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Duration (d)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Mean WL") + 
+  theme_bw()
+
+#SUVA
+ggplot(data, aes(dur_day,SUVA254_L_mgm,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Duration (d)") +
+  ylab("SUVA (L/mg-m)") + 
+  ggtitle("Wetland SUVA vs Mean WL") + 
+  theme_bw()
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#4.0 # Alternations Wet/Dry and ESOM -------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
