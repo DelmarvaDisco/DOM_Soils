@@ -86,7 +86,7 @@ ggplot(data, aes(dur_day,EOC_mgC_L,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   xlab("Duration (d)") +
   ylab("EOC (mg/L)") + 
-  ggtitle("Wetland EOC vs Mean WL") + 
+  ggtitle("Wetland EOC vs Duration") + 
   theme_bw()
 
 #FI
@@ -94,7 +94,7 @@ ggplot(data, aes(dur_day,FI,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   xlab("Duration (d)") +
   ylab("FI") + 
-  ggtitle("Wetland FI vs Mean WL") + 
+  ggtitle("Wetland FI vs Duration") + 
   theme_bw()
 
 #SUVA
@@ -102,7 +102,7 @@ ggplot(data, aes(dur_day,SUVA254_L_mgm,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   xlab("Duration (d)") +
   ylab("SUVA (L/mg-m)") + 
-  ggtitle("Wetland SUVA vs Mean WL") + 
+  ggtitle("Wetland SUVA vs Duration") + 
   theme_bw()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
