@@ -47,7 +47,15 @@ WetlandsNoLL <- Wetlands %>% filter(Point != "5 LL")
 #2.1 Plots of EOC vs other variables---------------------------------------
 
 #EOC Boxplot along Transect Points
+#Including leaf litter
 ggplot(Wetlands,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  xlab("EOC (mg/L)") +
+  ylab("Transect Point and Soil Horizon") + 
+  ggtitle("EOC by Horizon and Transect Spot")
+#No leaf litter
+ggplot(WetlandsNoLL,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
   xlab("EOC (mg/L)") +
