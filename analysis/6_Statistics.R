@@ -20,6 +20,7 @@ library(ggplot2)
 library(lubridate)
 library(tidyverse)
 library(car)
+library(ggpmisc)
 
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv")
@@ -72,13 +73,16 @@ shapiro.test(logFI) #logging FI data is not normally distributed
 #Using fake water level data for practice
 #Mean WL
 #EOC by horizon
+my.formula <- data$EOC_mgC_L~data$mean_depth_m
 ggplot(data, aes(mean_depth_m,EOC_mgC_L,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   xlab("Mean Depth to Water Table (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = "lm",formula=my.formula,se=FALSE)
+  #stat_poly_eq(formula=my.formula,
+               #aes(label=paste(..eq.label..,..rr.label..,sep=="~~~")), parse=TRUE )
 #log data
 ggplot(data, aes(mean_depth_m,log(EOC_mgC_L),col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -110,14 +114,22 @@ A <- data %>% filter(Generic_Horizon == "2A")
 B <- data %>% filter(Generic_Horizon == "3B")
 
 #untransformed
-lmEOCO <- lm(O$mean_depth_m~O$EOC_mgC_L)
+lmEOCO <- lm(O$EOC_mgC_L~O$mean_depth_m)
 summary(lmEOCO)
-lmEOCA <- lm(A$mean_depth_m~A$EOC_mgC_L)
+lmEOCA <- lm(A$EOC_mgC_L~A$mean_depth_m)
 summary(lmEOCA)
-lmEOCB <- lm(B$mean_depth_m~B$EOC_mgC_L)
+lmEOCB <- lm(B$EOC_mgC_L~B$mean_depth_m)
 summary(lmEOCB)
-lmoverall <- lm(data$mean_depth_m~data$EOC_mgC_L)
+lmoverall <- lm(data$EOC_mgC_L~data$mean_depth_m)
 summary(lmoverall)
+
+#plot using base R
+plot(O$EOC_mgC_L~O$mean_depth_m)
+points(A$EOC_mgC_L~A$mean_depth_m,col="red")
+points(B$EOC_mgC_L~B$mean_depth_m,col="blue")
+abline(lmEOCO)
+abline(lmEOCA,col="red")
+abline(lmEOCB,col="blue")
 
 #logtransformed
 lmlogEOCO <- lm(O$mean_depth_m~log(O$EOC_mgC_L))
