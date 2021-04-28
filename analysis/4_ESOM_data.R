@@ -279,3 +279,26 @@ ggplot(WetSynoptic,aes(x=FI,y=SSR,col=Generic_Horizon)) +
   ggtitle("SSR vs FI") +
   theme_bw()
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#3.0 Correlation Exploration ---------------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+library(corrplot)
+library(Hmisc)
+
+#cor
+glimpse(Wetlands)
+wetlandcor <- Wetlands %>% select(where(is.numeric))
+wetlandcor2 <- wetlandcor[,10:55]
+spearman <- cor(wetlandcor2,method="spearman",use="complete.obs")
+corrplot(spearman,type="upper",tl.col = "black", tl.srt = 45,tl.cex=0.5)
+
+#rcorr
+trial <- rcorr(as.matrix(wetlandcor2))
+# Extract the correlation coefficients
+trial$r
+# Extract p-values
+trial$P
+corrplot(trial$r, type="upper", 
+         p.mat = trial$P, sig.level = 0.05, insig = "blank",
+         tl.col = "black", tl.srt = 45,tl.cex=0.5)
