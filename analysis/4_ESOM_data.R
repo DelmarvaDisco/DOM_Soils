@@ -93,8 +93,36 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Point)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+#FI by point and horizon
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Number_Name)) +
+  geom_point(size=2.5) +
+  xlab("EOC (mg/L)") +
+  ylab("FI") + 
+  ggtitle("All Sites FI")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 #FI boxplot by transect point
 ggplot(WetlandsNoLL, aes(Point,FI,fill=Point)) +
+  geom_boxplot()+
+  xlab("EOC (mg/L)") +
+  ylab("FI") + 
+  ggtitle("All Sites FI")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#FI boxplot by transect point and horion
+ggplot(WetlandsNoLL, aes(Point,FI,fill=Generic_Horizon)) +
   geom_boxplot()+
   xlab("EOC (mg/L)") +
   ylab("FI") + 
@@ -124,9 +152,9 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #SUVA by Point - All wetalnd sites, No LL
-ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Point)) +
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,shape=Point,col=Point)) +
   geom_point(size=2.5) +
-  stat_ellipse()+
+  #stat_ellipse()+
   xlab("EOC (mg/L)") +
   ylab("SUVA254") + 
   ggtitle("All Sites SUVA254 vs EOC") + 
@@ -138,8 +166,36 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Point)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+#SUVA by point and horizon - no LL
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Number_Name)) +
+  geom_point(size=2.5) +
+  xlab("EOC (mg/L)") +
+  ylab("SUVA254") + 
+  ggtitle("Wetlands No LL SUVA")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 #SUVA boxplot by Point - All wetalnd sites, No LL
 ggplot(WetlandsNoLL, aes(Point,SUVA254_L_mgm,fill=Point)) +
+  geom_boxplot()+
+  xlab("EOC (mg/L)") +
+  ylab("SUVA254") + 
+  ggtitle("All Sites SUVA254") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#SUVA boxplot by Horizon - All wetalnd sites, No LL
+ggplot(WetlandsNoLL, aes(Generic_Horizon,SUVA254_L_mgm,fill=Generic_Horizon)) +
   geom_boxplot()+
   xlab("EOC (mg/L)") +
   ylab("SUVA254") + 
@@ -227,7 +283,7 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,M,col=Generic_Horizon)) +
 #2.2 Compare months --------------------------------------------------
 
 #QB EOC over the 3 sampling campaigns
-ggplot(data=QB,aes(x=Generic_Horizon,y=EOC_mgC_L)) + 
+ggplot(data=QB,aes(x=Generic_Horizon,y=EOC_mgC_L,fill=Generic_Horizon)) + 
   geom_boxplot()+
   theme_bw()+
   ylab("EOC (mg/L)") +
@@ -236,19 +292,36 @@ ggplot(data=QB,aes(x=Generic_Horizon,y=EOC_mgC_L)) +
   facet_wrap(~Month)
 
 #FI by horizon and month - shape is point on transect
-ggplot(data=QB,aes(x=Generic_Horizon,y=FI,shape=Point,size=0.25)) + 
-  geom_point() +
-  ylab("SUVA254") +
+ggplot(data=QB,aes(x=Generic_Horizon,y=FI,fill=Generic_Horizon)) + 
+  geom_boxplot() +
+  ylab("FI") +
   xlab("Soil Horizon")+
   theme_bw() +
   facet_wrap(~Month)
 
+#FI vs Month colored by point
+ggplot(data=QB,aes(x=Point,y=FI,fill=Point)) + 
+  geom_boxplot() +
+  ylab("FI") +
+  ggtitle("QB FI vs Month") +
+  theme_bw()+
+  facet_wrap(~Month)
+
 #SUVA vs Month colored by horizon
-ggplot(data=QB,aes(x=Month,y=SUVA254_L_mgm,col=Generic_Horizon)) + 
-  geom_point(size=4) +
+ggplot(data=QB,aes(x=Generic_Horizon,y=SUVA254_L_mgm,fill=Generic_Horizon)) + 
+  geom_boxplot() +
   ylab("SUVA254") +
   ggtitle("QB SUVA vs Month") +
-  theme_bw() 
+  theme_bw()+
+  facet_wrap(~Month)
+
+#SUVA vs Month colored by point
+ggplot(data=QB,aes(x=Point,y=SUVA254_L_mgm,fill=Point)) + 
+  geom_boxplot() +
+  ylab("SUVA254") +
+  ggtitle("QB SUVA vs Month") +
+  theme_bw()+
+  facet_wrap(~Month)
 
 #SUVA by horizon and month - shape is point on transect
 ggplot(data=QB,aes(x=Generic_Horizon,y=SUVA254_L_mgm,shape=Point,size=0.25)) + 
@@ -256,6 +329,14 @@ ggplot(data=QB,aes(x=Generic_Horizon,y=SUVA254_L_mgm,shape=Point,size=0.25)) +
   ylab("SUVA254") +
   xlab("Soil Horizon")+
   theme_bw() +
+  facet_wrap(~Month)
+
+#HIX vs Month colored by point
+ggplot(data=QB,aes(x=Point,y=HIX,fill=Point)) + 
+  geom_boxplot() +
+  ylab("HIX") +
+  ggtitle("QB HIX vs Month") +
+  theme_bw()+
   facet_wrap(~Month)
 
 #Moisture by horizon and month - shape is point on transect
@@ -299,7 +380,13 @@ ggplot(data=WetlandsNoLL) +
   xlab("SUVA254 (L/mg-m)") +
   ylab("%C2")+
   ggtitle("%C2 vs SUVA254")+
-  theme_bw()
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 ##C4##
 #EOC
@@ -468,7 +555,7 @@ ggplot(WetSynoptic,aes(x=FI,y=SSR,col=Generic_Horizon)) +
   ggtitle("SSR vs FI") +
   theme_bw()
 
-#2.5 FI vs other variables-----------------------------------
+#2.5 Other variables-----------------------------------
 
 #FI vs SSR
 ggplot(WetlandsNoLL,aes(x=FI,y=SSR,col=Generic_Horizon)) + 
@@ -519,7 +606,13 @@ ggplot(WetlandsNoLL,aes(x=FI,y=Percent_Protein,col=Generic_Horizon)) +
   xlab("FI")+
   ylab("%Protein") +
   ggtitle("%Protein vs FI") +
-  theme_bw()
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 ggplot(WetlandsNoLL,aes(x=FI,y=Percent_Protein,col=Point)) + 
   geom_point(size=2) +
   xlab("FI")+
@@ -527,7 +620,33 @@ ggplot(WetlandsNoLL,aes(x=FI,y=Percent_Protein,col=Point)) +
   ggtitle("%Protein vs FI") +
   theme_bw()
 
-
+##HIX##
+#Break out horizon at each point
+ggplot(WetlandsNoLL,aes(x=Point,y=HIX,fill=Generic_Horizon)) + 
+  geom_boxplot() +
+  xlab("Transect Point")+
+  ylab("HIX") +
+  ggtitle("HIX by Point and Horizon") +
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#Point only
+ggplot(WetlandsNoLL,aes(x=Point,y=HIX,fill=Point)) + 
+  geom_boxplot() +
+  xlab("Point")+
+  ylab("HIX") +
+  ggtitle("HIX by Transect Point") +
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 Correlation Exploration ---------------------------------------------------
