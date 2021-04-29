@@ -62,6 +62,7 @@ ggplot(WetlandsNoLL,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   ylab("Transect Point and Soil Horizon") + 
   ggtitle("EOC by Horizon and Transect Spot")
 
+##FI##
 #FI by Horizon - All wetland sites, no LL
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -77,6 +78,36 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+#FI by point - All wetland sites, no LL
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Point)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("EOC (mg/L)") +
+  ylab("FI") + 
+  ggtitle("All Sites FI")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#FI boxplot by transect point
+ggplot(WetlandsNoLL, aes(Point,FI,fill=Point)) +
+  geom_boxplot()+
+  xlab("EOC (mg/L)") +
+  ylab("FI") + 
+  ggtitle("All Sites FI")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+##SUVA254##
 #SUVA by Horizon - All wetalnd sites, No LL
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -84,6 +115,105 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
   xlab("EOC (mg/L)") +
   ylab("SUVA254") + 
   ggtitle("All Sites SUVA254 vs EOC") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#SUVA by Point - All wetalnd sites, No LL
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Point)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("EOC (mg/L)") +
+  ylab("SUVA254") + 
+  ggtitle("All Sites SUVA254 vs EOC") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#SUVA boxplot by Point - All wetalnd sites, No LL
+ggplot(WetlandsNoLL, aes(Point,SUVA254_L_mgm,fill=Point)) +
+  geom_boxplot()+
+  xlab("EOC (mg/L)") +
+  ylab("SUVA254") + 
+  ggtitle("All Sites SUVA254") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#EOC vs ETDN
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,ETDN_mgN_L,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("EOC (mg C/L)") +
+  ylab("ETDN (mg N/L)") + 
+  ggtitle("Wetland Soils")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#EOC vs T
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,T,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("EOC (mg C/L)") +
+  ylab("Peak T") + 
+  ggtitle("Wetland Soils")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#EOC vs A
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,A,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("EOC (mg C/L)") +
+  ylab("Peak A") + 
+  ggtitle("Wetland Soils")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#EOC vs C
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,C,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("EOC (mg C/L)") +
+  ylab("Peak C") + 
+  ggtitle("Wetland Soils")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#EOC vs M
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,M,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("EOC (mg C/L)") +
+  ylab("Peak M") + 
+  ggtitle("Wetland Soils")+ 
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -155,7 +285,23 @@ boxplot(WetlandsNoLL$C1,
         names=c("C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13"),
         ylab="Loading (%)",
         xlab="Component")
-#C4
+
+##C2##
+#EOC
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=EOC_mgC_L,y=C2_Q2,col=Generic_Horizon)) +
+  xlab("EOC (mg/L)") +
+  ylab("%C2")+
+  ggtitle("%C2 vs EOC")
+#SUVA
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=SUVA254_L_mgm,y=C2_Q2,col=Generic_Horizon),size=3) +
+  xlab("SUVA254 (L/mg-m)") +
+  ylab("%C2")+
+  ggtitle("%C2 vs SUVA254")+
+  theme_bw()
+
+##C4##
 #EOC
 ggplot(data=WetlandsNoLL) +
   geom_point(aes(x=EOC_mgC_L,y=C4_HQ,col=Generic_Horizon)) +
@@ -169,7 +315,7 @@ ggplot(data=WetlandsNoLL) +
   ylab("%C4")+
   ggtitle("%C4 vs SUVA254")
 
-#C8
+##C8##
 #EOC
 ggplot(data=WetlandsNoLL) +
   geom_point(aes(x=EOC_mgC_L,y=C8_Trypto,col=Generic_Horizon)) +
@@ -178,10 +324,11 @@ ggplot(data=WetlandsNoLL) +
   ggtitle("%C8 vs EOC")
 #FI
 ggplot(data=WetlandsNoLL) +
-  geom_point(aes(x=FI,y=C8_Trypto,col=Generic_Horizon)) +
+  geom_point(aes(x=FI,y=C8_Trypto,col=Generic_Horizon),size=3) +
   xlab("FI") +
   ylab("%C8")+
-  ggtitle("%C8 vs FI")
+  ggtitle("%C8 vs FI")+
+  theme_bw()
 #Transect Location
 ggplot(data=WetlandsNoLL) +
   geom_boxplot(aes(x=Point,y=C8_Trypto,fill=Generic_Horizon)) +
@@ -190,7 +337,35 @@ ggplot(data=WetlandsNoLL) +
   ggtitle("%C8 by Transect Location")+
   theme_bw()
 
-#C12
+##C10##
+#EOC
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=EOC_mgC_L,y=C10,col=Generic_Horizon)) +
+  xlab("EOC (mg/L)") +
+  ylab("%C10")+
+  ggtitle("%C10 vs EOC")
+#FI
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=FI,y=C10,col=Generic_Horizon)) +
+  xlab("FI") +
+  ylab("%C10")+
+  ggtitle("%C10 vs FI")
+
+##C11##
+#EOC
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=EOC_mgC_L,y=C11_Q1,col=Generic_Horizon)) +
+  xlab("EOC (mg/L)") +
+  ylab("%C11")+
+  ggtitle("%C11 vs EOC")
+#FI
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=FI,y=C11_Q1,col=Generic_Horizon)) +
+  xlab("FI") +
+  ylab("%C11")+
+  ggtitle("%C11 vs FI")
+
+##C12##
 #EOC
 ggplot(data=WetlandsNoLL) +
   geom_point(aes(x=EOC_mgC_L,y=C12_Q3,col=Generic_Horizon)) +
@@ -216,6 +391,20 @@ ggplot(data=WetlandsNoLL) +
   ylab("%C12")+
   ggtitle("%C12 by Transect Location")+
   theme_bw()
+
+##C13##
+#EOC
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=EOC_mgC_L,y=C13_Tyrosine,col=Generic_Horizon)) +
+  xlab("EOC (mg/L)") +
+  ylab("%C13")+
+  ggtitle("%C13 vs EOC")
+#FI
+ggplot(data=WetlandsNoLL) +
+  geom_point(aes(x=FI,y=C13_Tyrosine,col=Generic_Horizon)) +
+  xlab("FI") +
+  ylab("%C13")+
+  ggtitle("%C13 vs FI")
 
 #2.4 ESOM and Synoptic Data Together-----------------------------------
 
@@ -279,6 +468,67 @@ ggplot(WetSynoptic,aes(x=FI,y=SSR,col=Generic_Horizon)) +
   ggtitle("SSR vs FI") +
   theme_bw()
 
+#2.5 FI vs other variables-----------------------------------
+
+#FI vs SSR
+ggplot(WetlandsNoLL,aes(x=FI,y=SSR,col=Generic_Horizon)) + 
+  geom_point(size=2) +
+  xlab("FI")+
+  ylab("SSR") +
+  ggtitle("SSR vs FI") +
+  theme_bw()
+ggplot(WetlandsNoLL,aes(x=FI,y=SSR,col=Point)) + 
+  geom_point(size=2) +
+  xlab("FI")+
+  ylab("SSR") +
+  ggtitle("SSR vs FI") +
+  theme_bw()
+
+#FI vs SUVA
+ggplot(WetlandsNoLL,aes(x=FI,y=SUVA254_L_mgm,col=Generic_Horizon)) + 
+  geom_point(size=2) +
+  xlab("FI")+
+  ylab("SUVA254") +
+  ggtitle("SUVA254 vs FI") +
+  theme_bw()
+ggplot(WetlandsNoLL,aes(x=FI,y=SUVA254_L_mgm,col=Point)) + 
+  geom_point(size=2) +
+  xlab("FI")+
+  ylab("SUVA254") +
+  ggtitle("SUVA254 vs FI") +
+  theme_bw()
+
+#FI vs HIX
+ggplot(WetlandsNoLL,aes(x=FI,y=HIX,col=Generic_Horizon)) + 
+  geom_point(size=2) +
+  xlab("FI")+
+  ylab("HIX") +
+  ggtitle("HIX vs FI") +
+  theme_bw()+
+  stat_ellipse()
+ggplot(WetlandsNoLL,aes(x=FI,y=HIX,col=Point)) + 
+  geom_point(size=2) +
+  xlab("FI")+
+  ylab("HIX") +
+  ggtitle("HIX vs FI") +
+  theme_bw()
+
+#FI vs %Protein
+ggplot(WetlandsNoLL,aes(x=FI,y=Percent_Protein,col=Generic_Horizon)) + 
+  geom_point(size=3) +
+  xlab("FI")+
+  ylab("%Protein") +
+  ggtitle("%Protein vs FI") +
+  theme_bw()
+ggplot(WetlandsNoLL,aes(x=FI,y=Percent_Protein,col=Point)) + 
+  geom_point(size=2) +
+  xlab("FI")+
+  ylab("%Protein") +
+  ggtitle("%Protein vs FI") +
+  theme_bw()
+
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 Correlation Exploration ---------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -293,7 +543,7 @@ wetlandcor2 <- wetlandcor[,10:55]
 spearman <- cor(wetlandcor2,method="spearman",use="complete.obs")
 corrplot(spearman,type="upper",tl.col = "black", tl.srt = 45,tl.cex=0.5)
 
-#rcorr
+#rcorr - which shows if correlations are signficant within the cor plot
 trial <- rcorr(as.matrix(wetlandcor2))
 # Extract the correlation coefficients
 trial$r
