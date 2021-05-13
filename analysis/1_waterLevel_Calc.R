@@ -1,11 +1,13 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#Title: Depth to water table calclulation
+#Title: Depth to water table calculation
 #Coder: C. Nate Jones (cnjones7@ua.edu)
 #Date: 3/5/2020
 #Purpose: Estimate depth to water table at wetland sampling locations
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #1.0 Setup workspace------------------------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Clear workspace
 remove(list=ls())
 
@@ -20,7 +22,9 @@ survey<-read_csv("data/xs_survey.csv")
 #Filter data to Site_Names of interest
 df<- df %>%  filter(str_detect(Site_Name, "QB|TB|DB|ND")) 
 
-#2.0 Estimate Deth to Water Table-----------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#2.0 Estimate Depth to Water Table-----------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.1 Depth to water table function----------------------------------------------
 waterLevel_fun<-function(wetland_code){
   
@@ -29,7 +33,7 @@ waterLevel_fun<-function(wetland_code){
   temp<-df %>%
     #Select time series of interest
     filter(Site_Name == paste0(wetland_code, ' Wetland Well Shallow') |
-           Site_Name == paste0(wetland_code, ' Upland Well 1')) %>%
+             Site_Name == paste0(wetland_code, ' Upland Well 1')) %>%
     #Create wide dataframe
     pivot_wider(names_from = Site_Name, 
                 values_from = waterLevel) %>% 
@@ -37,9 +41,7 @@ waterLevel_fun<-function(wetland_code){
            y_gw = paste0(wetland_code, ' Upland Well 1'))
   
   #Cross section data
-  xs<-survey %>% 
-    filter(wetland == wetland_code) %>% 
-    select(distance, elevation)
+  xs<-survey %>% filter(wetland == wetland_code) %>% select(distance, elevation)
   
   #Define points of interest
   sample<- survey %>% 
@@ -86,28 +88,31 @@ waterLevel_fun<-function(wetland_code){
                                (y_gw-y_sw)*(x_n-x_sw)/(x_gw-x_sw) + y_sw)))
     
     #Estimate depth
-    temp<-temp %>% 
-      mutate(
-        y_n=y_n, 
-        station = sample$station)
+    temp<-temp %>% mutate(d_n = sample$elevation - y_n, 
+                          station = sample$station)
     
     #Organize and export
-    temp %>% select(Timestamp, y_n, station)
+    temp %>% select(Timestamp, d_n, station)
   }
   
-  #Apply function to all Site_Names                   
+  #Apply function to all sites                   
   output<-lapply(seq(1, nrow(sample)),inner_fun) %>% bind_rows(.)
   
   #Add wetland code
   output$wetland<-wetland_code
   
+  #Estimate elevation relative to ground surface
+  output <-output %>% 
+    mutate(y_n= d_n*-1) %>% 
+    select(-d_n)
+  
   #Export output
   output
 }
 
-#3.2 Apply Functions------------------------------------------------------------
+#2.2 Apply Functions------------------------------------------------------------
 Site_Names<-c("QB","TB","DB","ND")
 df<-lapply(Site_Names, waterLevel_fun) %>% bind_rows(.)
 
-#3.3 Export file----------------------------------------------------------------
+#2.3 Export file----------------------------------------------------------------
 write.csv(df, "data/waterLevel_at_sampling_location.csv")
