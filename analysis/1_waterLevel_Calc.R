@@ -149,7 +149,7 @@ TB<-df %>%
   geom_line(aes(y=`KW-2E`), col='blue2') +
   geom_line(aes(y=`KW-3T`), col='blue3') +
   geom_line(aes(y=`KW-4U`), col='blue4') +
-  ggtitle("QB Wetland") +
+  ggtitle("TB Wetland") +
   theme_bw() +
   theme(
     axis.title.y = element_text(size = 14), 
@@ -167,7 +167,7 @@ DB<-df %>%
   geom_line(aes(y=`KW-2E`), col='blue2') +
   geom_line(aes(y=`KW-3T`), col='blue3') +
   geom_line(aes(y=`KW-4U`), col='blue4') +
-  ggtitle("QB Wetland") +
+  ggtitle("DB Wetland") +
   theme_bw() +
   theme(
     axis.title.y = element_text(size = 14), 
@@ -186,7 +186,7 @@ ND<-df %>%
   geom_line(aes(y=`KW-2E`), col='blue2') +
   geom_line(aes(y=`KW-3T`), col='blue3') +
   geom_line(aes(y=`KW-4U`), col='blue4') +
-  ggtitle("QB Wetland") +
+  ggtitle("ND Wetland") +
   theme_bw() +
   theme(
     axis.title.y = element_text(size = 14), 
