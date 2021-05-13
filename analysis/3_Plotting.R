@@ -30,13 +30,11 @@ metrics<-read_csv("data//annual_metrics.csv")
 #2.1 Hydrograph---------------------------------------------
 df<-depth %>% 
   #Convert to cm
-  mutate(d_n = y_n*100) %>% 
+  mutate(waterLevel= y_n*100) %>% 
   #seleect wetland well data
   filter(str_detect(station, 'KW')) %>% 
   #create Hydrologic Zone col
   mutate(loc = substr(station, 4,4)) %>% 
-  #Convert from depth to waterLevel
-  mutate(waterLevel = -1*d_n) %>% 
   #Group by date & loc
   group_by(Timestamp, loc) %>% 
   #Summarise water level data
@@ -121,7 +119,7 @@ hyd
 #2.2 Water Level Plot---------------------------------------
 dep<-depth %>%
   #Convert depth-to-water-table to water level
-  mutate(d_n = -1*d_n) %>% 
+  mutate(d_n = -1*y_n) %>% 
   #Select SC stations
   filter(str_detect(station, 'KW')) %>% 
   #Summarise duration by transect and station
@@ -146,7 +144,7 @@ dep<-depth %>%
              fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3'), 
              alpha = 70) + 
   theme_bw() + 
-  ylab("Water Level [cm]") + 
+  ylab("Depth to Water Table [cm]") + 
   xlab("Hydrologic Zone") + 
   theme(axis.title = element_text(size = 14),
         axis.text = element_text(size = 12)) 
@@ -215,7 +213,7 @@ freq<-metrics %>%
 freq
 
 #2.5 Print plot---------------------------------------------
-tiff("docs/hydro_regime.tiff", res=285, width = 7, height = 6, units = 'in')
+tiff("docs/hydro_regime.tif", res=285, width = 7, height = 6, units = 'in')
 hyd + dep + dur + freq + plot_layout(ncol=2)
 dev.off()
 
@@ -223,42 +221,3 @@ pdf("docs/hydro_regime.pdf", width = 7, height = 6)
 hyd + dep + dur + freq + plot_layout(ncol=2)
 dev.off()
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#2.6 Intext calculations--------------------------------------------------------
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-depth %>%
-  #Convert depth-to-water-table to water level
-  mutate(d_n = -1*d_n) %>% 
-  #Select SC stations
-  filter(str_detect(station, 'SC')) %>% 
-  #Summarise duration by transect and station
-  mutate(transect = substr(station,4,4)) %>% 
-  group_by(transect, wetland) %>%
-  summarise(d_n = mean(d_n, na.rm=T), na.rm=T) %>% 
-  #Summarise by transect
-  group_by(transect) %>% 
-  summarise(mean_cm = mean(d_n, na.rm=T)*100, 
-            sem_cm  = sd(d_n, na.rm = T)*100/sqrt(n()))
-
-metrics %>% 
-  #Select SC stations
-  filter(str_detect(station, 'SC')) %>% 
-  #Summarise duration by transect
-  mutate(transect = substr(station,4,4)) %>% 
-  group_by(transect, wetland) %>%
-  summarise(dur_day = mean(dur_day, na.rm=T), na.rm=T) %>% 
-  group_by(transect) %>% 
-  summarise(mean_day = mean(dur_day, na.rm=T), 
-            sem_day  = sd(dur_day, na.rm=T)/sqrt(n()))
-
-
-metrics %>% 
-  #Select SC stations
-  filter(str_detect(station, 'SC')) %>% 
-  #Summarise duration by transect
-  mutate(transect = substr(station,4,4)) %>% 
-  group_by(transect, wetland) %>%
-  summarise(n_events = mean(n_events, na.rm=T), na.rm=T) %>% 
-  group_by(transect) %>% 
-  summarise(mean = mean(n_events, na.rm=T), 
-            sem  = sd(n_events, na.rm=T)/sqrt(n()))
