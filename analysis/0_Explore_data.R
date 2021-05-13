@@ -27,7 +27,7 @@ library(readxl)
 library(tidyverse)
 
 #load repo functions
-source('functions//dygraph_ts_fun.R')
+source('R//dygraph_ts_fun.R')
 
 #read waterLevel data
 dt<-read_csv("data//waterLevel.csv")
