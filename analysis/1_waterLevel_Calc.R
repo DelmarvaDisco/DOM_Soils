@@ -130,11 +130,13 @@ QB<-df %>%
   geom_line(aes(y=`KW-2E`), col='blue2') +
   geom_line(aes(y=`KW-3T`), col='blue3') +
   geom_line(aes(y=`KW-4U`), col='blue4') +
+  geom_hline(yintercept=0,linetype="dashed")+
+  geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
   ggtitle("QB Wetland") +
   theme_bw() +
   theme(
     axis.title.y = element_text(size = 14), 
-    axis.text.y  = element_text(size = 10)
+    axis.text.y  = element_text(size = 10),
   ) + 
   #Add labels
   xlab(NULL) + 
@@ -149,6 +151,8 @@ TB<-df %>%
   geom_line(aes(y=`KW-2E`), col='blue2') +
   geom_line(aes(y=`KW-3T`), col='blue3') +
   geom_line(aes(y=`KW-4U`), col='blue4') +
+  geom_hline(yintercept=0,linetype="dashed")+
+  geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
   ggtitle("TB Wetland") +
   theme_bw() +
   theme(
@@ -167,6 +171,8 @@ DB<-df %>%
   geom_line(aes(y=`KW-2E`), col='blue2') +
   geom_line(aes(y=`KW-3T`), col='blue3') +
   geom_line(aes(y=`KW-4U`), col='blue4') +
+  geom_hline(yintercept=0,linetype="dashed")+
+  geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
   ggtitle("DB Wetland") +
   theme_bw() +
   theme(
@@ -186,6 +192,8 @@ ND<-df %>%
   geom_line(aes(y=`KW-2E`), col='blue2') +
   geom_line(aes(y=`KW-3T`), col='blue3') +
   geom_line(aes(y=`KW-4U`), col='blue4') +
+  geom_hline(yintercept=0,linetype="dashed")+
+  geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
   ggtitle("ND Wetland") +
   theme_bw() +
   theme(
