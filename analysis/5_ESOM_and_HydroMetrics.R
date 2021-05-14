@@ -19,7 +19,7 @@ library(ggplot2)
 
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv")
-annual <- read_csv("data/annual_metrics.csv")
+annual <- read_csv("data/annual_metrics.csv") #annual_metrics depends on what water year 
 
 #Join tables
 data <- inner_join(df, annual, by=c("wetland","station"))
@@ -109,4 +109,26 @@ ggplot(data, aes(dur_day,SUVA254_L_mgm,col=Generic_Horizon)) +
 #4.0 # Alternations Wet/Dry and ESOM -------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#EOC
+ggplot(data, aes(n_events,EOC_mgC_L,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("n events") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs N Saturation Events") + 
+  theme_bw()
 
+#FI
+ggplot(data, aes(n_events,FI,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("n events") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs N Saturation Events") + 
+  theme_bw()
+
+#SUVA
+ggplot(data, aes(n_events,SUVA254_L_mgm,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("n events)") +
+  ylab("SUVA (L/mg-m)") + 
+  ggtitle("Wetland SUVA vs N Saturation Events") + 
+  theme_bw()
