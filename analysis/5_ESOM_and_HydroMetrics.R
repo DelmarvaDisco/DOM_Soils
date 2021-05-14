@@ -117,6 +117,13 @@ ggplot(data, aes(n_events,EOC_mgC_L,col=Generic_Horizon)) +
   ggtitle("Wetland EOC vs N Saturation Events") + 
   theme_bw()
 
+ggplot(data, aes(n_events,EOC_mgC_L,col=station)) +
+  geom_point(size=2.5) +
+  xlab("n events") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs N Saturation Events") + 
+  theme_bw()
+
 #FI
 ggplot(data, aes(n_events,FI,col=Generic_Horizon)) +
   geom_point(size=2.5) +

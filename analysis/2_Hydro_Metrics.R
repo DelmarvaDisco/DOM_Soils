@@ -42,6 +42,11 @@ annual<-annual %>%
                            lead(inun) == 0, 
                          1, 0))
 
+DB <- annual %>% filter(wetland == "DB")
+ND <- annual %>% filter(wetland == "ND")
+QB <- annual %>% filter(wetland == "QB")
+TB <- annual %>% filter(wetland == "TB")
+
 #Summarise Data
 annual<-annual %>% 
   #Group by wetland and sampling station
@@ -52,6 +57,7 @@ annual<-annual %>%
             median_waterLevel = median(y_n, na.rm = T), 
             max_waterLevel    = max(y_n,    na.rm = T), 
             dur_day           = sum(inun,   na.rm=T),
+            percent_sat       = (sum(inun,   na.rm=T)/1468),
             n_events          = sum(event,  na.rm = T))
 
 #2.2 Estimate Monthly Metrics---------------------------------------------------
