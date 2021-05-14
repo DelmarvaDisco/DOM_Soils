@@ -17,7 +17,8 @@ library(lubridate)
 library(tidyverse)
 
 #load data
-depth<-read_csv("data//waterLevel_at_sampling_location.csv")
+#depth<-read_csv("data//waterLevel_at_sampling_location.csv") #all data
+depth <- read_csv("data//2020wateryear.csv") #2020 water year
 metrics<-read_csv("data//annual_metrics.csv")
 
 #Remove SC-A because it was inundaded and not samples
@@ -102,7 +103,8 @@ hyd<-ggplot() +
   #Legend/color
   scale_fill_manual(name=NULL, values=cols) +
   #Clip to water year
-  coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
+  #coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
+  coord_cartesian(xlim=as.Date(c("2019-09-30", "2020-10-01"))) +
   #theme options
   theme_bw() + 
   ylab("Water Level [cm]") + 
@@ -220,4 +222,7 @@ dev.off()
 pdf("docs/hydro_regime.pdf", width = 7, height = 6)
 hyd + dep + dur + freq + plot_layout(ncol=2)
 dev.off()
+
+hyd + dep + dur + freq
+
 
