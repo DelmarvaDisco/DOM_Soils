@@ -18,8 +18,11 @@ library(tidyverse)
 #Read data
 df<-read_csv('data/waterLevel_at_sampling_location.csv')
 
+#Filter to desired water year
+df <- df %>% filter(Timestamp > "2019-09-30" & Timestamp < "2020-10-02")
+
 #Identify threshold of interest
-threshold<- -0.3
+threshold<- -0.5
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Estimate metrics-----------------------------------------------------------
@@ -65,8 +68,8 @@ monthly<-monthly %>% mutate(event = if_else(wetland == lead(wetland) &
                                               lead(inun) == 0, 
                                             1, 0))
 
-#Filter to Steptember!
-monthly<-monthly %>% mutate(month = lubridate::month(Timestamp)) %>% filter(month==9)
+#Filter to March!
+monthly<-monthly %>% mutate(month = lubridate::month(Timestamp)) %>% filter(month==3)
 
 #Summarise data
 monthly<-monthly %>% 
@@ -88,3 +91,5 @@ monthly<-monthly %>% mutate(n_events = if_else(dur_day>0 & n_events==0, 1, n_eve
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 write_csv(annual, "data//annual_metrics.csv")
 write_csv(monthly, "data//monthly_metrics.csv")
+#save 2019-2020 water year data as separate csv
+write_csv(df, "data//2020wateryear.csv")
