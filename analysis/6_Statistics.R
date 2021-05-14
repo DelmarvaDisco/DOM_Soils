@@ -24,7 +24,7 @@ library(ggpmisc)
 
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv")
-annual <- read_csv("data/katie_annual_metrics_practice.csv")
+annual <- read_csv("data/annual_metrics.csv")
 
 #Filter to just wetlands and no leaf litter
 Wetlands <- df %>% filter(wetland %in% c("QB","TB","DB","ND"))
@@ -73,37 +73,37 @@ shapiro.test(logFI) #logging FI data is not normally distributed
 #Using fake water level data for practice
 #Mean WL
 #EOC by horizon
-my.formula <- data$EOC_mgC_L~data$mean_depth_m
-ggplot(data, aes(mean_depth_m,EOC_mgC_L,col=Generic_Horizon)) +
+my.formula <- data$EOC_mgC_L~data$mean_waterLevel
+ggplot(data, aes(mean_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
   geom_point(size=2.5) +
-  xlab("Mean Depth to Water Table (m)") +
+  xlab("Mean Water Level (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = "lm",formula=my.formula,se=FALSE)
+  geom_smooth(method = "lm")
   #stat_poly_eq(formula=my.formula,
                #aes(label=paste(..eq.label..,..rr.label..,sep=="~~~")), parse=TRUE )
 #log data
-ggplot(data, aes(mean_depth_m,log(EOC_mgC_L),col=Generic_Horizon)) +
+ggplot(data, aes(mean_waterLevel,log(EOC_mgC_L),col=Generic_Horizon)) +
   geom_point(size=2.5) +
-  xlab("Mean Depth to Water Table (m)") +
+  xlab("Mean Water Level (m)") +
   ylab("log(EOC) (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw()+
   geom_smooth(method = 'lm')
 
 #all data
-ggplot(data, aes(mean_depth_m,EOC_mgC_L)) +
+ggplot(data, aes(mean_waterLevel,EOC_mgC_L)) +
   geom_point(size=2.5) +
-  xlab("Mean Depth to Water Table (m)") +
+  xlab("Mean Water Level (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw()+
   geom_smooth(method = 'lm')
 #log data
-ggplot(data, aes(mean_depth_m,log(EOC_mgC_L))) +
+ggplot(data, aes(mean_waterLevel,log(EOC_mgC_L))) +
   geom_point(size=2.5) +
-  xlab("Mean Depth to Water Table (m)") +
+  xlab("Mean Water Level (m)") +
   ylab("log(EOC) (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw()+
@@ -114,13 +114,13 @@ A <- data %>% filter(Generic_Horizon == "2A")
 B <- data %>% filter(Generic_Horizon == "3B")
 
 #untransformed
-lmEOCO <- lm(O$EOC_mgC_L~O$mean_depth_m)
+lmEOCO <- lm(O$EOC_mgC_L~O$mean_waterLevel)
 summary(lmEOCO)
-lmEOCA <- lm(A$EOC_mgC_L~A$mean_depth_m)
+lmEOCA <- lm(A$EOC_mgC_L~A$mean_waterLevel)
 summary(lmEOCA)
-lmEOCB <- lm(B$EOC_mgC_L~B$mean_depth_m)
+lmEOCB <- lm(B$EOC_mgC_L~B$mean_waterLevel)
 summary(lmEOCB)
-lmoverall <- lm(data$EOC_mgC_L~data$mean_depth_m)
+lmoverall <- lm(data$EOC_mgC_L~data$mean_waterLevel)
 summary(lmoverall)
 
 #plot using base R
