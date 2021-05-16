@@ -19,7 +19,7 @@ library(tidyverse)
 #load data
 #depth<-read_csv("data//waterLevel_at_sampling_location.csv") #all data
 depth <- read_csv("data//2020wateryear.csv") #2020 water year
-metrics<-read_csv("data//annual_metrics.csv")
+metrics<-read_csv("data//annual_metrics_2020.csv")
 
 #Remove SC-A because it was inundaded and not samples
 #depth<-depth %>% filter(!(station == 'KW-4U' & wetland == 'QB'))
@@ -69,7 +69,7 @@ hyd<-ggplot() +
     aes(
       xmin = as.Date('2017-09-30'), 
       xmax = as.Date('2020-10-18'), 
-      ymin = -30, 
+      ymin = -50, 
       ymax = 0), 
     fill='grey70', alpha = 0.9) +
  

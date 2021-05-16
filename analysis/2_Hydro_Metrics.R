@@ -42,22 +42,22 @@ annual<-annual %>%
                            lead(inun) == 0, 
                          1, 0))
 
-DB <- annual %>% filter(wetland == "DB")
-ND <- annual %>% filter(wetland == "ND")
-QB <- annual %>% filter(wetland == "QB")
-TB <- annual %>% filter(wetland == "TB")
+#Checking number of observations for each site and station
+observ <- annual %>% group_by(wetland,station) %>% 
+          summarise(n_obs = length(Timestamp))
 
 #Summarise Data
 annual<-annual %>% 
   #Group by wetland and sampling station
   group_by(wetland, station) %>% 
   #Summarise!
-  summarise(min_waterLevel    = min(y_n,    na.rm = T), 
+  summarise(n_observations    = length(Timestamp),
+            min_waterLevel    = min(y_n,    na.rm = T), 
             mean_waterLevel   = mean(y_n,   na.rm = T), 
             median_waterLevel = median(y_n, na.rm = T), 
             max_waterLevel    = max(y_n,    na.rm = T), 
             dur_day           = sum(inun,   na.rm=T),
-            percent_sat       = (sum(inun,   na.rm=T)/1468),
+            percent_sat       =(sum(inun,   na.rm=T)/n_observations),
             n_events          = sum(event,  na.rm = T))
 
 #2.2 Estimate Monthly Metrics---------------------------------------------------
@@ -97,5 +97,9 @@ monthly<-monthly %>% mutate(n_events = if_else(dur_day>0 & n_events==0, 1, n_eve
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 write_csv(annual, "data//annual_metrics.csv")
 write_csv(monthly, "data//monthly_metrics.csv")
+
+#for 2019-2020 water year
+write_csv(annual, "data//annual_metrics_2020.csv")
+
 #save 2019-2020 water year data as separate csv
 write_csv(df, "data//2020wateryear.csv")
