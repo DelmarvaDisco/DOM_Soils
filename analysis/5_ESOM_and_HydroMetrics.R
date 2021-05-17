@@ -88,8 +88,137 @@ ggplot(data, aes(mean_waterLevel,SUVA254_L_mgm,col=station)) +
   ggtitle("Wetland SUVA vs Mean WL") + 
   theme_bw()
 
+#HIX
+ggplot(data, aes(mean_waterLevel,HIX,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("HIX") + 
+  ggtitle("Wetland HIX vs Mean WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+
+#SSR
+ggplot(data, aes(mean_waterLevel,SSR)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SSR") + 
+  ggtitle("Wetland SSR vs Mean WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+
+#%Protein
+ggplot(data, aes(mean_waterLevel,Percent_Protein,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("%Protein") + 
+  ggtitle("Wetland %Protein vs Mean WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#3.0 Duration Inundation and ESOM ----------------------------------------------
+#2.0 Min/max WL and ESOM ----------------------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#ESOM vs Min WL colored by station
+ggplot(data, aes(min_waterLevel,EOC_mgC_L,col=station)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Min WL") + 
+  theme_bw() 
+ggplot(data, aes(min_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Minimum Water Elev (m)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Min WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm') 
+#Max
+ggplot(data, aes(max_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Max Water Elev (m)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Max WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm') 
+
+
+#FI
+#Min
+#By horizon
+ggplot(data, aes(min_waterLevel,FI,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Minimum Water Elev (m)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Min WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+#Max
+ggplot(data, aes(min_waterLevel,FI,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Maximum Water Elev (m)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Max WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+
+#SUVA
+#min
+#overall
+ggplot(data, aes(mean_waterLevel,SUVA254_L_mgm)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA (L/mg-m)") + 
+  ggtitle("Wetland SUVA vs Mean WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+#By horizon
+ggplot(data, aes(mean_waterLevel,SUVA254_L_mgm,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA (L/mg-m)") + 
+  ggtitle("Wetland SUVA vs Mean WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+#By transect point
+ggplot(data, aes(mean_waterLevel,SUVA254_L_mgm,col=station)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA (L/mg-m)") + 
+  ggtitle("Wetland SUVA vs Mean WL") + 
+  theme_bw()
+#max
+
+#HIX
+ggplot(data, aes(mean_waterLevel,HIX,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("HIX") + 
+  ggtitle("Wetland HIX vs Mean WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+
+#SSR
+ggplot(data, aes(mean_waterLevel,SSR)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SSR") + 
+  ggtitle("Wetland SSR vs Mean WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+
+#%Protein
+ggplot(data, aes(mean_waterLevel,Percent_Protein,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("%Protein") + 
+  ggtitle("Wetland %Protein vs Mean WL") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#4.0 Duration Inundation and ESOM ----------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #EOC
@@ -129,7 +258,7 @@ ggplot(data, aes(dur_day,SUVA254_L_mgm,col=Generic_Horizon)) +
   geom_smooth(method = 'lm')
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#4.0 # Alternations Wet/Dry and ESOM -------------------------------------------
+#5.0 # Alternations Wet/Dry and ESOM -------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #EOC
@@ -164,7 +293,7 @@ ggplot(data, aes(n_events,SUVA254_L_mgm,col=Generic_Horizon)) +
   theme_bw()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#5.0 Percent of year saturated -------------------------------------------
+#6.0 Percent of year saturated -------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #EOC
