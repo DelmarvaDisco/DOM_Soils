@@ -14,6 +14,7 @@ remove(list=ls())
 #load relevant packages
 library(lubridate)
 library(tidyverse)
+library(raster)
 
 #Read data
 df<-read_csv('data/waterLevel_at_sampling_location.csv')
@@ -58,8 +59,9 @@ annual<-annual %>%
             median_waterLevel = median(y_n, na.rm = T), 
             max_waterLevel    = max(y_n,    na.rm = T), 
             dur_day           = sum(inun,   na.rm=T),
-            percent_sat       =(sum(inun,   na.rm=T)/n_observations),
-            n_events          = sum(event,  na.rm = T))
+            percent_sat       = (sum(inun,   na.rm=T)/n_observations),
+            n_events          = sum(event,  na.rm = T),
+            CV_waterLevel     = cv(y_n, na.rm = T))
 
 #2.2 Estimate Monthly Metrics---------------------------------------------------
 #Sort based on site & station
