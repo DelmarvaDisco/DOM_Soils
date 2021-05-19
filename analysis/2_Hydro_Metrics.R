@@ -33,7 +33,7 @@ threshold<- -0.5
 #Sort based on site & station
 annual <- df %>% arrange(wetland, station, Timestamp)
 
-#Create collumn with bianary indicator of saturation
+#Create column with binary indicator of saturation
 annual<-annual %>% mutate(inun = if_else(y_n>threshold, 1,0))
 
 #Identify individual periods of saturation
@@ -48,7 +48,7 @@ annual<-annual %>%
 observ <- annual %>% group_by(wetland,station) %>% 
           summarise(n_obs = length(Timestamp))
 
-#Summarise Data
+#Summarize Data
 annual<-annual %>% 
   #Group by wetland and sampling station
   group_by(wetland, station) %>% 
@@ -67,7 +67,7 @@ annual<-annual %>%
 #Sort based on site & station
 monthly <- df %>% arrange(wetland, station, Timestamp)
 
-#Create collumn with bianary indicator of saturation
+#Create column with binary indicator of saturation
 monthly<-monthly %>% mutate(inun = if_else(y_n>threshold, 1,0))
 
 #Identify individual events of saturation
@@ -103,7 +103,7 @@ join <- left_join(df,soil,by=c("wetland","station"))
 #Sort based on site & station
 soil_annual <- join %>% arrange(wetland, station, Timestamp)
 
-#Create collumn with bianary indicator of saturation in each horizon
+#Create column with binary indicator of saturation in each horizon
 soil_annual<- soil_annual %>% mutate(inunO = if_else(y_n>O_lower,1,0),
                                      inunA = if_else(y_n>A_lower,1,0),
                                      inunB = if_else(y_n>B_lower,1,0))
