@@ -1,8 +1,8 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Title: Hydrologic Regime and Microbrial Dynamics
 #Coder: Nate Jones (cnjones7@ua.edu)
-#Date: 3/4/2020
-#Purpose: Develop hydrologic regime metrics for Microbrial Analysis
+#Date: 5/13/2021
+#Purpose: Develop hydrologic regime metrics for ESOM Analysis
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -110,15 +110,15 @@ soil_annual<- soil_annual %>% mutate(inunO = if_else(y_n>O_lower,1,0),
 
 #Identify individual periods of saturation in each horizon
 soil_annual<-soil_annual %>% 
-  mutate(Oevent = if_else(wetland == lead(wetland) &
+  mutate(Oevent = ifelse(wetland == lead(wetland) &
                            station==lead(station) &
                            inunO == 1 & 
                            lead(inunO) == 0, 1, 0),
-         Aevent = if_else(wetland == lead(wetland) &
+         Aevent = ifelse(wetland == lead(wetland) &
                             station==lead(station) &
                             inunA == 1 & 
                             lead(inunA) == 0, 1, 0),
-         Bevent = if_else(wetland == lead(wetland) &
+         Bevent = ifelse(wetland == lead(wetland) &
                             station==lead(station) &
                             inunB == 1 & 
                             lead(inunB) == 0, 1, 0))
