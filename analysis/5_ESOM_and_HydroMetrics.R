@@ -21,10 +21,15 @@ library(ggpubr)
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv")
 annual <- read_csv("data/annual_metrics_2020.csv") #annual_metrics depends on what water year 
+soil <- read_csv("data/horizon_annual_metrics.csv")
 
 #Join tables
+#extraction results and annual WL metrics
 data <- inner_join(df, annual, by=c("wetland","station"))
 glimpse(data)
+#extraction results and soil horizon metrics
+soildata <- inner_join(df, soil, by=c("wetland","station"))
+glimpse(soildata)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Mean/Min/Max WL and ESOM ----------------------------------------------------------
@@ -600,3 +605,58 @@ figureP <- ggarrange( Pdur,
                       labels = c("A", "B","C","D"),
                       ncol = 2, nrow = 2)
 figureP
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#4.0 Horizon Specific N events and Sat Dur -------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### 4.1 EOC ###---------------------------------------
+#4.1.1 EOC vs Dur ---------------------------------------
+#horizon
+ggplot() +
+  geom_point(data=soildata, aes(O_dur_day,EOC_mgC_L,col="red",size=1))+
+  geom_point(data=soildata, aes(A_dur_day,EOC_mgC_L,col="green",size=1))+
+  geom_point(data=soildata, aes(B_dur_day,EOC_mgC_L,col="blue",size=1))+
+  xlab("Duration (d)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Duration") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+
+#3.1.2 EOC vs N events ---------------------------------------
+ggplot() +
+  geom_point(data=soildata, aes(O_n_events,EOC_mgC_L,col="red",size=1))+
+  geom_point(data=soildata, aes(A_n_events,EOC_mgC_L,col="green",size=1))+
+  geom_point(data=soildata, aes(B_n_events,EOC_mgC_L,col="blue",size=1))+
+  xlab("N events") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Number of Saturation Events") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+
+
+#3.1.3 % Yr Sat ---------------------------------------
+ggplot() +
+  geom_point(data=soildata, aes(O_percent_sat,EOC_mgC_L,col="red",size=1))+
+  geom_point(data=soildata, aes(A_percent_sat,EOC_mgC_L,col="green",size=1))+
+  geom_point(data=soildata, aes(B_percent_sat,EOC_mgC_L,col="blue",size=1))+
+  xlab("% year saturated") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs % of Year Saturated") + 
+  theme_bw()+
+  geom_smooth(method = 'lm')
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#5.0 Other Plots -------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+##5.1 CV of Water Level-----------------------------
+#CV by transect point
+ggplot(data, aes(station,CV_waterLevel,fill=station))+
+  geom_boxplot()+
+  xlab("Transect Point") +
+  ylab("CV") + 
+  ggtitle("Coefficient of Variation By Transect Point") + 
+  theme_bw()
+
