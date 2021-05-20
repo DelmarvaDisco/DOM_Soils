@@ -110,15 +110,15 @@ soil_annual<- soil_annual %>% mutate(inunO = if_else(y_n>O_lower,1,0),
 
 #Identify individual periods of saturation in each horizon
 soil_annual<-soil_annual %>% 
-  mutate(Oevent = ifelse(wetland == lead(wetland) &
+  mutate(Oevent = if_else(wetland == lead(wetland) &
                            station==lead(station) &
                            inunO == 1 & 
                            lead(inunO) == 0, 1, 0),
-         Aevent = ifelse(wetland == lead(wetland) &
+         Aevent = if_else(wetland == lead(wetland) &
                             station==lead(station) &
                             inunA == 1 & 
                             lead(inunA) == 0, 1, 0),
-         Bevent = ifelse(wetland == lead(wetland) &
+         Bevent = if_else(wetland == lead(wetland) &
                             station==lead(station) &
                             inunB == 1 & 
                             lead(inunB) == 0, 1, 0))
@@ -138,6 +138,20 @@ soil_annual_metrics<-soil_annual %>%
             B_percent_sat       =(sum(inunB,   na.rm=T)/n_observations),
             B_n_events          = sum(Bevent,  na.rm = T),)
 
+#Override metrics for DB KW-1W, ND KW-1W, and ND KW-2E
+#because these sites had O/A combined horizons so if A is wet, consider O wet also
+
+#DB KW-1W 
+soil_annual_metrics[1,4] = 293 #O_dur_day = A_dur_day
+soil_annual_metrics[1,5] = 0.8027397 #O_percent_sat = A_percent_sat
+
+#ND KW-1W
+soil_annual_metrics[5,4] = 295 #O_dur_day = A_dur_day
+soil_annual_metrics[5,5] = 0.8082192 #O_percent_sat = A_percent_sat
+
+#ND KW-2E
+soil_annual_metrics[6,4] = 264 #O_dur_day = A_dur_day
+soil_annual_metrics[6,5] = 0.7232877 #O_percent_sat = A_percent_sat
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
