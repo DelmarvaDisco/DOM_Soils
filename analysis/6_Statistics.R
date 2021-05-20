@@ -142,26 +142,35 @@ B <- data %>% filter(Generic_Horizon == "3B")
 # 5.1.1 EOC ------------------------------
 lmEOCO <- lm(O$EOC_mgC_L~O$mean_waterLevel)
 summary(lmEOCO)
+plot(residuals(lmEOCO))
 lmEOCA <- lm(A$EOC_mgC_L~A$mean_waterLevel)
 summary(lmEOCA)
+plot(residuals(lmEOCA))
 lmEOCB <- lm(B$EOC_mgC_L~B$mean_waterLevel)
 summary(lmEOCB)
+plot(residuals(lmEOCB))
 lmoverall <- lm(data$EOC_mgC_L~data$mean_waterLevel)
 summary(lmoverall)
+plot(residuals(lmoverall))
 
 # 5.1.2 SUVA ------------------------------
 lmSUVAO <- lm(O$SUVA254_L_mgm~O$mean_waterLevel)
 summary(lmSUVAO)
+plot(residuals(lmSUVAO))
 lmSUVAA <- lm(A$SUVA254_L_mgm~A$mean_waterLevel)
 summary(lmSUVAA)
+plot(residuals(lmSUVAA)) #bit of a parabolic trend - indicating something important is missing
 lmSUVAB <- lm(B$SUVA254_L_mgm~B$mean_waterLevel)
 summary(lmSUVAB)
+plot(residuals(lmSUVAB))
 lmoverall <- lm(data$SUVA254_L_mgm~data$mean_waterLevel)
 summary(lmoverall)
+plot(residuals(lmoverall))
 
 # 5.1.3 HIX ------------------------------
-lmoverall <- lm(data$HIX~data$mean_waterLevel)
+lmHIXoverall <- lm(data$HIX~data$mean_waterLevel)
 summary(lmoverall)
+plot(residuals(lmHIXoverall))
 
 ### 5.2 N_events -----------------------------
 
@@ -170,9 +179,13 @@ summary(lmoverall)
 
 lmFIO <- lm(O$FI~O$dur_day)
 summary(lmFIO)
+plot(residuals(lmFIO))
 lmFIA <- lm(A$FI~A$dur_day)
 summary(lmFIA)
+plot(residuals(lmFIA))
 lmFIB <- lm(B$FI~B$dur_day)
 summary(lmFIB)
+plot(residuals(lmFIB))
 lmFIoverall <-(data$FI~data$dur_day)
 summary(lmFIoverall)
+plot(residuals(lmFIoverall))
