@@ -24,7 +24,7 @@ soil <- read_csv('data/20210516_KW_SoilHorizElev.csv')
 df <- df %>% filter(Timestamp > "2019-10-01" & Timestamp < "2020-10-01")
 
 #Identify threshold of interest
-threshold<- -0.5
+threshold<- -0.3
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Estimate metrics-----------------------------------------------------------
@@ -152,6 +152,41 @@ soil_annual_metrics[5,5] = 0.8082192 #O_percent_sat = A_percent_sat
 #ND KW-2E
 soil_annual_metrics[6,4] = 264 #O_dur_day = A_dur_day
 soil_annual_metrics[6,5] = 0.7232877 #O_percent_sat = A_percent_sat
+
+
+#2.4 Trial Run Event Duration Calc------------------------------------------------
+#using all 3 years of data and generic threshold for now
+#Sort based on site & station
+df <- df %>% arrange(wetland, station, Timestamp)
+
+#Define periods where water level is above threshold
+df <- df %>% mutate(inun = if_else(y_n>threshold, 1,0))
+
+#Define when each event starts - use lag instead of lead
+df <- df %>% 
+    mutate(event_start = if_else(wetland == lag(wetland) &
+                                 station==lag(station) & 
+                                 inun==1 & 
+                                 lag(inun)==0,1,0))
+
+#Define event id - df already arranged
+df <- df %>% 
+  #cumulative sum by event start to create event id
+    mutate(id_event = cumsum(event_start)) %>% 
+  #remove event id from rows below threshold
+    mutate(id_event = id_event*event_start)
+
+#Metrics for each event
+#Estimate metric for each event
+event_metrics <- df %>% 
+  group_by(wetland, station, id_event) %>% 
+  summarise(
+    duration = max(Timestamp)-min(Timestamp))
+#Summarize events
+event_summary <- event_metrics %>% 
+  group_by(wetland, station, id_event) %>% 
+  summarise(dur_mean = mean(duration, na.rm=T),
+            n_events = n())
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
