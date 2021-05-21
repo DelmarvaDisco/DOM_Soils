@@ -960,3 +960,25 @@ ggplot(data, aes(station,CV_waterLevel,fill=station))+
   ggtitle("Coefficient of Variation By Transect Point") + 
   theme_bw()
 
+#5.2 Thinking about potential vs realized DOM---------------------------------
+
+subset <- data %>% dplyr::select(wetland,station,Generic_Horizon,EOC_mgC_L,Layer_Thickness_cm, 
+                               min_waterLevel,mean_waterLevel,median_waterLevel,max_waterLevel,
+                               dur_day,n_events)
+subset <- subset %>% mutate(Bulk_EOC = EOC_mgC_L*Layer_Thickness_cm,
+                            EOC_mgC_gSoil = (EOC_mgC_L/1000)/30,
+                            EOC_Realized = EOC_mgC_L*abs(mean_waterLevel))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
