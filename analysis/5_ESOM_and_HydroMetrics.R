@@ -610,42 +610,342 @@ figureP
 #4.0 Horizon Specific N events and Sat Dur -------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#Filter down data by generic horizon
+O <- soildata %>% filter(Generic_Horizon == "1O")
+A <- soildata %>% filter(Generic_Horizon == "2A")
+B <- soildata %>% filter(Generic_Horizon == "3B")
+
 ### 4.1 EOC ###---------------------------------------
 #4.1.1 EOC vs Dur ---------------------------------------
 #horizon
-ggplot() +
-  geom_point(data=soildata, aes(O_dur_day,EOC_mgC_L,col="red",size=1))+
-  geom_point(data=soildata, aes(A_dur_day,EOC_mgC_L,col="green",size=1))+
-  geom_point(data=soildata, aes(B_dur_day,EOC_mgC_L,col="blue",size=1))+
-  xlab("Duration (d)") +
+EOCdur <- ggplot() +
+  geom_point(data=O, aes(O_dur_day,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_day,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_day,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  xlab("Horizon Saturation Duration (d)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Duration") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(data=O,aes(O_dur_day,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_day,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_day,EOC_mgC_L,col=Generic_Horizon), method = 'lm')
 
-#3.1.2 EOC vs N events ---------------------------------------
+#transect point
 ggplot() +
-  geom_point(data=soildata, aes(O_n_events,EOC_mgC_L,col="red",size=1))+
-  geom_point(data=soildata, aes(A_n_events,EOC_mgC_L,col="green",size=1))+
-  geom_point(data=soildata, aes(B_n_events,EOC_mgC_L,col="blue",size=1))+
-  xlab("N events") +
+  geom_point(data=O, aes(O_dur_day,EOC_mgC_L,col=station),size=4)+
+  geom_point(data=A, aes(A_dur_day,EOC_mgC_L,col=station),size=4)+
+  geom_point(data=B, aes(B_dur_day,EOC_mgC_L,col=station),size=4)+
+  xlab("Horizon Saturation Duration (d)") +
   ylab("EOC (mg/L)") + 
-  ggtitle("Wetland EOC vs Number of Saturation Events") + 
+  ggtitle("Wetland EOC vs Duration") + 
+  theme_bw()
+
+#4.1.2 EOC vs N events ---------------------------------------
+#horizon
+EOCn <- ggplot() +
+  geom_point(data=O, aes(O_n_events,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_n_events,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_n_events,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  xlab("N events in each horizon") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Number of Horizon Specific Saturation Events") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(data=O,aes(O_n_events,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_n_events,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_n_events,EOC_mgC_L,col=Generic_Horizon), method = 'lm')
+
+#transect point
+EOCstat <- ggplot() +
+  geom_point(data=O, aes(O_n_events,EOC_mgC_L,col=station),size=4)+
+  geom_point(data=A, aes(A_n_events,EOC_mgC_L,col=station),size=4)+
+  geom_point(data=B, aes(B_n_events,EOC_mgC_L,col=station),size=4)+
+  xlab("N events in each horizon") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()
 
 
-#3.1.3 % Yr Sat ---------------------------------------
+#4.1.3 % Yr Sat ---------------------------------------
+#horizon
+EOCpercent <- ggplot() +
+  geom_point(data=O, aes(O_percent_sat,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_percent_sat,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_percent_sat,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  xlab("% year horizon saturated") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs % of year Horizon is Saturated") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_percent_sat,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_percent_sat,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_percent_sat,EOC_mgC_L,col=Generic_Horizon), method = 'lm')
+
+#transect point
 ggplot() +
-  geom_point(data=soildata, aes(O_percent_sat,EOC_mgC_L,col="red",size=1))+
-  geom_point(data=soildata, aes(A_percent_sat,EOC_mgC_L,col="green",size=1))+
-  geom_point(data=soildata, aes(B_percent_sat,EOC_mgC_L,col="blue",size=1))+
-  xlab("% year saturated") +
+  geom_point(data=O, aes(O_percent_sat,EOC_mgC_L,col=station),size=4)+
+  geom_point(data=A, aes(A_percent_sat,EOC_mgC_L,col=station),size=4)+
+  geom_point(data=B, aes(B_percent_sat,EOC_mgC_L,col=station),size=4)+
+  xlab("% year horizon saturated") +
   ylab("EOC (mg/L)") + 
-  ggtitle("Wetland EOC vs % of Year Saturated") + 
-  theme_bw()+
-  geom_smooth(method = 'lm')
+  ggtitle("Wetland EOC vs % of year Horizon is Saturated") + 
+  theme_bw()
 
+#4.1.4 Plot ---------------------------------------
+figureEOC <- ggarrange( EOCstat, 
+                        EOCdur,
+                        EOCn,
+                        EOCpercent,
+                      labels = c("A", "B","C","D"),
+                      ncol = 2, nrow = 2)
+figureEOC
+
+### 4.2 FI ###---------------------------------------
+#4.2.1 FI vs Dur ---------------------------------------
+#horizon
+FIdur <- ggplot() +
+  geom_point(data=O, aes(O_dur_day,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_day,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_day,FI,col=Generic_Horizon),size=4)+
+  xlab("Horizon Saturation Duration (d)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_day,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_day,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_day,FI,col=Generic_Horizon), method = 'lm')
+
+#transect point
+ggplot() +
+  geom_point(data=O, aes(O_dur_day,FI,col=station),size=4)+
+  geom_point(data=A, aes(A_dur_day,FI,col=station),size=4)+
+  geom_point(data=B, aes(B_dur_day,FI,col=station),size=4)+
+  xlab("Horizon Saturation Duration (d)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Duration") + 
+  theme_bw()
+
+#4.2.2 FI vs N events ---------------------------------------
+#horizon
+FIn <- ggplot() +
+  geom_point(data=O, aes(O_n_events,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_n_events,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_n_events,FI,col=Generic_Horizon),size=4)+
+  xlab("N events in each horizon") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_n_events,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_n_events,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_n_events,FI,col=Generic_Horizon), method = 'lm')
+
+#transect point
+FIstat <- ggplot() +
+  geom_point(data=O, aes(O_n_events,FI,col=station),size=4)+
+  geom_point(data=A, aes(A_n_events,FI,col=station),size=4)+
+  geom_point(data=B, aes(B_n_events,FI,col=station),size=4)+
+  xlab("N events in each horizon") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()
+
+
+#4.2.3 FI vs % Yr Sat ---------------------------------------
+#horizon
+FIpercent <- ggplot() +
+  geom_point(data=O, aes(O_percent_sat,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_percent_sat,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_percent_sat,FI,col=Generic_Horizon),size=4)+
+  xlab("% year horizon saturated") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs % of year Horizon is Saturated") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_percent_sat,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_percent_sat,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_percent_sat,FI,col=Generic_Horizon), method = 'lm')
+
+#transect point
+ggplot() +
+  geom_point(data=O, aes(O_percent_sat,FI,col=station),size=4)+
+  geom_point(data=A, aes(A_percent_sat,FI,col=station),size=4)+
+  geom_point(data=B, aes(B_percent_sat,FI,col=station),size=4)+
+  xlab("% year horizon saturated") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs % of year Horizon is Saturated") + 
+  theme_bw()
+
+#4.2.4 FI Plot ---------------------------------------
+figureFI <- ggarrange( FIstat, 
+                       FIdur,
+                       FIn, 
+                       FIpercent,
+                        labels = c("A", "B","C","D"),
+                        ncol = 2, nrow = 2)
+figureFI
+
+### 4.3 SUVA254 ###---------------------------------------
+#4.3.1 SUVA vs Dur ---------------------------------------
+#horizon
+SUVAdur <- ggplot() +
+  geom_point(data=O, aes(O_dur_day,SUVA254_L_mgm,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_day,SUVA254_L_mgm,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_day,SUVA254_L_mgm,col=Generic_Horizon),size=4)+
+  xlab("Horizon Saturation Duration (d)") +
+  ylab("SUVA254 (L/mg-m)") + 
+  ggtitle("Wetland SUVA254 vs Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_day,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_day,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_day,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')
+
+#transect point
+ggplot() +
+  geom_point(data=O, aes(O_dur_day,SUVA254_L_mgm,col=station),size=4)+
+  geom_point(data=A, aes(A_dur_day,SUVA254_L_mgm,col=station),size=4)+
+  geom_point(data=B, aes(B_dur_day,SUVA254_L_mgm,col=station),size=4)+
+  xlab("Horizon Saturation Duration (d)") +
+  ylab("SUVA254 (L/mg-m)") + 
+  ggtitle("Wetland SUVA254 vs Duration") + 
+  theme_bw()
+
+#4.3.2 SUVA vs N events ---------------------------------------
+#horizon
+SUVAn <- ggplot() +
+  geom_point(data=O, aes(O_n_events,SUVA254_L_mgm,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_n_events,SUVA254_L_mgm,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_n_events,SUVA254_L_mgm,col=Generic_Horizon),size=4)+
+  xlab("N events in each horizon") +
+  ylab("SUVA254 (L/mg-m)") + 
+  ggtitle("Wetland SUVA254 vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_n_events,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_n_events,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_n_events,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')
+
+#transect point
+SUVAstat <- ggplot() +
+  geom_point(data=O, aes(O_n_events,SUVA254_L_mgm,col=station),size=4)+
+  geom_point(data=A, aes(A_n_events,SUVA254_L_mgm,col=station),size=4)+
+  geom_point(data=B, aes(B_n_events,SUVA254_L_mgm,col=station),size=4)+
+  xlab("N events in each horizon") +
+  ylab("SUVA254 (L/mg-m)") + 
+  ggtitle("Wetland SUVA254 vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()
+
+
+#4.3.3 SUVA254 vs % Yr Sat ---------------------------------------
+#horizon
+SUVApercent <- ggplot() +
+  geom_point(data=O, aes(O_percent_sat,SUVA254_L_mgm,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_percent_sat,SUVA254_L_mgm,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_percent_sat,SUVA254_L_mgm,col=Generic_Horizon),size=4)+
+  xlab("% year horizon saturated") +
+  ylab("SUVA254 (L/mg-m)") + 
+  ggtitle("Wetland SUVA254 vs % of year Horizon is Saturated") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_percent_sat,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_percent_sat,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_percent_sat,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')
+
+#transect point
+ggplot() +
+  geom_point(data=O, aes(O_percent_sat,SUVA254_L_mgm,col=station),size=4)+
+  geom_point(data=A, aes(A_percent_sat,SUVA254_L_mgm,col=station),size=4)+
+  geom_point(data=B, aes(B_percent_sat,SUVA254_L_mgm,col=station),size=4)+
+  xlab("% year horizon saturated") +
+  ylab("SUVA254 (L/mg-m)") + 
+  ggtitle("Wetland SUVA vs % of year Horizon is Saturated") + 
+  theme_bw()
+
+#4.3.4 SUVA254 Plot ---------------------------------------
+figureSUVA <- ggarrange( SUVAstat, 
+                         SUVAdur, 
+                         SUVAn, 
+                         SUVApercent,
+                       labels = c("A", "B","C","D"),
+                       ncol = 2, nrow = 2)
+figureSUVA
+
+### 4.4 HIX ###---------------------------------------
+#4.4.1 HIX vs Dur ---------------------------------------
+#horizon
+HIXdur <- ggplot() +
+  geom_point(data=O, aes(O_dur_day,HIX,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_day,HIX,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_day,HIX,col=Generic_Horizon),size=4)+
+  xlab("Horizon Saturation Duration (d)") +
+  ylab("HIX") + 
+  ggtitle("Wetland HIX vs Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_day,HIX,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_day,HIX,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_day,HIX,col=Generic_Horizon), method = 'lm')
+
+#transect point
+ggplot() +
+  geom_point(data=O, aes(O_dur_day,HIX,col=station),size=4)+
+  geom_point(data=A, aes(A_dur_day,HIX,col=station),size=4)+
+  geom_point(data=B, aes(B_dur_day,HIX,col=station),size=4)+
+  xlab("Horizon Saturation Duration (d)") +
+  ylab("HIX") + 
+  ggtitle("Wetland HIX vs Duration") + 
+  theme_bw()
+
+#4.4.2 HIX vs N events ---------------------------------------
+#horizon
+HIXn <- ggplot() +
+  geom_point(data=O, aes(O_n_events,HIX,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_n_events,HIX,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_n_events,HIX,col=Generic_Horizon),size=4)+
+  xlab("N events in each horizon") +
+  ylab("HIX") + 
+  ggtitle("Wetland HIX vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_n_events,HIX,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_n_events,HIX,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_n_events,HIX,col=Generic_Horizon), method = 'lm')
+
+#transect point
+HIXstat <- ggplot() +
+  geom_point(data=O, aes(O_n_events,HIX,col=station),size=4)+
+  geom_point(data=A, aes(A_n_events,HIX,col=station),size=4)+
+  geom_point(data=B, aes(B_n_events,HIX,col=station),size=4)+
+  xlab("N events in each horizon") +
+  ylab("HIX") + 
+  ggtitle("Wetland HIX vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()
+
+
+#4.4.3 HIX vs % Yr Sat ---------------------------------------
+#horizon
+HIXpercent <- ggplot() +
+  geom_point(data=O, aes(O_percent_sat,HIX,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_percent_sat,HIX,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_percent_sat,HIX,col=Generic_Horizon),size=4)+
+  xlab("% year horizon saturated") +
+  ylab("HIX") + 
+  ggtitle("Wetland HIX vs % of year Horizon is Saturated") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_percent_sat,HIX,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_percent_sat,HIX,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_percent_sat,HIX,col=Generic_Horizon), method = 'lm')
+
+#transect point
+ggplot() +
+  geom_point(data=O, aes(O_percent_sat,HIX,col=station),size=4)+
+  geom_point(data=A, aes(A_percent_sat,HIX,col=station),size=4)+
+  geom_point(data=B, aes(B_percent_sat,HIX,col=station),size=4)+
+  xlab("% year horizon saturated") +
+  ylab("HIX") + 
+  ggtitle("Wetland HIX vs % of year Horizon is Saturated") + 
+  theme_bw()
+
+#4.4.4 HIX Plot ---------------------------------------
+figureHIX <- ggarrange( HIXstat, 
+                        HIXdur, 
+                        HIXn, 
+                        HIXpercent,
+                         labels = c("A", "B","C","D"),
+                         ncol = 2, nrow = 2)
+figureHIX
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #5.0 Other Plots -------------------------------------
