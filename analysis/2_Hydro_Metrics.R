@@ -157,7 +157,7 @@ soil_annual_metrics[6,5] = 0.7232877 #O_percent_sat = A_percent_sat
 #2.4 Trial Run Event Duration Calc------------------------------------------------
 #using all 3 years of data and generic threshold for now
 #Sort based on site & station
-df <- df %>% arrange(wetland, station, Timestamp)
+df <- df %>% arrange(wetland, station, Timestamp) %>% drop_na()
 
 #Define periods where water level is above threshold
 df <- df %>% mutate(inun = if_else(y_n>threshold, 1,0))
