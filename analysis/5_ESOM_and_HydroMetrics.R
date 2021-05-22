@@ -42,14 +42,16 @@ mstat <- ggplot(data, aes(mean_waterLevel,EOC_mgC_L,col=station)) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
-  theme_bw() 
-meanEOC <- ggplot(data, aes(mean_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
+  theme_bw()
+meanEOC <-ggplot(data, aes(mean_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw() +
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -0.5)+
+  stat_cor(label.x = 0)
 
 #2.1.2 ESOM vs Min WL ------------------------------------
 ggplot(data, aes(min_waterLevel,EOC_mgC_L,col=station)) +
@@ -64,7 +66,9 @@ minEOC <- ggplot(data, aes(min_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Min WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm') 
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.25)+
+  stat_cor(label.x = -0.95)
 
 #2.1.3 ESOM vs Max WL ------------------------------------
 maxEOC <- ggplot(data, aes(max_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
@@ -73,7 +77,9 @@ maxEOC <- ggplot(data, aes(max_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Max WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm') 
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = 0)+
+  stat_cor(label.x = 0.5)
 
 #2.1.4 EOC Plot
 figureEOC <- ggarrange(mstat, 
@@ -92,7 +98,9 @@ FImean <- ggplot(data, aes(mean_waterLevel,FI,col=Generic_Horizon)) +
   ylab("FI") + 
   ggtitle("Wetland FI vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -0.5)+
+  stat_cor(label.x = -0.1)
 #By transect point
 FIoverall <- ggplot(data, aes(mean_waterLevel,FI)) +
   geom_point(size=2.5) +
@@ -100,7 +108,9 @@ FIoverall <- ggplot(data, aes(mean_waterLevel,FI)) +
   ylab("FI") + 
   ggtitle("Wetland FI vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -0.5)+
+  stat_cor(label.x = -0.1)
 
 #2.2.2 FI vs Min WL-------------------------------------
 FImin <- ggplot(data, aes(min_waterLevel,FI,col=Generic_Horizon)) +
@@ -109,7 +119,9 @@ FImin <- ggplot(data, aes(min_waterLevel,FI,col=Generic_Horizon)) +
   ylab("FI") + 
   ggtitle("Wetland FI vs Min WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.4)+
+  stat_cor(label.x = -1)
 
 #2.2.3 FI vs Max WL---------------------------------------
 FImax <- ggplot(data, aes(min_waterLevel,FI,col=Generic_Horizon)) +
@@ -118,7 +130,9 @@ FImax <- ggplot(data, aes(min_waterLevel,FI,col=Generic_Horizon)) +
   ylab("FI") + 
   ggtitle("Wetland FI vs Max WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.35)+
+  stat_cor(label.x = -1)
 
 #2.2.4 FI Plot---------------------------------------
 figureFI <- ggarrange(FIoverall,
@@ -138,7 +152,9 @@ SUVAoverall <- ggplot(data, aes(mean_waterLevel,SUVA254_L_mgm)) +
   ylab("SUVA (L/mg-m)") + 
   ggtitle("Wetland SUVA vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -0.5,label.y=0.5)+
+  stat_cor(label.x = -0.2,label.y=0.5)
 #By horizon
 SUVAmean <- ggplot(data, aes(mean_waterLevel,SUVA254_L_mgm,col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -146,7 +162,9 @@ SUVAmean <- ggplot(data, aes(mean_waterLevel,SUVA254_L_mgm,col=Generic_Horizon))
   ylab("SUVA (L/mg-m)") + 
   ggtitle("Wetland SUVA vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.npc = "center",label.y.npc="bottom")+
+  stat_cor(label.x.npc = 0.75,label.y.npc="bottom")
 #By transect point
 ggplot(data, aes(mean_waterLevel,SUVA254_L_mgm,col=station)) +
   geom_point(size=2.5) +
@@ -171,7 +189,9 @@ SUVAmin <- ggplot(data, aes(min_waterLevel,SUVA254_L_mgm,col=Generic_Horizon)) +
   ylab("SUVA (L/mg-m)") + 
   ggtitle("Wetland SUVA vs Min WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.npc = "center",label.y.npc="bottom")+
+  stat_cor(label.x.npc = 0.75,label.y.npc="bottom")
 
 #2.3.3 SUVA vs Max WL ---------------------------------------
 #overall
@@ -189,7 +209,9 @@ SUVAmax <- ggplot(data, aes(max_waterLevel,SUVA254_L_mgm,col=Generic_Horizon)) +
   ylab("SUVA (L/mg-m)") + 
   ggtitle("Wetland SUVA vs Max WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.npc = "center",label.y.npc="bottom")+
+  stat_cor(label.x.npc = 0.75,label.y.npc="bottom")
 
 #2.3.4 SUVA Plot---------------------------------------
 figureSUVA <- ggarrange(SUVAoverall,
@@ -210,7 +232,9 @@ HIXoverall <- ggplot(data, aes(mean_waterLevel,HIX)) +
   ylab("HIX") + 
   ggtitle("Wetland HIX vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.npc = "center",label.y.npc="bottom")+
+  stat_cor(label.x.npc = 0.75,label.y.npc="bottom")
 #by horizon
 HIXmean <- ggplot(data, aes(mean_waterLevel,HIX,col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -218,7 +242,9 @@ HIXmean <- ggplot(data, aes(mean_waterLevel,HIX,col=Generic_Horizon)) +
   ylab("HIX") + 
   ggtitle("Wetland HIX vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.npc = "center",label.y.npc="bottom")+
+  stat_cor(label.x.npc = 0.75,label.y.npc="bottom")
 
 #2.4.2 HIX vs Min WL---------------------------------------
 HIXmin <- ggplot(data, aes(min_waterLevel,HIX,col=Generic_Horizon)) +
@@ -227,7 +253,9 @@ HIXmin <- ggplot(data, aes(min_waterLevel,HIX,col=Generic_Horizon)) +
   ylab("HIX") + 
   ggtitle("Wetland HIX vs Min WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.npc = "center",label.y.npc="bottom")+
+  stat_cor(label.x.npc = 0.75,label.y.npc="bottom")
 
 #2.4.3 HIX vs Max WL---------------------------------------
 HIXmax <- ggplot(data, aes(max_waterLevel,HIX,col=Generic_Horizon)) +
@@ -236,7 +264,9 @@ HIXmax <- ggplot(data, aes(max_waterLevel,HIX,col=Generic_Horizon)) +
   ylab("HIX") + 
   ggtitle("Wetland HIX vs Max WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.npc = "center",label.y.npc="bottom")+
+  stat_cor(label.x.npc = 0.75,label.y.npc="bottom")
 
 #2.4.4 HIX Plot ---------------------------------------
 figureHIX <- ggarrange(HIXoverall,
@@ -255,14 +285,18 @@ SSRoverall <- ggplot(data, aes(mean_waterLevel,SSR)) +
   ylab("SSR") + 
   ggtitle("Wetland SSR vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.=0.5)+
+  stat_cor(label.x.npc = 0.75)
 SSRmean <- ggplot(data, aes(mean_waterLevel,SSR,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   xlab("Mean Water Elev (m)") +
   ylab("SSR") + 
   ggtitle("Wetland SSR vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.=0.5)+
+  stat_cor(label.x.npc = 0.75)
 
 #2.5.2 SSR Plot---------------------------------------
 figureSSR <- ggarrange(SSRoverall,SSRmean,
@@ -278,14 +312,18 @@ Poverall <- ggplot(data, aes(mean_waterLevel,Percent_Protein)) +
   ylab("%Protein") + 
   ggtitle("Wetland %Protein vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.=0.5)+
+  stat_cor(label.x.npc = 0.75)
 Pmean <- ggplot(data, aes(mean_waterLevel,Percent_Protein,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   xlab("Mean Water Elev (m)") +
   ylab("%Protein") + 
   ggtitle("Wetland %Protein vs Mean WL") + 
   theme_bw()+
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x.=0.5)+
+  stat_cor(label.x.npc = 0.75)
 
 #2.6.2 Protein Plot---------------------------------------
 figureP <- ggarrange(Poverall,Pmean,
