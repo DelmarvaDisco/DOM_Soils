@@ -50,6 +50,27 @@ threshold_annual <- left_join(threshold_annual,elev,by=c("wetland","station"))
 
 #Look at distributions/normality/equal variance 
 
+#Define station vs horizon
+Station <- WetlandsNoLL$station
+Horizon <- WetlandsNoLL$Generic_Horizon
+
+###ESOM DATA###
+
+#Summarize data
+ESOM_Summary <- WetlandsNoLL %>% 
+        group_by(Generic_Horizon) %>% 
+        summarise( MeanEOC = mean(EOC_mgC_L),
+                   sdEOC = sd(EOC_mgC_L),
+                   MeanFI = mean(FI),
+                   sdFI = sd(FI),
+                   MeanSUVA = mean(SUVA254_L_mgm),
+                   sdSUVA = sd(SUVA254_L_mgm),
+                   MeanHIX = mean(HIX),
+                   sdHIX = sd(HIX),
+                   MeanSSR = mean(SSR,na.rm=T),
+                   sdSSR = sd(SSR,na.rm = T))
+
+
 ### 2.1 EOC -----------------------------------
 hist(WetlandsNoLL$EOC_mgC_L)
 qqnorm(WetlandsNoLL$EOC_mgC_L)
@@ -62,8 +83,6 @@ qqnorm(logEOC)
 
 #test for normal distribution of log transformed data
 shapiro.test(logEOC) #Log of values is normally distributed
-Station <- WetlandsNoLL$station
-Horizon <- WetlandsNoLL$Generic_Horizon
 
 #test for equal variance
 bartlett.test(logEOC~Station) #Barlett test doesn't meet equal variance assumptions
@@ -73,13 +92,48 @@ leveneTest(logEOC,Horizon,center=median)
 
 
 ### 2.2 FI -----------------------------------
-qqnorm(df$FI)
-shapiro.test(df$FI)
-logFI <- log(df$FI)
+FI <- WetlandsNoLL$FI 
+qqnorm(FI)
+hist(FI)
+shapiro.test(FI) #not normally distributed
+bartlett.test(logFI~Horizon) #no equal variance
+
+logFI <- log10(FI)
+hist(logFI)
 qqnorm(logFI)
 shapiro.test(logFI) #logging FI data is not normally distributed
+bartlett.test(logFI~Horizon)
 
-### 2.3 Water Level Data -----------------------------------
+### 2.3 SUVA -----------------------------------
+SUVA <- WetlandsNoLL$SUVA254_L_mgm
+hist(SUVA)
+shapiro.test(SUVA) #not normally distributed
+bartlett.test(SUVA~Horizon)
+sqrtSUVA <- sqrt(SUVA) 
+hist(sqrtSUVA)
+shapiro.test(sqrtSUVA) #not normally distributed
+
+### 2.4 HIX -----------------------------------
+HIX <- WetlandsNoLL$HIX
+hist(HIX)
+shapiro.test(HIX) #not normally distributed
+bartlett.test(HIX~Station)
+
+sqrtHIX <- sqrt(HIX)
+hist(sqrtHIX) 
+shapiro.test(sqrtHIX) #not normally distributed
+
+### 2.5 SSR -----------------------------------
+SSR <- WetlandsNoLL$SSR
+hist(SSR)
+shapiro.test(SSR) #not normally distributed
+bartlett.test(SSR~Station)#no equal variance
+
+logSSR <- log10(SSR)
+hist(logSSR)
+shapiro.test(logSSR)
+
+### 2.6 Water Level Data -----------------------------------
 #break out variables
 y_n <- waterlevel$y_n
 station <- waterlevel$station
@@ -93,7 +147,7 @@ shapiro.test(y_n) #shapiro doesn't work when n>5,000 :(
 bartlett.test(y_n~station) #big fail p = 9.4x10^-5
 leveneTest(y_n,station,center=median) #p = 5.97x10-7
 
-### 2.4 2020 Annual Metrics ----------------------------------
+### 2.7 2020 Annual Metrics ----------------------------------
 threshold_annual_summary <-threshold_annual %>% 
   #Group by wetland and sampling station
   group_by(station) %>% 
@@ -176,7 +230,7 @@ bartlett.test(nevents~station) #not equal variance
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### 3.1 EOC --------------------------------------------------
-#4.1.1 EOC by horizon------------------------------------------
+#3.1.1 EOC by horizon------------------------------------------
 logEOC.horiz.aov <- aov(logEOC~Horizon)
 summary(logEOC.horiz.aov)
 logEOC.horiz.HSD <- TukeyHSD(logEOC.horiz.aov);logEOC.horiz.HSD 
@@ -195,12 +249,21 @@ logEOC.both.aov <- aov(logEOC~Horizon+Station)
 summary(logEOC.both.aov)
 logEOC.both.HSD <- TukeyHSD(logEOC.both.aov);logEOC.both.HSD  
 
-### 3.2 Water Level Data--------------------------------
+### 3.2 FI -------------------------------------------
+#3.2.1 FI by horizon------------------------------------------
+#3.2.2 FI by station------------------------------------------
+#3.2.3 FI by both horizon and transect location (ANOCVA) --------------------
+
+### 3.3 SUVA ------------------------------------------
+### 3.4 HIX ------------------------------------------
+### 3.5 SSR ------------------------------------------
+
+### 3.6 Water Level Data--------------------------------
 waterlevel.aov <- aov(y_n~station)
 summary(waterlevel.aov)
 waterlevel.HSD <- TukeyHSD(waterlevel.aov);waterlevel.HSD 
 
-### 3.3 2020 Water Level Metrics
+### 3.7 2020 Water Level Metrics
 station <- threshold_annual$station
 elev <-    threshold_annual$elevation
 minWL <-   threshold_annual$min_waterLevel
@@ -230,7 +293,7 @@ medianWL.HSD <- HSD.test(medianWL.aov,"station",group=T);medianWL.HSD
 maxWL.aov <-aov(maxWL~station); summary(medianWL.aov)
 maxWL.HSD <-   TukeyHSD(maxWL.aov); maxWL.HSD
 maxWL.HSD <- HSD.test(maxWL.aov,"station",group=T);maxWL.HSD
-#indundation duration
+#inundation duration
 durday.aov <-  aov(durday~station); summary(durday.aov)
 durday.HSD <-   TukeyHSD(durday.aov); durday.HSD
 durday.HSD <- HSD.test(durday.aov,"station",group=T);durday.HSD
