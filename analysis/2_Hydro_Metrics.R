@@ -192,7 +192,7 @@ event_summary <- event_metrics %>%
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 Export data----------------------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-write_csv(annual, "data//annual_metrics.csv")
+write_csv(annual, "data//annual_metrics_threshold_0.3.csv")
 write_csv(monthly, "data//monthly_metrics.csv")
 
 #for 2019-2020 water year
