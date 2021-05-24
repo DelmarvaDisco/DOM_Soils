@@ -1,5 +1,5 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#Title: Statistical Anlyses
+#Title: Statistical Analyses
 #Coder: Katie Wardinski (wardinskik@vt.edu)
 #Created: 4/9/2021
 #Updated: 
@@ -22,11 +22,14 @@ library(tidyverse)
 library(car)
 library(ggpmisc)
 library(performance)
+library(agricolae)
 
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv")
+threshold_annual <- read_csv("data/annual_metrics_threshold_0.3.csv")
 annual <- read_csv("data/annual_metrics_2020.csv")
 waterlevel <- read_csv("data/waterLevel_at_sampling_location.csv")
+elev <- read_csv("data/xs_survey.csv")
 
 #Filter to just wetlands and no leaf litter
 Wetlands <- df %>% filter(wetland %in% c("QB","TB","DB","ND"))
@@ -37,6 +40,9 @@ data <- inner_join(df, annual, by=c("wetland","station"))
 
 #Filter water level data to just 2020 water year
 waterlevel <- waterlevel %>% filter(Timestamp > "2019-10-01" & Timestamp < "2020-10-01")
+
+#Join elevation data to threshold annual metrics
+threshold_annual <- left_join(threshold_annual,elev,by=c("wetland","station"))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Exploratory Data Analysis--------------------------------------------------
@@ -87,6 +93,84 @@ shapiro.test(y_n) #shapiro doesn't work when n>5,000 :(
 bartlett.test(y_n~station) #big fail p = 9.4x10^-5
 leveneTest(y_n,station,center=median) #p = 5.97x10-7
 
+### 2.4 2020 Annual Metrics ----------------------------------
+threshold_annual_summary <-threshold_annual %>% 
+  #Group by wetland and sampling station
+  group_by(station) %>% 
+  #Summarise!
+  summarise(#elev
+            mean_elev =  mean(elevation),
+            sd_elev = sd(elevation),
+            se_elev = sd_elev/sqrt(4),
+            #min
+            mean_minWL =  mean(min_waterLevel),
+            sd_minWL = sd(min_waterLevel),
+            se_minWL = sd_minWL/sqrt(4),
+            #mean
+            mean_meanWL = mean(mean_waterLevel),
+            sd_meanWL = sd(mean_waterLevel),
+            se_meanWL = sd_meanWL/sqrt(4),
+            #median
+            mean_medianWL = mean(median_waterLevel),
+            sd_medianWL = sd(median_waterLevel),
+            se_medianWL = sd_medianWL/sqrt(4),
+            #max
+            mean_maxWL = mean(max_waterLevel),
+            sd_maxWL = sd(max_waterLevel),
+            se_maxWL = sd_maxWL/sqrt(4),
+            #dur_day
+            mean_durday = mean(dur_day),
+            sd_durday = sd(dur_day),
+            se_durday = sd_durday/sqrt(4),
+            #n_events
+            mean_nevents = mean(n_events),
+            sd_nevents = sd(n_events),
+            se_nevents = sd_nevents/sqrt(4),
+            #percent sat
+            mean_percentsat = mean(percent_sat),
+            sd_percentsat = sd(percent_sat),
+            sd_percentsat = sd_percentsat/sqrt(4)
+            )
+
+station <- threshold_annual$station
+elev <-    threshold_annual$elevation
+minWL <-   threshold_annual$min_waterLevel
+meanWL <-  threshold_annual$mean_waterLevel
+medianWL <-threshold_annual$median_waterLevel
+maxWL <-   threshold_annual$max_waterLevel
+durday <-  threshold_annual$dur_day
+nevents <- threshold_annual$n_events
+
+#elev
+qqnorm(elev)
+shapiro.test(elev) #normal
+bartlett.test(elev~station) #equal variance
+#min water level
+qqnorm(minWL)
+shapiro.test(minWL) #normal
+bartlett.test(minWL~station) #equal variance
+#mean water level
+qqnorm(meanWL)
+shapiro.test(meanWL) #normal
+bartlett.test(meanWL~station) #equal variance
+#median water level
+qqnorm(medianWL)
+shapiro.test(medianWL) #normal
+bartlett.test(medianWL~station) #equal variance
+#max water level
+qqnorm(maxWL)
+shapiro.test(maxWL) #normal
+bartlett.test(maxWL~station) #equal variance
+#duration
+qqnorm(durday)
+shapiro.test(durday) #not normally distributed
+bartlett.test(durday~station) #not equal variance
+#n events
+qqnorm(nevents)
+shapiro.test(nevents) #not normally distributed
+bartlett.test(nevents~station) #not equal variance
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 ANOVA/TukeyHSD --------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -115,6 +199,46 @@ logEOC.both.HSD <- TukeyHSD(logEOC.both.aov);logEOC.both.HSD
 waterlevel.aov <- aov(y_n~station)
 summary(waterlevel.aov)
 waterlevel.HSD <- TukeyHSD(waterlevel.aov);waterlevel.HSD 
+
+### 3.3 2020 Water Level Metrics
+station <- threshold_annual$station
+elev <-    threshold_annual$elevation
+minWL <-   threshold_annual$min_waterLevel
+meanWL <-  threshold_annual$mean_waterLevel
+medianWL <-threshold_annual$median_waterLevel
+maxWL <-   threshold_annual$max_waterLevel
+durday <-  threshold_annual$dur_day
+nevents <- threshold_annual$n_events
+
+#elev
+elev.aov <-    aov(elev~station);summary(elev.aov)
+elev.HSD <- TukeyHSD(elev.aov);elev.HSD
+elev.HSD <- HSD.test(elev.aov,"station",group=T);elev.HSD 
+#min water level
+minWL.aov <-   aov(minWL~station); summary(minWL.aov)
+minWL.HSD <-   TukeyHSD(minWL.aov); minWL.HSD
+minWL.HSD <- HSD.test(elev.aov,"station",group=T);minWL.HSD
+#mean water level
+meanWL.aov <-  aov(meanWL~station); summary(meanWL.aov)
+meanWL.HSD <-   TukeyHSD(meanWL.aov); meanWL.HSD
+meanWL.HSD <- HSD.test(meanWL.aov,"station",group=T);meanWL.HSD
+#median water level
+medianWL.aov <-aov(medianWL~station); summary(medianWL.aov)
+medianWL.HSD <-   TukeyHSD(medianWL.aov); medianWL.HSD
+medianWL.HSD <- HSD.test(medianWL.aov,"station",group=T);medianWL.HSD
+#max water level
+maxWL.aov <-aov(maxWL~station); summary(medianWL.aov)
+maxWL.HSD <-   TukeyHSD(maxWL.aov); maxWL.HSD
+maxWL.HSD <- HSD.test(maxWL.aov,"station",group=T);maxWL.HSD
+#indundation duration
+durday.aov <-  aov(durday~station); summary(durday.aov)
+durday.HSD <-   TukeyHSD(durday.aov); durday.HSD
+durday.HSD <- HSD.test(durday.aov,"station",group=T);durday.HSD
+#n events
+nevents.aov <- aov(nevents~station); summary(nevents.aov)
+nevents.HSD <-   TukeyHSD(nevents.aov); nevents.HSD
+nevents.HSD <- HSD.test(nevents.aov,"station",group=T);nevents.HSD
+
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
