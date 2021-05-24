@@ -21,6 +21,7 @@ library(lubridate)
 library(tidyverse)
 library(car)
 library(ggpmisc)
+library(performance)
 
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv")
@@ -152,6 +153,8 @@ plot(residuals(lmEOCB))
 lmoverall <- lm(data$EOC_mgC_L~data$mean_waterLevel)
 summary(lmoverall)
 plot(residuals(lmoverall))
+
+compEOC <- compare_performance(lmEOCO,lmEOCA,lmEOCB)
 
 # 5.1.2 SUVA ------------------------------
 lmSUVAO <- lm(O$SUVA254_L_mgm~O$mean_waterLevel)
