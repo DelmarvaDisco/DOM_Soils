@@ -331,9 +331,9 @@ figureP <- ggarrange(Poverall,Pmean,
                        ncol = 1, nrow = 2)
 figureP
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#3.0 Duration Inundation, Wet/Dry Alternations, % of year Saturated  -----------
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#3.0 Duration Inundation, N events, % of year Saturated - using threshold of -0.5m ------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### 3.1 EOC ###---------------------------------------
 #3.1.1 EOC vs Dur ---------------------------------------
@@ -666,7 +666,13 @@ EOCdur <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_dur_day,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_dur_day,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_dur_day,EOC_mgC_L,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_dur_day,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_day,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 25)+
+  stat_regline_equation(data=A,aes(A_dur_day,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 24)+
+  stat_regline_equation(data=B,aes(B_dur_day,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 23)+
+  stat_cor(data=O,aes(O_dur_day,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 25)+
+  stat_cor(data=A,aes(A_dur_day,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 24)+
+  stat_cor(data=B,aes(B_dur_day,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 23)
 
 #transect point
 ggplot() +
@@ -690,7 +696,13 @@ EOCn <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_n_events,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_n_events,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_n_events,EOC_mgC_L,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_n_events,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_n_events,EOC_mgC_L,col=Generic_Horizon),label.x = 1,label.y = 25)+
+  stat_regline_equation(data=A,aes(A_n_events,EOC_mgC_L,col=Generic_Horizon),label.x = 1,label.y = 24)+
+  stat_regline_equation(data=B,aes(B_n_events,EOC_mgC_L,col=Generic_Horizon),label.x = 1,label.y = 23)+
+  stat_cor(data=O,aes(O_n_events,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 25)+
+  stat_cor(data=A,aes(A_n_events,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 24)+
+  stat_cor(data=B,aes(B_n_events,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 23)
 
 #transect point
 EOCstat <- ggplot() +
@@ -715,7 +727,13 @@ EOCpercent <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_percent_sat,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_percent_sat,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_percent_sat,EOC_mgC_L,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_percent_sat,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_percent_sat,EOC_mgC_L,col=Generic_Horizon),label.x = 0.25,label.y = 25)+
+  stat_regline_equation(data=A,aes(A_percent_sat,EOC_mgC_L,col=Generic_Horizon),label.x = 0.25,label.y = 24)+
+  stat_regline_equation(data=B,aes(B_percent_sat,EOC_mgC_L,col=Generic_Horizon),label.x = 0.25,label.y = 23)+
+  stat_cor(data=O,aes(O_percent_sat,EOC_mgC_L,col=Generic_Horizon),label.x = 0.5,label.y = 25)+
+  stat_cor(data=A,aes(A_percent_sat,EOC_mgC_L,col=Generic_Horizon),label.x = 0.5,label.y = 24)+
+  stat_cor(data=B,aes(B_percent_sat,EOC_mgC_L,col=Generic_Horizon),label.x = 0.5,label.y = 23)
 
 #transect point
 ggplot() +
@@ -749,7 +767,14 @@ FIdur <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_dur_day,FI,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_dur_day,FI,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_dur_day,FI,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_dur_day,FI,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_day,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 1.89)+
+  stat_regline_equation(data=A,aes(A_dur_day,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 1.87)+
+  stat_regline_equation(data=B,aes(B_dur_day,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 1.85)+
+  stat_cor(data=O,aes(O_dur_day,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.89)+
+  stat_cor(data=A,aes(A_dur_day,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.87)+
+  stat_cor(data=B,aes(B_dur_day,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.85)
+
 
 #transect point
 ggplot() +
@@ -773,7 +798,13 @@ FIn <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_n_events,FI,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_n_events,FI,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_n_events,FI,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_n_events,FI,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_n_events,FI,col=Generic_Horizon),label.x = 1,label.y = 1.89)+
+  stat_regline_equation(data=A,aes(A_n_events,FI,col=Generic_Horizon),label.x = 1,label.y = 1.87)+
+  stat_regline_equation(data=B,aes(B_n_events,FI,col=Generic_Horizon),label.x = 1,label.y = 1.85)+
+  stat_cor(data=O,aes(O_n_events,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.89)+
+  stat_cor(data=A,aes(A_n_events,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.87)+
+  stat_cor(data=B,aes(B_n_events,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.85)
 
 #transect point
 FIstat <- ggplot() +
@@ -798,7 +829,13 @@ FIpercent <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_percent_sat,FI,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_percent_sat,FI,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_percent_sat,FI,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_percent_sat,FI,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_percent_sat,FI,col=Generic_Horizon),label.x = 0.25,label.y = 1.89)+
+  stat_regline_equation(data=A,aes(A_percent_sat,FI,col=Generic_Horizon),label.x = 0.25,label.y = 1.87)+
+  stat_regline_equation(data=B,aes(B_percent_sat,FI,col=Generic_Horizon),label.x = 0.25,label.y = 1.85)+
+  stat_cor(data=O,aes(O_percent_sat,FI,col=Generic_Horizon),label.x = 0.5,label.y = 1.89)+
+  stat_cor(data=A,aes(A_percent_sat,FI,col=Generic_Horizon),label.x = 0.5,label.y = 1.87)+
+  stat_cor(data=B,aes(B_percent_sat,FI,col=Generic_Horizon),label.x = 0.5,label.y = 1.85)
 
 #transect point
 ggplot() +
@@ -832,7 +869,14 @@ SUVAdur <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_dur_day,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_dur_day,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_dur_day,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_dur_day,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_day,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = 0.1,label.y = 0.6)+
+  stat_regline_equation(data=A,aes(A_dur_day,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = 0.1,label.y = 0.5)+
+  stat_regline_equation(data=B,aes(B_dur_day,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = 0.1,label.y = 0.4)+
+  stat_cor(data=O,aes(O_dur_day,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = 0.3,label.y = 0.6)+
+  stat_cor(data=A,aes(A_dur_day,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = 0.3,label.y = 0.5)+
+  stat_cor(data=B,aes(B_dur_day,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = 0.3,label.y = 0.4)
+SUVAdur
 
 #transect point
 ggplot() +
@@ -856,7 +900,14 @@ SUVAn <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_n_events,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_n_events,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_n_events,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_n_events,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_n_events,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = "center",label.y = 3.0)+
+  stat_regline_equation(data=A,aes(A_n_events,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = "center",label.y = 2.9)+
+  stat_regline_equation(data=B,aes(B_n_events,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = "center",label.y = 2.8)+
+  stat_cor(data=O,aes(O_n_events,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = 0.75,label.y = 3.0)+
+  stat_cor(data=A,aes(A_n_events,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = 0.75,label.y = 2.9)+
+  stat_cor(data=B,aes(B_n_events,SUVA254_L_mgm,col=Generic_Horizon),label.x.npc = 0.75,label.y = 2.8)
+SUVAn
 
 #transect point
 SUVAstat <- ggplot() +
@@ -881,7 +932,14 @@ SUVApercent <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_percent_sat,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_percent_sat,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_percent_sat,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_percent_sat,SUVA254_L_mgm,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_percent_sat,SUVA254_L_mgm,col=Generic_Horizon),label.x = 0.5,label.y = 1.0)+
+  stat_regline_equation(data=A,aes(A_percent_sat,SUVA254_L_mgm,col=Generic_Horizon),label.x = 0.5,label.y = 0.9)+
+  stat_regline_equation(data=B,aes(B_percent_sat,SUVA254_L_mgm,col=Generic_Horizon),label.x = 0.5,label.y = 0.8)+
+  stat_cor(data=O,aes(O_percent_sat,SUVA254_L_mgm,col=Generic_Horizon),label.x = 0.75,label.y = 1.0)+
+  stat_cor(data=A,aes(A_percent_sat,SUVA254_L_mgm,col=Generic_Horizon),label.x = 0.75,label.y = 0.9)+
+  stat_cor(data=B,aes(B_percent_sat,SUVA254_L_mgm,col=Generic_Horizon),label.x = 0.75,label.y = 0.8)
+SUVApercent
 
 #transect point
 ggplot() +
@@ -915,7 +973,14 @@ HIXdur <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_dur_day,HIX,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_dur_day,HIX,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_dur_day,HIX,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_dur_day,HIX,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_day,HIX,col=Generic_Horizon),label.x.npc = 0.1,label.y = 0.60)+
+  stat_regline_equation(data=A,aes(A_dur_day,HIX,col=Generic_Horizon),label.x.npc = 0.1,label.y = 0.59)+
+  stat_regline_equation(data=B,aes(B_dur_day,HIX,col=Generic_Horizon),label.x.npc = 0.1,label.y = 0.58)+
+  stat_cor(data=O,aes(O_dur_day,HIX,col=Generic_Horizon),label.x.npc = 0.3,label.y = 0.60)+
+  stat_cor(data=A,aes(A_dur_day,HIX,col=Generic_Horizon),label.x.npc = 0.3,label.y = 0.59)+
+  stat_cor(data=B,aes(B_dur_day,HIX,col=Generic_Horizon),label.x.npc = 0.3,label.y = 0.58)
+HIXdur
 
 #transect point
 ggplot() +
@@ -939,7 +1004,14 @@ HIXn <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_n_events,HIX,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_n_events,HIX,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_n_events,HIX,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_n_events,HIX,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_n_events,HIX,col=Generic_Horizon),label.x.npc = "center",label.y = 0.60)+
+  stat_regline_equation(data=A,aes(A_n_events,HIX,col=Generic_Horizon),label.x.npc = "center",label.y = 0.59)+
+  stat_regline_equation(data=B,aes(B_n_events,HIX,col=Generic_Horizon),label.x.npc = "center",label.y = 0.58)+
+  stat_cor(data=O,aes(O_n_events,HIX,col=Generic_Horizon),label.x.npc = 0.75,label.y = 0.60)+
+  stat_cor(data=A,aes(A_n_events,HIX,col=Generic_Horizon),label.x.npc = 0.75,label.y = 0.59)+
+  stat_cor(data=B,aes(B_n_events,HIX,col=Generic_Horizon),label.x.npc = 0.75,label.y = 0.58)
+HIXn
 
 #transect point
 HIXstat <- ggplot() +
@@ -964,7 +1036,14 @@ HIXpercent <- ggplot() +
   theme_bw()+
   geom_smooth(data=O,aes(O_percent_sat,HIX,col=Generic_Horizon), method = 'lm')+
   geom_smooth(data=A,aes(A_percent_sat,HIX,col=Generic_Horizon), method = 'lm')+
-  geom_smooth(data=B,aes(B_percent_sat,HIX,col=Generic_Horizon), method = 'lm')
+  geom_smooth(data=B,aes(B_percent_sat,HIX,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_percent_sat,HIX,col=Generic_Horizon),label.x = 0.25,label.y = 0.60)+
+  stat_regline_equation(data=A,aes(A_percent_sat,HIX,col=Generic_Horizon),label.x = 0.25,label.y = 0.59)+
+  stat_regline_equation(data=B,aes(B_percent_sat,HIX,col=Generic_Horizon),label.x = 0.25,label.y = 0.58)+
+  stat_cor(data=O,aes(O_percent_sat,HIX,col=Generic_Horizon),label.x = 0.5,label.y = 0.60)+
+  stat_cor(data=A,aes(A_percent_sat,HIX,col=Generic_Horizon),label.x = 0.5,label.y = 0.59)+
+  stat_cor(data=B,aes(B_percent_sat,HIX,col=Generic_Horizon),label.x = 0.5,label.y = 0.58)
+HIXpercent
 
 #transect point
 ggplot() +
@@ -984,6 +1063,170 @@ figureHIX <- ggarrange( HIXstat,
                          labels = c("A", "B","C","D"),
                          ncol = 2, nrow = 2)
 figureHIX
+
+### 4.5 SSR ### -------------------------------------------
+#4.5.1 SSR vs Dur --------------------------------------------
+SSRdur <- ggplot() +
+  geom_point(data=O, aes(O_dur_day,SSR,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_day,SSR,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_day,SSR,col=Generic_Horizon),size=4)+
+  xlab("Horizon Saturation Duration (d)") +
+  ylab("SSR") + 
+  ggtitle("Wetland SSR vs Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_day,SSR,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_day,SSR,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_day,SSR,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_day,SSR,col=Generic_Horizon),label.x.npc = 0.1,label.y = 4.0)+
+  stat_regline_equation(data=A,aes(A_dur_day,SSR,col=Generic_Horizon),label.x.npc = 0.1,label.y = 3.9)+
+  stat_regline_equation(data=B,aes(B_dur_day,SSR,col=Generic_Horizon),label.x.npc = 0.1,label.y = 3.8)+
+  stat_cor(data=O,aes(O_dur_day,SSR,col=Generic_Horizon),label.x.npc = 0.3,label.y = 4.0)+
+  stat_cor(data=A,aes(A_dur_day,SSR,col=Generic_Horizon),label.x.npc = 0.3,label.y = 3.9)+
+  stat_cor(data=B,aes(B_dur_day,SSR,col=Generic_Horizon),label.x.npc = 0.3,label.y = 3.8)
+SSRdur
+
+#4.5.2 SSR vs N events ---------------------------------------
+#horizon
+SSRn <- ggplot() +
+  geom_point(data=O, aes(O_n_events,SSR,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_n_events,SSR,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_n_events,SSR,col=Generic_Horizon),size=4)+
+  xlab("N events in each horizon") +
+  ylab("SSR") + 
+  ggtitle("Wetland SSR vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_n_events,SSR,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_n_events,SSR,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_n_events,SSR,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_n_events,SSR,col=Generic_Horizon),label.x.npc = "center",label.y = 4.0)+
+  stat_regline_equation(data=A,aes(A_n_events,SSR,col=Generic_Horizon),label.x.npc = "center",label.y = 3.9)+
+  stat_regline_equation(data=B,aes(B_n_events,SSR,col=Generic_Horizon),label.x.npc = "center",label.y = 3.8)+
+  stat_cor(data=O,aes(O_n_events,SSR,col=Generic_Horizon),label.x.npc = 0.75,label.y = 4.0)+
+  stat_cor(data=A,aes(A_n_events,SSR,col=Generic_Horizon),label.x.npc = 0.75,label.y = 3.9)+
+  stat_cor(data=B,aes(B_n_events,SSR,col=Generic_Horizon),label.x.npc = 0.75,label.y = 3.8)
+SSRn
+
+#transect
+SSRstat <- ggplot() +
+  geom_point(data=O, aes(O_n_events,SSR,col=station),size=4)+
+  geom_point(data=A, aes(A_n_events,SSR,col=station),size=4)+
+  geom_point(data=B, aes(B_n_events,SSR,col=station),size=4)+
+  xlab("N events in each horizon") +
+  ylab("SSR") + 
+  ggtitle("Wetland SSR vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()
+SSRstat
+
+#4.5.3 SSR vs % yr Sat ---------------------------------------
+SSRpercent <- ggplot() +
+  geom_point(data=O, aes(O_percent_sat,SSR,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_percent_sat,SSR,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_percent_sat,SSR,col=Generic_Horizon),size=4)+
+  xlab("% year horizon saturated") +
+  ylab("SSR") + 
+  ggtitle("Wetland SSR vs % of year Horizon is Saturated") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_percent_sat,SSR,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_percent_sat,SSR,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_percent_sat,SSR,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_percent_sat,SSR,col=Generic_Horizon),label.x = 0.25,label.y = 4.0)+
+  stat_regline_equation(data=A,aes(A_percent_sat,SSR,col=Generic_Horizon),label.x = 0.25,label.y = 3.9)+
+  stat_regline_equation(data=B,aes(B_percent_sat,SSR,col=Generic_Horizon),label.x = 0.25,label.y = 3.8)+
+  stat_cor(data=O,aes(O_percent_sat,SSR,col=Generic_Horizon),label.x = 0.5,label.y = 4.0)+
+  stat_cor(data=A,aes(A_percent_sat,SSR,col=Generic_Horizon),label.x = 0.5,label.y = 3.9)+
+  stat_cor(data=B,aes(B_percent_sat,SSR,col=Generic_Horizon),label.x = 0.5,label.y = 3.8)
+SSRpercent
+
+#4.5.4 SSR Plot ---------------------------------------------
+figureSSR <- ggarrange( SSRstat, 
+                        SSRdur, 
+                        SSRn, 
+                        SSRpercent,
+                        labels = c("A", "B","C","D"),
+                        ncol = 2, nrow = 2)
+figureSSR
+
+### 4.6 %Protein ###---------------------------------------
+#4.6.1 %Protein vs Dur --------------------------------------------
+Pdur <- ggplot() +
+  geom_point(data=O, aes(O_dur_day,Percent_Protein,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_day,Percent_Protein,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_day,Percent_Protein,col=Generic_Horizon),size=4)+
+  xlab("Horizon Saturation Duration (d)") +
+  ylab("% Protein") + 
+  ggtitle("Wetland % Protein vs Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_day,Percent_Protein,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_day,Percent_Protein,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_day,Percent_Protein,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_day,Percent_Protein,col=Generic_Horizon),label.x.npc = 0.1,label.y = 0.20)+
+  stat_regline_equation(data=A,aes(A_dur_day,Percent_Protein,col=Generic_Horizon),label.x.npc = 0.1,label.y = 0.19)+
+  stat_regline_equation(data=B,aes(B_dur_day,Percent_Protein,col=Generic_Horizon),label.x.npc = 0.1,label.y = 0.18)+
+  stat_cor(data=O,aes(O_dur_day,Percent_Protein,col=Generic_Horizon),label.x.npc = 0.3,label.y = 0.20)+
+  stat_cor(data=A,aes(A_dur_day,Percent_Protein,col=Generic_Horizon),label.x.npc = 0.3,label.y = 0.19)+
+  stat_cor(data=B,aes(B_dur_day,Percent_Protein,col=Generic_Horizon),label.x.npc = 0.3,label.y = 0.18)
+Pdur
+
+#4.6.2 %Protein vs N events ---------------------------------------
+#horizon
+Pn <- ggplot() +
+  geom_point(data=O, aes(O_n_events,Percent_Protein,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_n_events,Percent_Protein,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_n_events,Percent_Protein,col=Generic_Horizon),size=4)+
+  xlab("N events in each horizon") +
+  ylab("% Protein") + 
+  ggtitle("Wetland % Protein vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_n_events,Percent_Protein,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_n_events,Percent_Protein,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_n_events,Percent_Protein,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_n_events,Percent_Protein,col=Generic_Horizon),label.x.npc = "left",label.y = 0.20)+
+  stat_regline_equation(data=A,aes(A_n_events,Percent_Protein,col=Generic_Horizon),label.x.npc = "left",label.y = 0.19)+
+  stat_regline_equation(data=B,aes(B_n_events,Percent_Protein,col=Generic_Horizon),label.x.npc = "left",label.y = 0.18)+
+  stat_cor(data=O,aes(O_n_events,Percent_Protein,col=Generic_Horizon),label.x.npc = 0.25,label.y = 0.20)+
+  stat_cor(data=A,aes(A_n_events,Percent_Protein,col=Generic_Horizon),label.x.npc = 0.25,label.y = 0.19)+
+  stat_cor(data=B,aes(B_n_events,Percent_Protein,col=Generic_Horizon),label.x.npc = 0.25,label.y = 0.18)
+Pn
+
+#transect
+Pstat <- ggplot() +
+  geom_point(data=O, aes(O_n_events,Percent_Protein,col=station),size=4)+
+  geom_point(data=A, aes(A_n_events,Percent_Protein,col=station),size=4)+
+  geom_point(data=B, aes(B_n_events,Percent_Protein,col=station),size=4)+
+  xlab("N events in each horizon") +
+  ylab("% Protein") + 
+  ggtitle("Wetland % Protein vs Number of Horizon Specific Saturation Events") + 
+  theme_bw()
+Pstat
+
+#4.6.3 %Protein vs % yr Sat ---------------------------------------
+Ppercent <- ggplot() +
+  geom_point(data=O, aes(O_percent_sat,Percent_Protein,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_percent_sat,Percent_Protein,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_percent_sat,Percent_Protein,col=Generic_Horizon),size=4)+
+  xlab("% year horizon saturated") +
+  ylab("% Protein") + 
+  ggtitle("Wetland % Protein vs % of year Horizon is Saturated") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_percent_sat,Percent_Protein,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_percent_sat,Percent_Protein,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_percent_sat,Percent_Protein,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_percent_sat,Percent_Protein,col=Generic_Horizon),label.x = 0,label.y = 0.20)+
+  stat_regline_equation(data=A,aes(A_percent_sat,Percent_Protein,col=Generic_Horizon),label.x = 0,label.y = 0.19)+
+  stat_regline_equation(data=B,aes(B_percent_sat,Percent_Protein,col=Generic_Horizon),label.x = 0,label.y = 0.18)+
+  stat_cor(data=O,aes(O_percent_sat,Percent_Protein,col=Generic_Horizon),label.x = 0.25,label.y = 0.20)+
+  stat_cor(data=A,aes(A_percent_sat,Percent_Protein,col=Generic_Horizon),label.x = 0.25,label.y = 0.19)+
+  stat_cor(data=B,aes(B_percent_sat,Percent_Protein,col=Generic_Horizon),label.x = 0.25,label.y = 0.18)
+Ppercent
+
+#4.6.4 %Protein Plot ---------------------------------------------
+figureP <- ggarrange(   Pstat, 
+                        Pdur, 
+                        Pn, 
+                        Ppercent,
+                        labels = c("A", "B","C","D"),
+                        ncol = 2, nrow = 2)
+figureP
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #5.0 Other Plots -------------------------------------
