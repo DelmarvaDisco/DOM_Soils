@@ -136,7 +136,7 @@ soil_annual_metrics<-soil_annual %>%
             A_n_events          = sum(Aevent,  na.rm = T),
             B_dur_day           = sum(inunB,   na.rm=T),
             B_percent_sat       =(sum(inunB,   na.rm=T)/n_observations),
-            B_n_events          = sum(Bevent,  na.rm = T),)
+            B_n_events          = sum(Bevent,  na.rm = T))
 
 #Override metrics for DB KW-1W, ND KW-1W, and ND KW-2E
 #because these sites had O/A combined horizons so if A is wet, consider O wet also
