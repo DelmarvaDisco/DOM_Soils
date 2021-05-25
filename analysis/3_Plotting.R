@@ -233,9 +233,16 @@ hyd + dep + dur + freq
 #load ESOM data
 soil <- read_csv("data//R_Extraction_Results_All.csv") 
 #filter out channel, forested flat, leaf litter
-soil <-soil %>% filter(wetland == 'DB'|'TB'|'QB'|'ND' & Month == '2020-09')
+soil <-soil %>% filter(wetland %in% c("QB","TB","DB","ND") & Month == '2020-09')
+
+#Specify wetland
+QB <- soil %>% filter(wetland == "QB")
+TB <- soil %>% filter(wetland == "TB")
+DB <- soil %>% filter(wetland == "DB")
+ND <- soil %>% filter(wetland == "ND")
 
 #soil profile specific packages
+#note that these mask dplyr abilities so do all filtering before using
 library(aqp)
 library(soilDB)
 library(sharpshootR)
@@ -245,20 +252,16 @@ library(latticeExtra)
 library(Hmisc)
 
 
-depths(SoilNoLL) <- Sample.Name ~ Start..cm. + End..cm.
-str(SoilNoLL)
-class(SoilNoLL)
-summary(SoilNoLL)
-plot(SoilNoLL,name="Sample.Name")
-
-#North Dog Bone
-depths(ND) <- Point ~ Start..cm. + End..cm.
-par(mar=c(0,0,3,0)) 
-colfunc <- colorRampPalette(c('white', 'purple'))
-plot(ND,name="Sample.Name",color=colfunc(length(ND$EOC..mg.C.L.)))
-title(main="ND",line=-1)
-
-depths(ND) <- Point ~ Start..cm. + End..cm.
-par(mar=c(0,0,5,0)) 
-plotSPC(ND,name="Sample.Name",color="EOC..mg.C.L.",col.palette=RColorBrewer::brewer.pal(9, 'YlOrRd'),col.label="EOC (mg C/L)") 
-title(main="North Dog Bone",line=3)
+depths(ND) <- station ~ Horizon_Start_cm + Horizon_End_cm
+str(ND)
+class(ND)
+summary(ND)
+par(mar=c(0,0,5,2)) 
+plotSPC(ND,
+        name="Horizon",
+        color="EOC_mgC_L",
+        col.palette=RColorBrewer::brewer.pal(9, 'OrRd'),
+        col.label="EOC (mg C/L)",
+        cex.names=0.9,
+        width = 0.25) 
+title(main="ND Sept EOC",line=3)
