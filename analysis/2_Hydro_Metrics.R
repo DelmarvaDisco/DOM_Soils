@@ -226,16 +226,34 @@ soil_annual <- soil_annual %>%
          B_id_event = cumsum(Bevent))
 
 #Metrics for each event
-#Estimate metric for each event
-soil_event_metrics <- soil_annual %>% 
-  group_by(wetland, station, id_event) %>% #how to incorporate each horiz column 
+#Estimate metric for each event and horizon
+soil_Oevent_metrics <- soil_annual %>% 
+  group_by(wetland, station, O_id_event) %>% 
   summarise(
-    duration = max(Timestamp)-min(Timestamp))
+    Oduration = max(Timestamp)-min(Timestamp))
+
+soil_Aevent_metrics <- soil_annual %>% 
+  group_by(wetland, station, A_id_event) %>%
+  summarise(
+    Aduration = max(Timestamp)-min(Timestamp))
+
+soil_Bevent_metrics <- soil_annual %>% 
+  group_by(wetland, station, B_id_event) %>% 
+  summarise(
+    Bduration = max(Timestamp)-min(Timestamp))
+
+#join tables together
+soil_event_metrics <- left_join(soil_Oevent_metrics,soil_Aevent_metrics,by = c("wetland", "station"))
+soil_event_metrics <- left_join(soil_event_metrics,soil_Bevent_metrics,by=c("wetland", "station"))
 #Summarize events
 soil_event_summary <- soil_event_metrics %>% 
   group_by(wetland, station) %>% 
-  summarise(dur_mean = mean(duration, na.rm=T),
-            n_events = n())
+  summarise(O_dur_mean = mean(Oduration, na.rm=T),
+            A_dur_mean = mean(Aduration, na.rm=T),
+            B_dur_mean = mean(Bduration, na.rm=T),
+            O_n_events = n(),
+            A_n_events = n(),
+            B_n_events = n())
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 Export data----------------------------------------------------------------
