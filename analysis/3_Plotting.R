@@ -15,6 +15,7 @@ remove(list=ls())
 library(patchwork)
 library(lubridate)
 library(tidyverse)
+library(dplyr)
 
 #load data
 #depth<-read_csv("data//waterLevel_at_sampling_location.csv") #all data
@@ -225,4 +226,39 @@ dev.off()
 
 hyd + dep + dur + freq
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 3.0 Soil Profile Plots -------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#load ESOM data
+soil <- read_csv("data//R_Extraction_Results_All.csv") 
+#filter out channel, forested flat, leaf litter
+soil <-soil %>% filter(wetland == 'DB'|'TB'|'QB'|'ND' & Month == '2020-09')
+
+#soil profile specific packages
+library(aqp)
+library(soilDB)
+library(sharpshootR)
+library(RColorBrewer)
+library(reshape)
+library(latticeExtra)
+library(Hmisc)
+
+
+depths(SoilNoLL) <- Sample.Name ~ Start..cm. + End..cm.
+str(SoilNoLL)
+class(SoilNoLL)
+summary(SoilNoLL)
+plot(SoilNoLL,name="Sample.Name")
+
+#North Dog Bone
+depths(ND) <- Point ~ Start..cm. + End..cm.
+par(mar=c(0,0,3,0)) 
+colfunc <- colorRampPalette(c('white', 'purple'))
+plot(ND,name="Sample.Name",color=colfunc(length(ND$EOC..mg.C.L.)))
+title(main="ND",line=-1)
+
+depths(ND) <- Point ~ Start..cm. + End..cm.
+par(mar=c(0,0,5,0)) 
+plotSPC(ND,name="Sample.Name",color="EOC..mg.C.L.",col.palette=RColorBrewer::brewer.pal(9, 'YlOrRd'),col.label="EOC (mg C/L)") 
+title(main="North Dog Bone",line=3)
