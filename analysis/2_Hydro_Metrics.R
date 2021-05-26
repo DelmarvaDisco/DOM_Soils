@@ -21,7 +21,7 @@ df<-read_csv('data/waterLevel_at_sampling_location.csv')
 soil <- read_csv('data/20210516_KW_SoilHorizElev.csv')
 
 #Filter to desired water year
-#df <- df %>% filter(Timestamp > "2019-10-01" & Timestamp < "2020-10-01")
+df <- df %>% filter(Timestamp > "2019-10-01" & Timestamp < "2020-10-01")
 
 #Identify threshold of interest
 threshold<- -0.3
@@ -63,6 +63,7 @@ annual<-annual %>%
             n_events          = sum(event,  na.rm = T),
             CV_waterLevel     = cv(y_n, na.rm = T))
 
+
 #2.2 Estimate Monthly Metrics---------------------------------------------------
 #Sort based on site & station
 monthly <- df %>% arrange(wetland, station, Timestamp)
@@ -101,7 +102,7 @@ monthly<-monthly %>% mutate(n_events = if_else(dur_day>0 & n_events==0, 1, n_eve
 join <- left_join(df,soil,by=c("wetland","station"))
 
 #Sort based on site & station
-soil_annual <- join %>% arrange(wetland, station, Timestamp)
+soil_annual <- join %>% arrange(wetland, station, Timestamp) %>% drop_na(y_n)
 
 #Create column with binary indicator of saturation in each horizon
 soil_annual<- soil_annual %>% mutate(inunO = if_else(y_n>O_lower,1,0),
@@ -142,16 +143,16 @@ soil_annual_metrics<-soil_annual %>%
 #because these sites had O/A combined horizons so if A is wet, consider O wet also
 
 #DB KW-1W 
-soil_annual_metrics[1,4] = 293 #O_dur_day = A_dur_day
-soil_annual_metrics[1,5] = 0.8027397 #O_percent_sat = A_percent_sat
+soil_annual_metrics[1,4] = soil_annual_metrics[1,7] #O_dur_day = A_dur_day
+soil_annual_metrics[1,5] = soil_annual_metrics[1,8] #O_percent_sat = A_percent_sat
 
 #ND KW-1W
-soil_annual_metrics[5,4] = 295 #O_dur_day = A_dur_day
-soil_annual_metrics[5,5] = 0.8082192 #O_percent_sat = A_percent_sat
+soil_annual_metrics[5,4] = soil_annual_metrics[5,7] #O_dur_day = A_dur_day
+soil_annual_metrics[5,5] = soil_annual_metrics[5,8] #O_percent_sat = A_percent_sat
 
 #ND KW-2E
-soil_annual_metrics[6,4] = 264 #O_dur_day = A_dur_day
-soil_annual_metrics[6,5] = 0.7232877 #O_percent_sat = A_percent_sat
+soil_annual_metrics[6,4] = soil_annual_metrics[6,7] #O_dur_day = A_dur_day
+soil_annual_metrics[6,5] = soil_annual_metrics[6,8] #O_percent_sat = A_percent_sat
 
 
 #2.4 Trial Run Event Duration Calc------------------------------------------------
@@ -264,8 +265,12 @@ write_csv(monthly, "data//monthly_metrics.csv")
 #for 2019-2020 water year
 write_csv(annual, "data//annual_metrics_2020.csv")
 
+#for all data
+write_csv(annual,"data//annual_metrics_2017-2020_threshold.csv")
+
 #save 2019-2020 water year data as separate csv
 write_csv(df, "data//2020wateryear.csv")
 
 #Horizon annual metrics
-write_csv(soil_annual_metrics, "data//horizon_annual_metrics.csv")
+write_csv(soil_annual_metrics, "data//horizon_annual_metrics_2020.csv")
+write_csv(soil_annual_metrics,"data//horizon_annual_metrics_2017-2020.csv")
