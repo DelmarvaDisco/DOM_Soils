@@ -21,7 +21,7 @@ library(ggpubr)
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv")
 annual <- read_csv("data/annual_metrics_2020.csv") #annual_metrics depends on what water year 
-soil <- read_csv("data/horizon_annual_metrics.csv")
+soil <- read_csv("data/horizon_annual_metrics_2020.csv")
 
 #Join tables
 #extraction results and annual WL metrics
