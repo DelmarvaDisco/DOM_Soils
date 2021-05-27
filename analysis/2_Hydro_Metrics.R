@@ -24,7 +24,7 @@ soil <- read_csv('data/20210516_KW_SoilHorizElev.csv')
 df <- df %>% filter(Timestamp > "2019-10-01" & Timestamp < "2020-10-01")
 
 #Identify threshold of interest
-threshold<- -0.3
+threshold<- -0.5
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Estimate metrics-----------------------------------------------------------
@@ -45,8 +45,8 @@ annual<-annual %>%
                          1, 0))
 
 #Checking number of observations for each site and station
-observ <- annual %>% group_by(wetland,station) %>% 
-          summarise(n_obs = length(Timestamp))
+#observ <- annual %>% group_by(wetland,station) %>% 
+          #summarise(n_obs = length(Timestamp))
 
 #Summarize Data
 annual<-annual %>% 
@@ -259,18 +259,21 @@ soil_event_summary <- soil_event_metrics %>%
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 Export data----------------------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-write_csv(annual, "data//annual_metrics_threshold_0.3.csv")
-write_csv(monthly, "data//monthly_metrics.csv")
+#original code
+write_csv(annual, "data//annual_metrics_threshold.csv")
+write_csv(monthly, "data//monthly_metrics_thredhold.csv")
 
-#for 2019-2020 water year
-write_csv(annual, "data//annual_metrics_2020.csv")
+#save 2020 water year data as separate csv
+write_csv(df, "data//waterLevel_2020only.csv")
 
-#for all data
-write_csv(annual,"data//annual_metrics_2017-2020_threshold.csv")
+#for 2020 water year
+write_csv(annual, "data//annual_metrics_2020.csv") #2020 annual metrics using threshold = -0.5
+write_csv(soil_annual_metrics, "data//horizon_annual_metrics_2020.csv") #2020 annual metrics for soil horizons
 
-#save 2019-2020 water year data as separate csv
-write_csv(df, "data//2020wateryear.csv")
+#for 2017-2020 water years
+write_csv(annual,"data//annual_metrics_2017-2020_threshold.csv") #2017-20 annual metrics using threshold = -0.5
+write_csv(soil_annual_metrics,"data//horizon_annual_metrics_2017-2020.csv") #2017-20 annual metrics for soil horizons
 
-#Horizon annual metrics
-write_csv(soil_annual_metrics, "data//horizon_annual_metrics_2020.csv")
-write_csv(soil_annual_metrics,"data//horizon_annual_metrics_2017-2020.csv")
+
+
+
