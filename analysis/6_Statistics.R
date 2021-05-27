@@ -26,8 +26,8 @@ library(agricolae)
 
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv")
-threshold_annual <- read_csv("data/annual_metrics_threshold_0.3.csv")
-annual <- read_csv("data/annual_metrics_2020.csv")
+threshold_annual <- read_csv("data/annual_metrics_2020_threshold.csv")
+soil_annual <- read_csv("data/horizon_annual_metrics_2020.csv")
 waterlevel <- read_csv("data/waterLevel_at_sampling_location.csv")
 elev <- read_csv("data/xs_survey.csv")
 
