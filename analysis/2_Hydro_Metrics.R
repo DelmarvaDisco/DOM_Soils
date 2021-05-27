@@ -21,7 +21,7 @@ df<-read_csv('data/waterLevel_at_sampling_location.csv')
 soil <- read_csv('data/20210516_KW_SoilHorizElev.csv')
 
 #Filter to desired water year
-df <- df %>% filter(Timestamp > "2019-10-01" & Timestamp < "2020-10-01")
+df <- df %>% filter(Timestamp > "2019-09-30" & Timestamp < "2020-10-01")
 
 #Identify threshold of interest
 threshold<- -0.5
