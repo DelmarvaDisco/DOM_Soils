@@ -1,9 +1,9 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#Title: ESOM and Hydro Metrics
+#Title: ESOM and Hydro Metrics 2017-2020
 #Coder: Katie Wardinski (wardinskik@vt.edu)
 #Created: 4/1/2021
-#Updated: 4/9/2021
-#Purpose: How do hydrologic metrics influence ESOM?
+#Updated: 5/27/2021
+#Purpose: How do "long term" (2017-2020 data) hydrologic metrics influence ESOM?
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
