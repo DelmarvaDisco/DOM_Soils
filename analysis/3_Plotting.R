@@ -19,8 +19,8 @@ library(dplyr)
 
 #load data
 #depth<-read_csv("data//waterLevel_at_sampling_location.csv") #all data
-depth <- read_csv("data//2020wateryear.csv") #2020 water year
-metrics<-read_csv("data//annual_metrics_2020.csv")
+depth <- read_csv("data//waterLevel_2020only.csv") #2020 water year
+metrics<-read_csv("data//annual_metrics_2020_threshold.csv")
 
 #Remove SC-A because it was inundaded and not samples
 #depth<-depth %>% filter(!(station == 'KW-4U' & wetland == 'QB'))
