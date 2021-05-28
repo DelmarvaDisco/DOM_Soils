@@ -21,7 +21,7 @@ df<-read_csv('data/waterLevel_at_sampling_location.csv')
 soil <- read_csv('data/20210516_KW_SoilHorizElev.csv')
 
 #Filter to desired water year
-df <- df %>% filter(Timestamp > "2019-09-30" & Timestamp < "2020-10-01")
+#df <- df %>% filter(Timestamp > "2019-09-30" & Timestamp < "2020-10-01")
 
 #Identify threshold of interest
 threshold<- -0.5
@@ -155,7 +155,7 @@ soil_annual_metrics[6,4] = soil_annual_metrics[6,7] #O_dur_day = A_dur_day
 soil_annual_metrics[6,5] = soil_annual_metrics[6,8] #O_percent_sat = A_percent_sat
 
 
-#2.4 Trial Run Event Duration Calc------------------------------------------------
+#2.4 Threshold Event Duration Calc------------------------------------------------
 #using all 3 years of data and generic threshold for now
 #Sort based on site & station
 df <- df %>% arrange(wetland, station, Timestamp) %>% drop_na()
@@ -163,34 +163,40 @@ df <- df %>% arrange(wetland, station, Timestamp) %>% drop_na()
 #Define periods where water level is above threshold
 df <- df %>% mutate(inun = if_else(y_n>threshold, 1,0))
 
-#Define when each event starts or ends - use lag (end) instead of lead (start)
+#Define when each event starts or ends - lead or lag functions
+#Here I use lead and say, if inundation is currently 0 and the next day is 1, then the event starts
 df <- df %>% 
     mutate(event_start= if_else(wetland == lead(wetland) &
                                  station==lead(station) & 
                                  inun==0 & 
                                  lead(inun)==1,1,0))
 
-#Define event id - df already arranged
+#Define event id
 df <- df %>% 
   group_by(wetland, station) %>% 
   #cumulative sum by event start to create event id
-    mutate(id_event = cumsum(event_start)) #%>% 
+    mutate(id_event = cumsum(event_start)) %>% 
   #remove event id from rows below threshold
-    #mutate(id_event = id_event*event_start)
+    mutate(id_event = inun*id_event)  
+
+#Remove periods not in event (i.e. any time event_id = 0)
+df <- df %>% filter(id_event!=0)
 
 #Metrics for each event
 #Estimate metric for each event
 event_metrics <- df %>% 
   group_by(wetland, station, id_event) %>% 
-  summarise(
-    duration = max(Timestamp)-min(Timestamp))
+  summarise(duration = max(Timestamp)-min(Timestamp))
 #Summarize events
 event_summary <- event_metrics %>% 
   group_by(wetland, station) %>% 
   summarise(dur_mean = mean(duration, na.rm=T),
+            dur_min = min(duration,na.rm=T),
+            dur_max = max(duration,na.rm=T),
+            dur_median = median(duration,na.rm=T),
             n_events = n())
 
-#2.5 Trial Run Horizon Specific Event Duration Calc------------------------------------------------
+#2.5 Horizon Specific Event Duration Calc------------------------------------------------
 
 #Join together water level data and soil horizon elevations
 join <- left_join(df,soil,by=c("wetland","station"))
@@ -224,7 +230,16 @@ soil_annual <- soil_annual %>%
   #cumulative sum by event start to create event id
   mutate(O_id_event = cumsum(Oevent),
          A_id_event = cumsum(Aevent),
-         B_id_event = cumsum(Bevent))
+         B_id_event = cumsum(Bevent))%>% 
+  #remove event id from rows below threshold
+  mutate(O_id_event = inunO*O_id_event,
+         A_id_event = inunA*A_id_event,
+         B_id_event = inunB*B_id_event)  
+
+#Remove periods not in event (i.e. any time event_id = 0)
+soil_annual <- soil_annual %>% filter(O_id_event!=0,
+                                      A_id_event!=0,
+                                      B_id_event!=0)
 
 #Metrics for each event
 #Estimate metric for each event and horizon
@@ -246,6 +261,7 @@ soil_Bevent_metrics <- soil_annual %>%
 #join tables together
 soil_event_metrics <- left_join(soil_Oevent_metrics,soil_Aevent_metrics,by = c("wetland", "station"))
 soil_event_metrics <- left_join(soil_event_metrics,soil_Bevent_metrics,by=c("wetland", "station"))
+
 #Summarize events
 soil_event_summary <- soil_event_metrics %>% 
   group_by(wetland, station) %>% 
