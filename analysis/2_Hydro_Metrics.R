@@ -143,16 +143,16 @@ soil_annual_metrics<-soil_annual %>%
 #because these sites had O/A combined horizons so if A is wet, consider O wet also
 
 #DB KW-1W 
-soil_annual_metrics[1,4] = soil_annual_metrics[1,7] #O_dur_day = A_dur_day
-soil_annual_metrics[1,5] = soil_annual_metrics[1,8] #O_percent_sat = A_percent_sat
+#soil_annual_metrics[1,4] = soil_annual_metrics[1,7] #O_dur_day = A_dur_day
+#soil_annual_metrics[1,5] = soil_annual_metrics[1,8] #O_percent_sat = A_percent_sat
 
 #ND KW-1W
-soil_annual_metrics[5,4] = soil_annual_metrics[5,7] #O_dur_day = A_dur_day
-soil_annual_metrics[5,5] = soil_annual_metrics[5,8] #O_percent_sat = A_percent_sat
+#soil_annual_metrics[5,4] = soil_annual_metrics[5,7] #O_dur_day = A_dur_day
+#soil_annual_metrics[5,5] = soil_annual_metrics[5,8] #O_percent_sat = A_percent_sat
 
 #ND KW-2E
-soil_annual_metrics[6,4] = soil_annual_metrics[6,7] #O_dur_day = A_dur_day
-soil_annual_metrics[6,5] = soil_annual_metrics[6,8] #O_percent_sat = A_percent_sat
+#soil_annual_metrics[6,4] = soil_annual_metrics[6,7] #O_dur_day = A_dur_day
+#soil_annual_metrics[6,5] = soil_annual_metrics[6,8] #O_percent_sat = A_percent_sat
 
 
 #2.4 Threshold Event Duration Calc------------------------------------------------
@@ -268,6 +268,15 @@ soil_event_summary <- soil_event_metrics %>%
   summarise(O_dur_mean = mean(Oduration, na.rm=T),
             A_dur_mean = mean(Aduration, na.rm=T),
             B_dur_mean = mean(Bduration, na.rm=T),
+            O_dur_min = min(Oduration, na.rm=T),
+            A_dur_min = min(Aduration, na.rm=T),
+            B_dur_min = min(Bduration, na.rm=T),
+            O_dur_max = max(Oduration, na.rm=T),
+            A_dur_max = max(Aduration, na.rm=T),
+            B_dur_max = max(Bduration, na.rm=T),
+            O_dur_sd = sd(Oduration, na.rm=T),
+            A_dur_sd = sd(Aduration, na.rm=T),
+            B_dur_sd = sd(Bduration, na.rm=T),
             O_n_events = n(),
             A_n_events = n(),
             B_n_events = n())
