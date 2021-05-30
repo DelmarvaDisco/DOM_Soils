@@ -230,11 +230,13 @@ soil_annual <- soil_annual %>%
   #cumulative sum by event start to create event id
   mutate(O_id_event = cumsum(Oevent),
          A_id_event = cumsum(Aevent),
-         B_id_event = cumsum(Bevent))%>% 
+         B_id_event = cumsum(Bevent))#%>% 
   #remove event id from rows below threshold
-  mutate(O_id_event = inunO*O_id_event,
-         A_id_event = inunA*A_id_event,
-         B_id_event = inunB*B_id_event)  
+  #mutate(O_id_event = inunO*O_id_event,
+         #A_id_event = inunA*A_id_event,
+         #B_id_event = inunB*B_id_event)  
+
+#how to remove ID without removing transect points where there were no events?
 
 #Remove periods not in event (i.e. any time event_id = 0)
 soil_annual <- soil_annual %>% filter(O_id_event!=0,
