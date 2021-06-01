@@ -21,7 +21,7 @@ df<-read_csv('data/waterLevel_at_sampling_location.csv')
 soil <- read_csv('data/20210516_KW_SoilHorizElev.csv')
 
 #Filter to desired water year
-#df <- df %>% filter(Timestamp > "2019-09-30" & Timestamp < "2020-10-01")
+df <- df %>% filter(Timestamp > "2019-09-30" & Timestamp < "2020-10-01")
 
 #Identify threshold of interest
 threshold<- -0.5
@@ -230,58 +230,86 @@ soil_annual <- soil_annual %>%
   #cumulative sum by event start to create event id
   mutate(O_id_event = cumsum(Oevent),
          A_id_event = cumsum(Aevent),
-         B_id_event = cumsum(Bevent))#%>% 
+         B_id_event = cumsum(Bevent)) %>% 
   #remove event id from rows below threshold
-  #mutate(O_id_event = inunO*O_id_event,
-         #A_id_event = inunA*A_id_event,
-         #B_id_event = inunB*B_id_event)  
+  mutate(O_id_event = inunO*O_id_event,
+         A_id_event = inunA*A_id_event,
+         B_id_event = inunB*B_id_event)  
 
-#how to remove ID without removing transect points where there were no events?
-
+#how to remove ID = 0 without removing transect points where there were no events?
 #Remove periods not in event (i.e. any time event_id = 0)
-soil_annual <- soil_annual %>% filter(O_id_event!=0,
-                                      A_id_event!=0,
-                                      B_id_event!=0)
+#soil_annual <- soil_annual %>% filter(O_id_event!=0,
+                                      #A_id_event!=0,
+                                      #B_id_event!=0)
 
 #Metrics for each event
 #Estimate metric for each event and horizon
 soil_Oevent_metrics <- soil_annual %>% 
+  filter(O_id_event!=0) %>% 
   group_by(wetland, station, O_id_event) %>% 
   summarise(
     Oduration = max(Timestamp)-min(Timestamp))
 
-soil_Aevent_metrics <- soil_annual %>% 
+soil_Aevent_metrics <- soil_annual %>%
+  filter(A_id_event!=0) %>% 
   group_by(wetland, station, A_id_event) %>%
   summarise(
     Aduration = max(Timestamp)-min(Timestamp))
 
 soil_Bevent_metrics <- soil_annual %>% 
+  filter(B_id_event!=0) %>% 
   group_by(wetland, station, B_id_event) %>% 
   summarise(
     Bduration = max(Timestamp)-min(Timestamp))
 
-#join tables together
-soil_event_metrics <- left_join(soil_Oevent_metrics,soil_Aevent_metrics,by = c("wetland", "station"))
-soil_event_metrics <- left_join(soil_event_metrics,soil_Bevent_metrics,by=c("wetland", "station"))
 
 #Summarize events
-soil_event_summary <- soil_event_metrics %>% 
+O_event_summary <- soil_Oevent_metrics %>% 
   group_by(wetland, station) %>% 
   summarise(O_dur_mean = mean(Oduration, na.rm=T),
-            A_dur_mean = mean(Aduration, na.rm=T),
-            B_dur_mean = mean(Bduration, na.rm=T),
             O_dur_min = min(Oduration, na.rm=T),
-            A_dur_min = min(Aduration, na.rm=T),
-            B_dur_min = min(Bduration, na.rm=T),
             O_dur_max = max(Oduration, na.rm=T),
-            A_dur_max = max(Aduration, na.rm=T),
-            B_dur_max = max(Bduration, na.rm=T),
             O_dur_sd = sd(Oduration, na.rm=T),
+            O_n_events = n())
+
+A_event_summary <- soil_Aevent_metrics %>% 
+  group_by(wetland, station) %>% 
+  summarise(A_dur_mean = mean(Aduration, na.rm=T),
+            A_dur_min = min(Aduration, na.rm=T),
+            A_dur_max = max(Aduration, na.rm=T),
             A_dur_sd = sd(Aduration, na.rm=T),
+            A_n_events = n())
+
+B_event_summary <- soil_Bevent_metrics %>% 
+  group_by(wetland, station) %>% 
+  summarise(B_dur_mean = mean(Bduration, na.rm=T),
+            B_dur_min = min(Bduration, na.rm=T),
+            B_dur_max = max(Bduration, na.rm=T),
             B_dur_sd = sd(Bduration, na.rm=T),
-            O_n_events = n(),
-            A_n_events = n(),
             B_n_events = n())
+
+#join tables together
+soil_event_summary <- full_join(O_event_summary,A_event_summary,by = c("wetland", "station"))
+soil_event_summary <- full_join(soil_event_summary,B_event_summary,by=c("wetland", "station"))
+
+#arrange
+soil_event_summary <- soil_event_summary %>% arrange(wetland, station)
+
+#replace NA with 0
+as.data.frame(soil_event_summary)
+soil_event_summary[is.na(soil_event_summary)] <- 0
+
+#add zeros for uplands with no events
+ND_KW_U <- c(wetland="ND",station="KW-4U",O_dur_mean=0,O_dur_min=0,O_dur_max=0,O_dur_sd=0,O_n_events=0,A_dur_mean=0,A_dur_min=0,A_dur_max=0,A_dur_sd=0,A_n_events=0,B_dur_mean=0,B_dur_min=0,B_dur_max=0,B_dur_sd=0,B_n_events=0)
+QB_KW_U <- c(wetland="QB",station="KW-4U",O_dur_mean=0,O_dur_min=0,O_dur_max=0,O_dur_sd=0,O_n_events=0,A_dur_mean=0,A_dur_min=0,A_dur_max=0,A_dur_sd=0,A_n_events=0,B_dur_mean=0,B_dur_min=0,B_dur_max=0,B_dur_sd=0,B_n_events=0)
+TB_KW_U <- c(wetland="TB",station="KW-4U",O_dur_mean=0,O_dur_min=0,O_dur_max=0,O_dur_sd=0,O_n_events=0,A_dur_mean=0,A_dur_min=0,A_dur_max=0,A_dur_sd=0,A_n_events=0,B_dur_mean=0,B_dur_min=0,B_dur_max=0,B_dur_sd=0,B_n_events=0)
+
+#soil_event_summary = rbind(as.matrix(soil_event_summary),as.matrix(ND_KW_U)) 
+as.data.frame(soil_event_summary)
+as.data.frame(ND_KW_U)
+soil_event_summary %>% add_row(ND_KW_U) 
+soil_event_summary = rbind(soil_event_summary,ND_KW_U) 
+#soil_event_summary[nrow(soil_event_summary)+1,]=as.list(ND_KW_U)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 Export data----------------------------------------------------------------
@@ -293,14 +321,39 @@ write_csv(monthly, "data//monthly_metrics_thredhold.csv")
 #save 2020 water year data as separate csv
 write_csv(df, "data//waterLevel_2020only.csv")
 
-#for 2020 water year
-write_csv(annual, "data//annual_metrics_2020.csv") #2020 annual metrics using threshold = -0.5
-write_csv(soil_annual_metrics, "data//horizon_annual_metrics_2020.csv") #2020 annual metrics for soil horizons
+### 2020 water year ###
+#threshold#
+#2020 annual metrics using threshold = -0.5
+write_csv(annual, "data//annual_metrics_2020.csv")
+#event metrics for threshold = -0.5
+write_csv(event_metrics, "data//threshold_event_metrics_2020.csv")
+#summary of event metrics for threshold = -0.5
+write_csv(event_summary,"data//threshold_event_summary_2020.csv") 
 
-#for 2017-2020 water years
-write_csv(annual,"data//annual_metrics_2017-2020_threshold.csv") #2017-20 annual metrics using threshold = -0.5
-write_csv(soil_annual_metrics,"data//horizon_annual_metrics_2017-2020.csv") #2017-20 annual metrics for soil horizons
+# soil horizon#
+#2020 annual metrics for soil horizons
+write_csv(soil_annual_metrics, "data//horizon_annual_metrics_2020.csv") 
+#event metrics for soil horizons
+write_csv(soil_event_metrics, "data//horizon_event_metrics_2020.csv") 
+#summary of event metrics for soil horizons
+write_csv(soil_event_summary,"data//horizon_event_summary_2020.csv") 
 
+### 2017-2020 water years ###
+#threshold#
+#2017-20 annual metrics using threshold = -0.5
+write_csv(annual,"data//annual_metrics_2017-2020_threshold.csv") 
+#event metrics for threshold = -0.5
+write_csv(event_metrics, "data//threshold_event_metrics_2017-2020.csv")
+#summary of event metrics for threshold = -0.5
+write_csv(event_summary,"data//threshold_event_summary_2017-2020.csv") 
+
+#soil horizon#
+#2017-20 annual metrics for soil horizons
+write_csv(soil_annual_metrics,"data//horizon_annual_metrics_2017-2020.csv")
+#event metrics for soil horizons
+write_csv(soil_event_metrics, "data//horizon_event_metrics_2017-2020.csv")
+#summary of event metrics for soil horizons
+write_csv(soil_event_summary,"data//horizon_event_summary_2017-2020.csv") 
 
 
 
