@@ -25,10 +25,12 @@ df<-read_csv("data/R_Extraction_Results_All.csv")
 #2017-2020 water years
 #annual <- read_csv("data/annual_metrics_2017-2020_threshold.csv") 
 #soil <- read_csv("data/horizon_annual_metrics_2017-2020.csv")
+#event <- read_csv("data//horizon_event_summary_2017-2020.csv") 
 
 #2020 water year only
 annual <- read_csv("data/annual_metrics_2020_threshold.csv") #annual_metrics used for water level
 soil <- read_csv("data/horizon_annual_metrics_2020.csv") #horizon metrics used for duration/n events
+event <- read_csv("data//horizon_event_summary_2020.csv") #event duration calculated separately from other metrics
 
 #Join tables
 #extraction results and annual WL metrics
@@ -37,6 +39,9 @@ glimpse(data)
 #extraction results and soil horizon metrics
 soildata <- inner_join(df, soil, by=c("wetland","station"))
 glimpse(soildata)
+#extraction results and horizon event duration
+eventdata <- inner_join(df,event,by=c("wetland","station"))
+glimpse(eventdata)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Mean/Min/Max WL and ESOM ----------------------------------------------------------
@@ -1236,10 +1241,176 @@ figureP <- ggarrange(   Pstat,
 figureP
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#5.0 Other Plots -------------------------------------
+#5.0 Event duration -------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-##5.1 CV of Water Level-----------------------------
+#Filter down data by generic horizon
+O <- eventdata %>% filter(Generic_Horizon == "1O")
+A <- eventdata %>% filter(Generic_Horizon == "2A")
+B <- eventdata %>% filter(Generic_Horizon == "3B")
+
+### 5.1 EOC ###---------------------------------------
+#5.1.1 EOC vs Mean Event Dur ------------------------------------
+#horizon
+EOCdurmean <- ggplot() +
+  geom_point(data=O, aes(O_dur_mean,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_mean,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_mean,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  xlab("Horizon Mean Event Duration (d)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Mean Event Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_mean,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_mean,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_mean,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_mean,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 25)+
+  stat_regline_equation(data=A,aes(A_dur_mean,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 24)+
+  stat_regline_equation(data=B,aes(B_dur_mean,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 23)+
+  stat_cor(data=O,aes(O_dur_mean,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 25)+
+  stat_cor(data=A,aes(A_dur_mean,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 24)+
+  stat_cor(data=B,aes(B_dur_mean,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 23)
+
+#5.1.2 EOC vs Min Event Dur ------------------------------------
+EOCdurmin <- ggplot() +
+  geom_point(data=O, aes(O_dur_min,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_min,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_min,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  xlab("Horizon Mininum Event Duration (d)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Min Event Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_min,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_min,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_min,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_min,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 25)+
+  stat_regline_equation(data=A,aes(A_dur_min,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 24)+
+  stat_regline_equation(data=B,aes(B_dur_min,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 23)+
+  stat_cor(data=O,aes(O_dur_min,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 25)+
+  stat_cor(data=A,aes(A_dur_min,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 24)+
+  stat_cor(data=B,aes(B_dur_min,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 23)
+
+#5.1.3 EOC vs Max Event Dur ------------------------------------
+EOCdurmax <- ggplot() +
+  geom_point(data=O, aes(O_dur_max,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_max,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_max,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  xlab("Horizon Maximum Event Duration (d)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Max Event Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_max,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_max,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_max,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_max,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 25)+
+  stat_regline_equation(data=A,aes(A_dur_max,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 24)+
+  stat_regline_equation(data=B,aes(B_dur_max,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 23)+
+  stat_cor(data=O,aes(O_dur_max,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 25)+
+  stat_cor(data=A,aes(A_dur_max,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 24)+
+  stat_cor(data=B,aes(B_dur_max,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 23)
+
+#5.1.4 EOC vs N Event ------------------------------------
+EOCnevent <- ggplot() +
+  geom_point(data=O, aes(O_n_events,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_n_events,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_n_events,EOC_mgC_L,col=Generic_Horizon),size=4)+
+  xlab("Horizon N Events") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs N Events") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_n_events,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_n_events,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_n_events,EOC_mgC_L,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_n_events,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 25)+
+  stat_regline_equation(data=A,aes(A_n_events,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 24)+
+  stat_regline_equation(data=B,aes(B_n_events,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "left",label.y = 23)+
+  stat_cor(data=O,aes(O_n_events,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 25)+
+  stat_cor(data=A,aes(A_n_events,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 24)+
+  stat_cor(data=B,aes(B_n_events,EOC_mgC_L,col=Generic_Horizon),label.x.npc = "center",label.y = 23)
+
+### 5.2 FI ###---------------------------------------
+#5.2.1 FI vs Mean Event Dur ------------------------------------
+#horizon
+FIdurmean <- ggplot() +
+  geom_point(data=O, aes(O_dur_mean,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_mean,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_mean,FI,col=Generic_Horizon),size=4)+
+  xlab("Horizon Mean Event Duration (d)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Mean Event Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_mean,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_mean,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_mean,FI,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_mean,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 2.0)+
+  stat_regline_equation(data=A,aes(A_dur_mean,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 1.9)+
+  stat_regline_equation(data=B,aes(B_dur_mean,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 1.8)+
+  stat_cor(data=O,aes(O_dur_mean,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 2.0)+
+  stat_cor(data=A,aes(A_dur_mean,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.9)+
+  stat_cor(data=B,aes(B_dur_mean,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.8)
+
+#5.2.2 FI vs Min Event Dur ------------------------------------
+FIdurmin <- ggplot() +
+  geom_point(data=O, aes(O_dur_min,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_min,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_min,FI,col=Generic_Horizon),size=4)+
+  xlab("Horizon Mininum Event Duration (d)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Min Event Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_min,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_min,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_min,FI,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_min,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 2.0)+
+  stat_regline_equation(data=A,aes(A_dur_min,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 1.9)+
+  stat_regline_equation(data=B,aes(B_dur_min,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 1.8)+
+  stat_cor(data=O,aes(O_dur_min,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 2.0)+
+  stat_cor(data=A,aes(A_dur_min,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.9)+
+  stat_cor(data=B,aes(B_dur_min,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.8)
+
+#5.2.3 FI vs Max Event Dur ------------------------------------
+FIdurmax <- ggplot() +
+  geom_point(data=O, aes(O_dur_max,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_dur_max,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_dur_max,FI,col=Generic_Horizon),size=4)+
+  xlab("Horizon Maximum Event Duration (d)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Max Event Duration") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_dur_max,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_dur_max,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_dur_max,FI,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_dur_max,FI,col=Generic_Horizon),label.x.npc = "left",label.y =2.0)+
+  stat_regline_equation(data=A,aes(A_dur_max,FI,col=Generic_Horizon),label.x.npc = "left",label.y =1.9)+
+  stat_regline_equation(data=B,aes(B_dur_max,FI,col=Generic_Horizon),label.x.npc = "left",label.y =1.8)+
+  stat_cor(data=O,aes(O_dur_max,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 2.0)+
+  stat_cor(data=A,aes(A_dur_max,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.9)+
+  stat_cor(data=B,aes(B_dur_max,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.8)
+
+#5.2.4 FI vs N Event ------------------------------------
+FInevent <- ggplot() +
+  geom_point(data=O, aes(O_n_events,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=A, aes(A_n_events,FI,col=Generic_Horizon),size=4)+
+  geom_point(data=B, aes(B_n_events,FI,col=Generic_Horizon),size=4)+
+  xlab("Horizon N Events") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs N Events") + 
+  theme_bw()+
+  geom_smooth(data=O,aes(O_n_events,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=A,aes(A_n_events,FI,col=Generic_Horizon), method = 'lm')+
+  geom_smooth(data=B,aes(B_n_events,FI,col=Generic_Horizon), method = 'lm')+
+  stat_regline_equation(data=O,aes(O_n_events,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 2.0)+
+  stat_regline_equation(data=A,aes(A_n_events,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 1.9)+
+  stat_regline_equation(data=B,aes(B_n_events,FI,col=Generic_Horizon),label.x.npc = "left",label.y = 1.8)+
+  stat_cor(data=O,aes(O_n_events,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 2.0)+
+  stat_cor(data=A,aes(A_n_events,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.9)+
+  stat_cor(data=B,aes(B_n_events,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.8)
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#6.0 Other Plots -------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+##6.1 CV of Water Level-----------------------------
 #CV by transect point
 ggplot(data, aes(station,CV_waterLevel,fill=station))+
   geom_boxplot()+
@@ -1248,7 +1419,7 @@ ggplot(data, aes(station,CV_waterLevel,fill=station))+
   ggtitle("Coefficient of Variation By Transect Point") + 
   theme_bw()
 
-#5.2 Thinking about potential vs realized DOM---------------------------------
+#6.2 Thinking about potential vs realized DOM---------------------------------
 
 subset <- data %>% dplyr::select(wetland,station,Generic_Horizon,EOC_mgC_L,Layer_Thickness_cm, 
                                min_waterLevel,mean_waterLevel,median_waterLevel,max_waterLevel,
