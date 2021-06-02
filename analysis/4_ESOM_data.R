@@ -39,7 +39,13 @@ WetSynoptic <- synoptic %>% filter(Wetland_ID %in% c("QB","TB","DB","ND"))
 #Filter out Leaf Litter
 WetlandsNoLL <- Wetlands %>% filter(Point != "5 LL")
 
+#General summary of EOC
+EOC_Summary <- WetlandsNoLL %>% group_by(station,Generic_Horizon) %>% 
+                summarise(mean_EOC_mgC_L = mean(EOC_mgC_L),
+                          mean_EOC_mgC_gsoil = mean(EOC_mgC_gsoil),
+                          meanlayerthickness_m = mean(Layer_Thickness_cm/100))
 
+write_csv(EOC_Summary,"data//EOC_Summary.csv")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Plots-----------------------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

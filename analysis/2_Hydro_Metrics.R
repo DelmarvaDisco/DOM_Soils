@@ -21,7 +21,7 @@ df<-read_csv('data/waterLevel_at_sampling_location.csv')
 soil <- read_csv('data/20210516_KW_SoilHorizElev.csv')
 
 #Filter to desired water year
-#df <- df %>% filter(Timestamp > "2019-09-30" & Timestamp < "2020-10-01")
+df <- df %>% filter(Timestamp > "2019-09-30" & Timestamp < "2020-10-01")
 
 #Identify threshold of interest
 threshold<- -0.5
@@ -154,6 +154,15 @@ soil_annual_metrics<-soil_annual %>%
 #soil_annual_metrics[6,4] = soil_annual_metrics[6,7] #O_dur_day = A_dur_day
 #soil_annual_metrics[6,5] = soil_annual_metrics[6,8] #O_percent_sat = A_percent_sat
 
+#Group by station only
+soil_station_horizon <- soil_annual_metrics %>% 
+  group_by(station) %>% 
+  summarise(mean_O_dur_day           = mean(O_dur_day),
+            mean_O_n_events          = mean(O_n_events),
+            mean_A_dur_day           = mean(A_dur_day),
+            mean_A_n_events          = mean(A_n_events),
+            mean_B_dur_day           = mean(B_dur_day),
+            mean_B_n_events          = mean(B_n_events))
 
 #2.4 Threshold Event Duration Calc------------------------------------------------
 #using all 3 years of data and generic threshold for now

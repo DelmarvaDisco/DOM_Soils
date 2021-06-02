@@ -1419,7 +1419,7 @@ ggplot(data, aes(station,CV_waterLevel,fill=station))+
   ggtitle("Coefficient of Variation By Transect Point") + 
   theme_bw()
 
-#6.2 Thinking about potential vs realized DOM---------------------------------
+#6.2 Potential vs realized DOM---------------------------------
 
 subset <- data %>% dplyr::select(wetland,station,Generic_Horizon,EOC_mgC_L,Layer_Thickness_cm, 
                                min_waterLevel,mean_waterLevel,median_waterLevel,max_waterLevel,
