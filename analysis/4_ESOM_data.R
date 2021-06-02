@@ -688,7 +688,8 @@ ggplot(WetlandsNoLL,aes(x=Point,y=HIX,fill=Point)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-#%Clay
+## %Clay ##
+#EOC vs clay
 ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=EOC_mgC_L,color=Generic_Horizon)) + 
   geom_point() +
   xlab("%Clay")+
@@ -701,7 +702,7 @@ ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=EOC_mgC_L,color=Generic_Horizon)) +
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
-
+#FI vs %Clay
 ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=FI,color=Generic_Horizon)) + 
   geom_point() +
   xlab("%Clay")+
@@ -714,7 +715,7 @@ ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=FI,color=Generic_Horizon)) +
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
-
+#SUVA254 vs %Clay
 ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=SUVA254_L_mgm,color=Generic_Horizon)) + 
   geom_point() +
   xlab("%Clay")+
