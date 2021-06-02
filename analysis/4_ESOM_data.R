@@ -688,6 +688,46 @@ ggplot(WetlandsNoLL,aes(x=Point,y=HIX,fill=Point)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+#%Clay
+ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=EOC_mgC_L,color=Generic_Horizon)) + 
+  geom_point() +
+  xlab("%Clay")+
+  ylab("EOC (mgC/L)") +
+  ggtitle("EOC vs %Clay") +
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=FI,color=Generic_Horizon)) + 
+  geom_point() +
+  xlab("%Clay")+
+  ylab("FI") +
+  ggtitle("FI vs %Clay") +
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=SUVA254_L_mgm,color=Generic_Horizon)) + 
+  geom_point() +
+  xlab("%Clay")+
+  ylab("SUVA254") +
+  ggtitle("SUVA254 vs %Clay") +
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 Correlation Exploration ---------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
