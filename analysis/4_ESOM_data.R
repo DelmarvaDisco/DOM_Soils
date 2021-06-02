@@ -278,7 +278,47 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,M,col=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+##HIX##
+#HIX boxplot by Point - All wetland sites, No LL
+ggplot(WetlandsNoLL, aes(Point,HIX,fill=Point)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("HIX") + 
+  ggtitle("All Sites HIX") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+##SSR##
+ggplot(WetlandsNoLL, aes(Point,SSR,fill=Point)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SSR") + 
+  ggtitle("All Sites SSR") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+ggplot(WetlandsNoLL, aes(Point,SSR,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SSR") + 
+  ggtitle("All Sites SSR") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #2.2 Compare months --------------------------------------------------
 
