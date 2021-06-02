@@ -36,7 +36,7 @@ Wetlands <- df %>% filter(wetland %in% c("QB","TB","DB","ND"))
 WetlandsNoLL <- Wetlands %>% filter(Point != "5 LL")
 
 #Join metrics and ESOM data
-data <- inner_join(df, annual, by=c("wetland","station"))
+data <- inner_join(df, threshold_annual, by=c("wetland","station"))
 
 #Filter water level data to just 2020 water year
 waterlevel <- waterlevel %>% filter(Timestamp > "2019-10-01" & Timestamp < "2020-10-01")
@@ -49,8 +49,6 @@ threshold_annual <- left_join(threshold_annual,elev,by=c("wetland","station"))
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Look at distributions/normality/equal variance 
-
-
 
 ###ESOM DATA###
 #Define station vs horizon
@@ -385,8 +383,17 @@ nevent.KW <- kruskal.test(nevents~station)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#4.0 Linear Regression --------------------------------------------------
+#4.0 Simple Linear Regression ---------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#create inidcator variable for station and horizon
+data <- data %>% 
+  mutate(Horizon_Indicator = case_when(Generic_Horizon == "1O"~ 0,
+                                       Generic_Horizon == "2A" ~ 1,
+                                       Generic_Horizon == "3B" ~ 2),
+         Station_Indicator = case_when(station == "KW-1W"~ 0,
+                                       station == "KW-2E" ~ 1,
+                                       station == "KW-3T" ~ 2,
+                                       station == "KW-4U" ~ 3))
 
 #Separate horizons
 O <- data %>% filter(Generic_Horizon == "1O")
@@ -431,7 +438,12 @@ summary(lmoverall)
 plot(residuals(lmHIXoverall))
 
 ### 4.2 N_events -----------------------------
-
+lmNO <- lm(O$EOC_mgC_L~O$n_events)
+summary(lmNO) 
+lmNA <- lm(A$EOC_mgC_L~A$n_events)
+summary(lmNA)
+lmNB <- lm(B$EOC_mgC_L~B$n_events)
+summary(lmNB) #non significant 
 
 ### 4.3 Duration -----------------------------
 
@@ -447,3 +459,306 @@ plot(residuals(lmFIB))
 lmFIoverall <-(data$FI~data$dur_day)
 summary(lmFIoverall)
 plot(residuals(lmFIoverall))
+
+### 4.4 Station indicator------------------------
+lmstatO <- lm(O$EOC_mgC_L~O$Station_Indicator)
+summary(lmstatO) #station signf for O only
+lmstatA <- lm(A$EOC_mgC_L~A$Station_Indicator)
+summary(lmstatA)
+lmstatB <- lm(B$EOC_mgC_L~B$Station_Indicator)
+summary(lmstatB)
+
+### 4.5 Keep horizons together----------------------
+#4.5.1 EOC ------------------------------------
+#EOC ~ Horizon
+lmEOChoriz <- lm(data$EOC_mgC_L~data$Horizon_Indicator)
+summary(lmEOChoriz)
+plot(residuals(lmEOChoriz)) #horiz is significant
+
+#EOC ~ station
+lmEOCstat <- lm(data$EOC_mgC_L~data$Station_Indicator)
+summary(lmEOCstat)
+plot(residuals(lmEOCstat)) #station not significant by itself
+
+#EOC ~ mean_waterlevel
+lmmeanwl <- lm(data$EOC_mgC_L~data$mean_waterLevel)
+summary(lmmeanwl) #mean not significant
+plot(residuals(lmmeanwl))
+
+# 4.5.2 FI --------------------------------------
+#FI ~ Horizon
+lmFIhoriz <- lm(data$FI~data$Horizon_Indicator)
+summary(lmFIhoriz)
+plot(residuals(lmFIhoriz)) #horiz is significant
+
+#FI ~ station
+lmFIstat <- lm(data$EOC_mgC_L~data$Station_Indicator)
+summary(lmFIstat)
+plot(residuals(lmFIstat)) #station not significant by itself
+
+#FI ~ mean_waterlevel
+lmmeanwl <- lm(data$FI~data$mean_waterLevel)
+summary(lmmeanwl) #mean not significant
+plot(residuals(lmmeanwl))
+
+# 4.5.3 SUVA ----------------------------------
+#SUVA ~ Horizon
+lmSUVAhoriz <- lm(data$SUVA254_L_mgm~data$Horizon_Indicator)
+summary(lmSUVAhoriz)
+plot(residuals(lmSUVAhoriz)) #horiz is significant
+qqnorm(resid(lmSUVAhoriz))
+shapiro.test(resid(lmSUVAhoriz))
+
+#SUVA ~ station
+lmSUVAstat <- lm(data$SUVA254_L_mgm~data$Station_Indicator)
+summary(lmSUVAstat)
+plot(residuals(lmSUVAstat)) #station is significant 
+
+#SUVA ~ mean_waterlevel
+lmmeanwl <- lm(data$SUVA254_L_mgm~data$mean_waterLevel)
+summary(lmmeanwl) #mean not significant (just barely)
+plot(residuals(lmmeanwl))
+qqnorm(resid(lmmeanwl))
+shapiro.test(resid(lmmeanwl))
+
+# 4.5.4 HIX -----------------------------
+#HIX ~ Horizon
+lmHIXhoriz <- lm(data$HIX~data$Horizon_Indicator)
+summary(lmHIXhoriz)
+plot(residuals(lmHIXhoriz)) #horiz is significant by itself
+qqnorm(resid(lmHIXhoriz))
+shapiro.test(resid(lmHIXhoriz))
+
+#HIX ~ station
+lmHIXstat <- lm(data$HIX~data$Station_Indicator)
+summary(lmHIXstat)
+plot(residuals(lmHIXstat)) #station is significant 
+
+#HIX ~ mean_waterlevel
+lmmeanwl <- lm(data$HIX~data$mean_waterLevel)
+summary(lmmeanwl) #mean water level is significant by itself
+plot(residuals(lmmeanwl))
+qqnorm(resid(lmmeanwl))
+shapiro.test(resid(lmmeanwl))
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#5.0 Multiple Linear Regression --------------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#keep horizons grouped together
+#create indicator variables for horizon and transect station 
+data <- data %>% 
+  mutate(Horizon_Indicator = case_when(Generic_Horizon == "1O"~ 0,
+                                       Generic_Horizon == "2A" ~ 1,
+                                       Generic_Horizon == "3B" ~ 2),
+         Station_Indicator = case_when(station == "KW-1W"~ 0,
+                                       station == "KW-2E" ~ 1,
+                                       station == "KW-3T" ~ 2,
+                                       station == "KW-4U" ~ 3))
+
+#5.1 EOC -----------------------------
+
+#EOC ~ All variables
+lmall <- lm(data$EOC_mgC_L~data$Horizon_Indicator+
+              data$Station_Indicator+
+              data$Percent_Clay+
+              data$min_waterLevel+
+              data$mean_waterLevel+
+              data$max_waterLevel+
+              data$dur_day)
+summary(lmall) #none of the water level variables are significant
+plot(residuals(lmall))
+qqnorm(resid(lmall))
+shapiro.test(resid(lmall))
+
+#5.2 FI ------------------------------
+#FI ~ All variables
+lmall <- lm(data$FI~data$Horizon_Indicator+
+              data$Station_Indicator+
+              data$Percent_Clay+
+              data$min_waterLevel+
+              data$mean_waterLevel+
+              data$max_waterLevel+
+              data$dur_day)
+summary(lmall) #horiz, clay significant
+plot(residuals(lmall))
+qqnorm(resid(lmall))
+shapiro.test(resid(lmall))
+
+#5.3 SUVA -----------------------------
+#SUVA ~ All variables
+lmall <- lm(data$SUVA254_L_mgm~data$Horizon_Indicator+
+              data$Station_Indicator+
+              data$Percent_Clay+
+              data$min_waterLevel+
+              data$mean_waterLevel+
+              data$max_waterLevel+
+              data$dur_day)
+summary(lmall) #horizon, clay, min water level significant
+plot(residuals(lmall))
+qqnorm(resid(lmall))
+shapiro.test(resid(lmall))
+
+
+#5.4 HIX -----------------------------
+#HIX ~ All variables
+lmall <- lm(data$HIX~data$Horizon_Indicator+
+              data$Station_Indicator+
+              data$Percent_Clay+
+              data$min_waterLevel+
+              data$mean_waterLevel+
+              data$max_waterLevel+
+              data$dur_day)
+summary(lmall) #station, clay, (horizon just barely not significant)
+plot(residuals(lmall))
+qqnorm(resid(lmall))
+shapiro.test(resid(lmall))
+
+#5.5 Now separate horizons and look at multiple variable influence--------------
+#5.5.1 EOC ------------------------------
+lmOall <- lm(O$EOC_mgC_L~
+               O$Station_Indicator+
+               O$Percent_Clay+
+               O$min_waterLevel+
+               O$mean_waterLevel+
+               O$max_waterLevel+
+               O$dur_day)
+summary(lmOall) #nothing significant, overall model is
+plot(residuals(lmOall))
+qqnorm(resid(lmOall))
+shapiro.test(resid(lmOall))
+
+lmAall <- lm(A$EOC_mgC_L~
+               A$Station_Indicator+
+               A$Percent_Clay+
+               A$min_waterLevel+
+               A$mean_waterLevel+
+               A$max_waterLevel+
+               A$dur_day)
+summary(lmAall) #station signficiant, nothing else, overall model is
+plot(residuals(lmAall))
+qqnorm(resid(lmAall))
+shapiro.test(resid(lmAall))
+
+lmBall <- lm(B$EOC_mgC_L~
+               B$Station_Indicator+
+               B$Percent_Clay+
+               B$min_waterLevel+
+               B$mean_waterLevel+
+               B$max_waterLevel+
+               B$dur_day)
+summary(lmBall) #nothing significant, overall model isn't either
+plot(residuals(lmBall))
+qqnorm(resid(lmBall))
+shapiro.test(resid(lmBall))
+
+#5.5.2 FI ------------------------------
+
+lmFIOall <- lm(O$FI~
+               O$Station_Indicator+
+               O$Percent_Clay+
+               O$min_waterLevel+
+               O$mean_waterLevel+
+               O$max_waterLevel+
+               O$dur_day)
+summary(lmFIOall) #nothing significant, overall model isn't
+plot(residuals(lmFIOall))
+qqnorm(resid(lmFIOall))
+shapiro.test(resid(lmFIOall))
+
+lmFIAall <- lm(A$FI~
+               A$Station_Indicator+
+               A$Percent_Clay+
+               A$min_waterLevel+
+               A$mean_waterLevel+
+               A$max_waterLevel+
+               A$dur_day)
+summary(lmFIAall) #nothing significant, overall model isn't
+plot(residuals(lmFIAall))
+qqnorm(resid(lmFIAall))
+shapiro.test(resid(lmFIAall))
+
+lmFIBall <- lm(B$FI~
+               B$Station_Indicator+
+               B$Percent_Clay+
+               B$min_waterLevel+
+               B$mean_waterLevel+
+               B$max_waterLevel+
+               B$dur_day)
+summary(lmFIBall) #nothing significant, overall model isn't either
+plot(residuals(lmFIBall))
+qqnorm(resid(lmFIBall))
+shapiro.test(resid(lmFIBall))
+
+#5.5.3 SUVA ------------------------------
+lmSUVAOall <- lm(O$SUVA254_L_mgm~
+                 O$Station_Indicator+
+                 O$Percent_Clay+
+                 O$min_waterLevel+
+                 O$mean_waterLevel+
+                 O$max_waterLevel+
+                 O$dur_day)
+summary(lmSUVAOall) #nothing significant, overall model isn't
+plot(residuals(lmSUVAOall))
+qqnorm(resid(lmSUVAOall))
+shapiro.test(resid(lmSUVAOall))
+
+lmSUVAAall <- lm(A$SUVA254_L_mgm~
+                 A$Station_Indicator+
+                 A$Percent_Clay+
+                 A$min_waterLevel+
+                 A$mean_waterLevel+
+                 A$max_waterLevel+
+                 A$dur_day)
+summary(lmSUVAAall) #min water level is significant, dur day barely not, overall model is
+plot(residuals(lmSUVAAall))
+qqnorm(resid(lmSUVAAall))
+shapiro.test(resid(lmSUVAAall))
+
+lmSUVABall <- lm(B$SUVA254_L_mgm~
+                 B$Station_Indicator+
+                 B$Percent_Clay+
+                 B$min_waterLevel+
+                 B$mean_waterLevel+
+                 B$max_waterLevel+
+                 B$dur_day)
+summary(lmSUVABall) #percent clay significant
+plot(residuals(lmSUVABall))
+qqnorm(resid(lmSUVABall))
+shapiro.test(resid(lmSUVABall))
+
+#5.5.4 HIX ------------------------------
+lmHIXOall <- lm(O$HIX~
+                   O$Station_Indicator+
+                   O$Percent_Clay+
+                   O$min_waterLevel+
+                   O$mean_waterLevel+
+                   O$max_waterLevel+
+                   O$dur_day)
+summary(lmHIXOall) #nothing significant, overall model isn't
+plot(residuals(lmHIXOall))
+qqnorm(resid(lmHIXOall))
+shapiro.test(resid(lmHIXOall))
+
+lmHIXAall <- lm(A$HIX~
+                   A$Station_Indicator+
+                   A$Percent_Clay+
+                   A$min_waterLevel+
+                   A$mean_waterLevel+
+                   A$max_waterLevel+
+                   A$dur_day)
+summary(lmHIXAall)  #nothing significant, overall model isn't
+plot(residuals(lmHIXAall))
+qqnorm(resid(lmHIXAall))
+shapiro.test(resid(lmHIXAall))
+
+lmHIXBall <- lm(B$HIX~
+                   B$Station_Indicator+
+                   B$Percent_Clay+
+                   B$min_waterLevel+
+                   B$mean_waterLevel+
+                   B$max_waterLevel+
+                   B$dur_day)
+summary(lmHIXBall) #percent clay significant, model overal is
+plot(residuals(lmHIXBall))
+qqnorm(resid(lmHIXBall))
+shapiro.test(resid(lmHIXBall))
