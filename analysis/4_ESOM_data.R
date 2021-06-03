@@ -392,9 +392,11 @@ ggplot(data=QB,aes(x=Point,y=Percent_Soil_Moisture_notin,color=Generic_Horizon))
   theme_bw() + 
   facet_wrap(~Month)
 
-#2.3 Cory and McKnight PARAFAC Results--------------------------------
-
-#Cory and McKnight Component Loadings across all sites
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#2.3 PARAFAC Results--------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2.3.1 Cory and McKnight Model ----------------------------------------
+#loadings across all sites
 boxplot(WetlandsNoLL$C1, 
         WetlandsNoLL$C2_Q2, 
         WetlandsNoLL$C3, 
@@ -538,6 +540,66 @@ ggplot(data=WetlandsNoLL) +
   xlab("FI") +
   ylab("%C13")+
   ggtitle("%C13 vs FI")
+
+#2.3.2 Delmarva Synoptic Model -----------------------------------------
+#boxplot of loadings across all samples
+boxplot(WetlandsNoLL$DMV_C1, 
+        WetlandsNoLL$DMV_C2, 
+        WetlandsNoLL$DMV_C3, 
+        WetlandsNoLL$DMV_C4,
+        main="Percent Loading of Each Component",
+        names=c("C1","C2","C3","C4"),
+        ylab="Loading (%)",
+        xlab="Component")
+
+#Components vs fluorescence metrics
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=SUVA254_L_mgm,y=DMV_C1,col=Generic_Horizon)) +
+  xlab("SUVA254 (L/mg-m)") +
+  ylab("%C1")+
+  ggtitle("%C1 vs SUVA254")+
+  theme_bw()
+
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=FI,y=DMV_C4,col=Generic_Horizon)) +
+  xlab("FI") +
+  ylab("%C4")+
+  ggtitle("%C4 vs FI")+
+  theme_bw()
+
+#Components by horizon
+#C1
+ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C1,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
+  ylab("%C1")+
+  ggtitle("%C1 by Point")+
+  theme_bw()
+
+#C2
+ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C2,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
+  ylab("%C2")+
+  ggtitle("%C2 by Point")+
+  theme_bw()
+
+#C3
+ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C3,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
+  ylab("%C3")+
+  ggtitle("%C3 by Point")+
+  theme_bw()
+
+#C4
+ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C4,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
+  ylab("%C4")+
+  ggtitle("%C4 by Point")+
+  theme_bw()
+
 
 #2.4 ESOM and Synoptic Data Together-----------------------------------
 
