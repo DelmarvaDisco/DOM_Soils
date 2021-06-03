@@ -64,6 +64,15 @@ meanEOC <-ggplot(data, aes(mean_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
   geom_smooth(method = 'lm')+
   stat_regline_equation(label.x = -0.5)+
   stat_cor(label.x = 0)
+EOCoverall <- ggplot(data, aes(mean_waterLevel,EOC_mgC_L)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -0.5)+
+  stat_cor(label.x = 0)
 
 #2.1.2 ESOM vs Min WL ------------------------------------
 ggplot(data, aes(min_waterLevel,EOC_mgC_L,col=station)) +
@@ -94,7 +103,7 @@ maxEOC <- ggplot(data, aes(max_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
   stat_cor(label.x = 0.5)
 
 #2.1.4 EOC Plot
-figureEOC <- ggarrange(mstat, 
+figureEOC <- ggarrange(EOCoverall, 
                        meanEOC, 
                        minEOC, 
                        maxEOC,

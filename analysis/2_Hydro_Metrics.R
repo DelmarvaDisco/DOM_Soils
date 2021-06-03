@@ -380,7 +380,7 @@ write_csv(df, "data//waterLevel_2020only.csv")
 ### 2020 water year ###
 #threshold#
 #2020 annual metrics using threshold = -0.5
-write_csv(annual, "data//annual_metrics_2020.csv")
+write_csv(annual, "data//annual_metrics_2020_threshold.csv")
 #event metrics for threshold = -0.5
 #write_csv(event_metrics, "data//threshold_event_metrics_2020.csv")
 #summary of event metrics for threshold = -0.5
