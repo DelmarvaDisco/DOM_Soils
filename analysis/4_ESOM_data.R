@@ -17,6 +17,7 @@ library(lubridate)
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
+library(ggpubr)
 
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv") #extraction data
@@ -27,17 +28,17 @@ JanMar <- df %>% filter(Month %in% c('2020-01','2020-03'))
 Sept <- df %>% filter(Month == '2020-09')
 Nov <- df %>% filter(Month == "2020-11")
 
-#Separate wetland sites
-QB <- df %>% filter(wetland == "QB")
-TB <- df %>% filter(wetland == "TB")
-DB <- df %>% filter(wetland == "DB")
-ND <- df %>% filter(wetland == "ND")
-
 #Filter out Channel and Forested Flat
 Wetlands <- df %>% filter(wetland %in% c("QB","TB","DB","ND"))
 WetSynoptic <- synoptic %>% filter(Wetland_ID %in% c("QB","TB","DB","ND")) 
 #Filter out Leaf Litter
 WetlandsNoLL <- Wetlands %>% filter(Point != "5 LL")
+
+#Separate wetland sites
+QB <- WetlandsNoLL %>% filter(wetland == "QB")
+TB <- WetlandsNoLL %>% filter(wetland == "TB")
+DB <- WetlandsNoLL %>% filter(wetland == "DB")
+ND <- WetlandsNoLL %>% filter(wetland == "ND")
 
 #General summary of EOC
 EOC_Summary <- WetlandsNoLL %>% group_by(station,Generic_Horizon) %>% 
@@ -50,7 +51,7 @@ write_csv(EOC_Summary,"data//EOC_Summary.csv")
 #2.0 Plots-----------------------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#2.1 Plots of EOC vs other variables---------------------------------------
+#2.1  EOC ---------------------------------------
 
 #EOC Boxplot along Transect Points
 #Including leaf litter
@@ -68,7 +69,7 @@ ggplot(WetlandsNoLL,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   ylab("Transect Point and Soil Horizon") + 
   ggtitle("EOC by Horizon and Transect Spot")
 
-##FI##
+#2.2 FI------------------------------------------
 #FI by Horizon - All wetland sites, no LL
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -141,7 +142,23 @@ ggplot(WetlandsNoLL, aes(Point,FI,fill=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-##SUVA254##
+#FI boxplot by transect point and horizon, wrap by wetland
+#Note: DB and ND show more variability in values
+ggplot(WetlandsNoLL, aes(Point,FI,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("EOC (mg/L)") +
+  ylab("FI") + 
+  ggtitle("All Sites FI")+ 
+  theme_bw() +
+  facet_wrap(~wetland)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#2.3 SUVA254 -------------------------------------------
 #SUVA by Horizon - All wetalnd sites, No LL
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -189,7 +206,7 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Number_Name)) +
 #SUVA boxplot by Point - All wetalnd sites, No LL
 ggplot(WetlandsNoLL, aes(Point,SUVA254_L_mgm,fill=Point)) +
   geom_boxplot()+
-  xlab("EOC (mg/L)") +
+  xlab("Point") +
   ylab("SUVA254") + 
   ggtitle("All Sites SUVA254") + 
   theme_bw() +
@@ -203,7 +220,7 @@ ggplot(WetlandsNoLL, aes(Point,SUVA254_L_mgm,fill=Point)) +
 #SUVA boxplot by Horizon - All wetalnd sites, No LL
 ggplot(WetlandsNoLL, aes(Generic_Horizon,SUVA254_L_mgm,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("EOC (mg/L)") +
+  xlab("Horizon") +
   ylab("SUVA254") + 
   ggtitle("All Sites SUVA254") + 
   theme_bw() +
@@ -214,6 +231,23 @@ ggplot(WetlandsNoLL, aes(Generic_Horizon,SUVA254_L_mgm,fill=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+#SUVA boxplot by transect point and horizon, wrap by wetland
+#Note: DB and ND show more variability in values
+ggplot(WetlandsNoLL, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SUVA254") + 
+  ggtitle("SUVA254")+ 
+  theme_bw() +
+  facet_wrap(~wetland)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+# 2.4 Random ------------------------------------
 #EOC vs ETDN
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,ETDN_mgN_L,col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -284,7 +318,7 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,M,col=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-##HIX##
+# 2.5 HIX ----------------------------------------
 #HIX boxplot by Point - All wetland sites, No LL
 ggplot(WetlandsNoLL, aes(Point,HIX,fill=Point)) +
   geom_boxplot()+
@@ -299,7 +333,7 @@ ggplot(WetlandsNoLL, aes(Point,HIX,fill=Point)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-##SSR##
+# 2.6 SSR -------------------------------------
 ggplot(WetlandsNoLL, aes(Point,SSR,fill=Point)) +
   geom_boxplot()+
   xlab("Point") +
@@ -326,8 +360,9 @@ ggplot(WetlandsNoLL, aes(Point,SSR,fill=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-#2.2 Compare months --------------------------------------------------
+#2.7 Compare months --------------------------------------------------
 
+#2.7.1 QB only -------------------------
 #QB EOC over the 3 sampling campaigns
 ggplot(data=QB,aes(x=Generic_Horizon,y=EOC_mgC_L,fill=Generic_Horizon)) + 
   geom_boxplot()+
@@ -392,10 +427,51 @@ ggplot(data=QB,aes(x=Point,y=Percent_Soil_Moisture_notin,color=Generic_Horizon))
   theme_bw() + 
   facet_wrap(~Month)
 
+#2.7.2 All sites ---------------------------
+#SUVA
+ND_SUVA <- ggplot(data=ND,aes(x=Point,y=SUVA254_L_mgm,col=Generic_Horizon,shape=Generic_Horizon)) + 
+  geom_point(size=3) +
+  ylab("SUVA254") +
+  xlab("Point")+
+  ggtitle("ND") +
+  theme_bw() +
+  facet_wrap(~Month)
+
+DB_SUVA <- ggplot(data=DB,aes(x=Point,y=SUVA254_L_mgm,col=Generic_Horizon,shape=Generic_Horizon)) + 
+  geom_point(size=3) +
+  ylab("SUVA254") +
+  xlab("Point")+
+  ggtitle("DB") +
+  theme_bw() +
+  facet_wrap(~Month)
+
+QB_SUVA <- ggplot(data=QB,aes(x=Point,y=SUVA254_L_mgm,col=Generic_Horizon,shape=Generic_Horizon)) + 
+  geom_point(size=3) +
+  ylab("SUVA254") +
+  xlab("Point")+
+  ggtitle("QB") +
+  theme_bw() +
+  facet_wrap(~Month)
+
+TB_SUVA <- ggplot(data=TB,aes(x=Point,y=SUVA254_L_mgm,col=Generic_Horizon,shape=Generic_Horizon)) + 
+  geom_point(size=3) +
+  ylab("SUVA254") +
+  xlab("Point")+
+  ggtitle("TB") +
+  theme_bw() +
+  facet_wrap(~Month)
+
+SUVA_Wetland <- ggarrange( ND_SUVA, 
+                           DB_SUVA, 
+                           QB_SUVA, 
+                           TB_SUVA,
+                         ncol = 2, nrow = 2)
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#2.3 PARAFAC Results--------------------------------
+# 3.0 PARAFAC Results--------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 2.3.1 Cory and McKnight Model ----------------------------------------
+# 3.1 Cory and McKnight Model ----------------------------------------
 #loadings across all sites
 boxplot(WetlandsNoLL$C1, 
         WetlandsNoLL$C2_Q2, 
@@ -415,13 +491,53 @@ boxplot(WetlandsNoLL$C1,
         ylab="Loading (%)",
         xlab="Component")
 
+#boxplot of most notable components broken out by horizon
+CM_C2 <- ggplot(data=WetlandsNoLL) +
+  geom_boxplot(aes(x=Point,y=C2_Q2,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C2")+
+  ggtitle("%C2 by Point")+
+  theme_bw()
+CM_C4 <- ggplot(data=WetlandsNoLL) +
+  geom_boxplot(aes(x=Point,y=C4_HQ,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C4")+
+  ggtitle("%C4 by Point")+
+  theme_bw()
+CM_C8 <- ggplot(data=WetlandsNoLL) +
+  geom_boxplot(aes(x=Point,y=C8_Trypto,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C8")+
+  ggtitle("%C8 by Point")+
+  theme_bw()
+CM_C12 <- ggplot(data=WetlandsNoLL) +
+  geom_boxplot(aes(x=Point,y=C12_Q3,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C12")+
+  ggtitle("%C12 by Point")+
+  theme_bw()
+CM_C13 <- ggplot(data=WetlandsNoLL) +
+  geom_boxplot(aes(x=Point,y=C13_Tyrosine,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C13")+
+  ggtitle("%C13 by Point")+
+  theme_bw()
+  
+CM_Boxplot <- ggarrange( CM_C2, 
+                         CM_C4, 
+                         CM_C8, 
+                         CM_C12,
+                         CM_C13,
+                         ncol = 2, nrow = 3)
+
 ##C2##
 #EOC
 ggplot(data=WetlandsNoLL) +
   geom_point(aes(x=EOC_mgC_L,y=C2_Q2,col=Generic_Horizon)) +
   xlab("EOC (mg/L)") +
   ylab("%C2")+
-  ggtitle("%C2 vs EOC")
+  ggtitle("%C2 vs EOC")+
+  theme_bw()
 #SUVA
 ggplot(data=WetlandsNoLL) +
   geom_point(aes(x=SUVA254_L_mgm,y=C2_Q2,col=Generic_Horizon),size=3) +
@@ -442,13 +558,15 @@ ggplot(data=WetlandsNoLL) +
   geom_point(aes(x=EOC_mgC_L,y=C4_HQ,col=Generic_Horizon)) +
   xlab("EOC (mg/L)") +
   ylab("%C4")+
-  ggtitle("%C4 vs EOC")
+  ggtitle("%C4 vs EOC")+
+  theme_bw()
 #SUVA
 ggplot(data=WetlandsNoLL) +
   geom_point(aes(x=SUVA254_L_mgm,y=C4_HQ,col=Generic_Horizon)) +
   xlab("SUVA254 (L/mg-m)") +
   ylab("%C4")+
-  ggtitle("%C4 vs SUVA254")
+  ggtitle("%C4 vs SUVA254")+
+  theme_bw()
 
 ##C8##
 #EOC
@@ -541,8 +659,8 @@ ggplot(data=WetlandsNoLL) +
   ylab("%C13")+
   ggtitle("%C13 vs FI")
 
-#2.3.2 Delmarva Synoptic Model -----------------------------------------
-#boxplot of loadings across all samples
+#3.2 Delmarva Synoptic Model -----------------------------------------
+#boxplot of loadings across all samples - no leaf litter
 boxplot(WetlandsNoLL$DMV_C1, 
         WetlandsNoLL$DMV_C2, 
         WetlandsNoLL$DMV_C3, 
@@ -552,56 +670,156 @@ boxplot(WetlandsNoLL$DMV_C1,
         ylab="Loading (%)",
         xlab="Component")
 
-#Components vs fluorescence metrics
-ggplot(data=WetlandsNoLL)+
-  geom_point(aes(x=SUVA254_L_mgm,y=DMV_C1,col=Generic_Horizon)) +
-  xlab("SUVA254 (L/mg-m)") +
-  ylab("%C1")+
-  ggtitle("%C1 vs SUVA254")+
-  theme_bw()
+#boxplot of loadings across all samples - including leaf litter
+boxplot(Wetlands$DMV_C1, 
+        Wetlands$DMV_C2, 
+        Wetlands$DMV_C3, 
+        Wetlands$DMV_C4,
+        main="Percent Loading of Each Component",
+        names=c("C1","C2","C3","C4"),
+        ylab="Loading (%)",
+        xlab="Component")
 
-ggplot(data=WetlandsNoLL)+
-  geom_point(aes(x=FI,y=DMV_C4,col=Generic_Horizon)) +
-  xlab("FI") +
-  ylab("%C4")+
-  ggtitle("%C4 vs FI")+
-  theme_bw()
-
-#Components by horizon
-#C1
-ggplot(data=WetlandsNoLL)+
-  geom_boxplot(aes(x=Point,y=DMV_C1,fill=Generic_Horizon)) +
+#loading by horizon
+Box_C1 <- ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C1,fill=Generic_Horizon))+ 
   xlab("Transect Point") +
   ylab("%C1")+
   ggtitle("%C1 by Point")+
   theme_bw()
-
-#C2
-ggplot(data=WetlandsNoLL)+
-  geom_boxplot(aes(x=Point,y=DMV_C2,fill=Generic_Horizon)) +
+Box_C2 <- ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C2,fill=Generic_Horizon))+
   xlab("Transect Point") +
   ylab("%C2")+
   ggtitle("%C2 by Point")+
   theme_bw()
-
-#C3
-ggplot(data=WetlandsNoLL)+
-  geom_boxplot(aes(x=Point,y=DMV_C3,fill=Generic_Horizon)) +
+Box_C3 <- ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C3,fill=Generic_Horizon))+
   xlab("Transect Point") +
   ylab("%C3")+
   ggtitle("%C3 by Point")+
   theme_bw()
-
-#C4
-ggplot(data=WetlandsNoLL)+
-  geom_boxplot(aes(x=Point,y=DMV_C4,fill=Generic_Horizon)) +
+Box_C4 <- ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C4,fill=Generic_Horizon))+
   xlab("Transect Point") +
   ylab("%C4")+
   ggtitle("%C4 by Point")+
   theme_bw()
 
+DMV_Boxplot <- ggarrange(Box_C1, 
+                         Box_C2, 
+                         Box_C3, 
+                         Box_C4,
+                         labels = c("1", "2","3","4"),
+                         ncol = 2, nrow = 2)
 
-#2.4 ESOM and Synoptic Data Together-----------------------------------
+#component by wetland
+DMV_C1 <- ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C1,fill=Generic_Horizon))+ 
+  xlab("Transect Point") +
+  ylab("%C1")+
+  ggtitle("%C1 by Point")+
+  theme_bw()+
+  facet_wrap(~wetland)
+DMV_C2 <- ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C2,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C2")+
+  ggtitle("%C2 by Point")+
+  theme_bw()+
+  facet_wrap(~wetland)
+DMV_C3 <- ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C3,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C3")+
+  ggtitle("%C3 by Point")+
+  theme_bw()+
+  facet_wrap(~wetland)
+DMV_C4 <- ggplot(data=WetlandsNoLL)+
+  geom_boxplot(aes(x=Point,y=DMV_C4,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C4")+
+  ggtitle("%C4 by Point")+
+  theme_bw()+
+  facet_wrap(~wetland)
+
+DMV_Boxplot <- ggarrange(DMV_C1, 
+                         DMV_C2, 
+                         DMV_C3, 
+                         DMV_C4,
+                         labels = c("C1", "C2","C3","C4"),
+                         ncol = 2, nrow = 2)
+
+#Components vs fluorescence metrics
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=SUVA254_L_mgm,y=DMV_C2,col=Generic_Horizon,shape=Point,size=2)) +
+  xlab("SUVA254 (L/mg-m)") +
+  ylab("%C2")+
+  ggtitle("%C2 vs SUVA254")+
+  theme_bw()
+
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=FI,y=DMV_C3,col=Generic_Horizon,shape=Point,size=2)) +
+  xlab("FI") +
+  ylab("%C3")+
+  ggtitle("%C3 vs FI")+
+  theme_bw()
+
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=HIX,y=DMV_C1,col=Generic_Horizon,shape=Point,size=2)) +
+  xlab("HIX") +
+  ylab("%C1")+
+  ggtitle("%C1 vs HIX")+
+  theme_bw()
+
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=SSR,y=DMV_C1,col=Generic_Horizon,shape=Point)) +
+  xlab("SSR") +
+  ylab("%C1")+
+  ggtitle("%C1 vs SSR")+
+  theme_bw()
+
+#Components vs EOC
+#C1
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=EOC_mgC_L,y=DMV_C1,col=Generic_Horizon)) +
+  xlab("EOC (mg/L)") +
+  ylab("%C1")+
+  ggtitle("%C1 vs EOC")+
+  theme_bw()
+
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=EOC_mgC_L,y=DMV_C1,col=Point)) +
+  xlab("EOC (mg/L)") +
+  ylab("%C1")+
+  ggtitle("%C1 vs EOC")+
+  theme_bw()
+
+#C2
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=EOC_mgC_L,y=DMV_C2,col=Generic_Horizon)) +
+  xlab("EOC (mg C/L)") +
+  ylab("%C2")+
+  ggtitle("%C2 vs EOC")+
+  theme_bw()
+
+#C3
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=EOC_mgC_L,y=DMV_C3,col=Generic_Horizon,shape=Point)) +
+  xlab("EOC (mg C/L)") +
+  ylab("%C3")+
+  ggtitle("%C3 vs EOC")+
+  theme_bw()
+
+#C4
+ggplot(data=WetlandsNoLL)+
+  geom_point(aes(x=EOC_mgC_L,y=DMV_C4,col=Generic_Horizon,shape=Point)) +
+  xlab("EOC (mg C/L)") +
+  ylab("%C4")+
+  ggtitle("%C4 vs EOC")+
+  theme_bw()
+
+#4.0 ESOM and Synoptic Data Together-----------------------------------
 
 #EOC Boxplot along Transect Points
 ggplot(WetSynoptic,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
@@ -663,7 +881,7 @@ ggplot(WetSynoptic,aes(x=FI,y=SSR,col=Generic_Horizon)) +
   ggtitle("SSR vs FI") +
   theme_bw()
 
-#2.5 Other variables-----------------------------------
+#5.0 Other variables-----------------------------------
 
 #FI vs SSR
 ggplot(WetlandsNoLL,aes(x=FI,y=SSR,col=Generic_Horizon)) + 
@@ -798,7 +1016,7 @@ ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=SUVA254_L_mgm,color=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#3.0 Correlation Exploration ---------------------------------------------------
+#6.0 Correlation Exploration ---------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 library(corrplot)

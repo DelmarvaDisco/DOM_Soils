@@ -64,6 +64,7 @@ meanEOC <-ggplot(data, aes(mean_waterLevel,EOC_mgC_L,col=Generic_Horizon)) +
   geom_smooth(method = 'lm')+
   stat_regline_equation(label.x = -0.5)+
   stat_cor(label.x = 0)
+
 EOCoverall <- ggplot(data, aes(mean_waterLevel,EOC_mgC_L)) +
   geom_point(size=2.5) +
   xlab("Mean Water Elev (m)") +
@@ -1414,21 +1415,169 @@ FInevent <- ggplot() +
   stat_cor(data=A,aes(A_n_events,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.9)+
   stat_cor(data=B,aes(B_n_events,FI,col=Generic_Horizon),label.x.npc = "center",label.y = 1.8)
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#6.0 Variability within transect point -------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#separate transect points and get mean of data points (since you have 3 months of samples)
+Upland <- data %>% filter(station == "KW-4U") %>% 
+  group_by(wetland,station,Generic_Horizon) %>% 
+  summarize(meanEOC = mean(EOC_mgC_L),
+            meanFI = mean(FI),
+            meanSUVA = mean(SUVA254_L_mgm),
+            meanHIX=mean(HIX),
+            meanSSR = mean(SSR),
+            meanWL = mean(mean_waterLevel))
+Trans <- data %>% filter(station == "KW-3T")%>% 
+  group_by(wetland,station,Generic_Horizon) %>% 
+  summarize(meanEOC = mean(EOC_mgC_L),
+            meanFI = mean(FI),
+            meanSUVA = mean(SUVA254_L_mgm),
+            meanHIX=mean(HIX),
+            meanSSR = mean(SSR),
+            meanWL = mean(mean_waterLevel))
+Edge <- data %>% filter(station == "KW-2E")%>% 
+  group_by(wetland,station,Generic_Horizon) %>% 
+  summarize(meanEOC = mean(EOC_mgC_L),
+            meanFI = mean(FI),
+            meanSUVA = mean(SUVA254_L_mgm),
+            meanHIX=mean(HIX),
+            meanSSR = mean(SSR),
+            meanWL = mean(mean_waterLevel))
+Wet <- data %>% filter(station == "KW-1W")%>% 
+  group_by(wetland,station,Generic_Horizon) %>% 
+  summarize(meanEOC = mean(EOC_mgC_L),
+            meanFI = mean(FI),
+            meanSUVA = mean(SUVA254_L_mgm),
+            meanHIX=mean(HIX),
+            meanSSR = mean(SSR),
+            meanWL = mean(mean_waterLevel))
+
+All <- data %>%
+  group_by(wetland,station,Generic_Horizon) %>% 
+  summarize(meanEOC = mean(EOC_mgC_L),
+            meanFI = mean(FI),
+            meanSUVA = mean(SUVA254_L_mgm),
+            meanHIX=mean(HIX),
+            meanSSR = mean(SSR),
+            meanWL = mean(mean_waterLevel))
+
+# 6.1 EOC -----------------------------------
+#Upland
+UpEOC <- ggplot(Upland, aes(meanWL,meanEOC,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Upland EOC vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.1)+
+  stat_cor(label.x = -1.05)
+#Transition
+TransEOC <- ggplot(Trans, aes(meanWL,meanEOC,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Transition EOC vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.0)+
+  stat_cor(label.x = -0.9)
+#Edge
+EdgeEOC <- ggplot(Edge, aes(meanWL,meanEOC,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Edge EOC vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.0)#+
+  #stat_cor(label.x = -0.9)
+#Wetland
+WetlandEOC <- ggplot(Wet, aes(meanWL,meanEOC,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.0)#+
+#stat_cor(label.x = -0.9)
+
+#Don't separate horizons
+ggplot(All, aes(meanWL,meanEOC,col=station)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("EOC vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.0)+
+  stat_cor(label.x = -0.5)
+
+# 6.2 FI -------------------------------------
+#Don't separate horizons
+ggplot(All, aes(meanWL,meanFI,col=station)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("FI") + 
+  ggtitle("FI vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.0)+
+  stat_cor(label.x = -0.5)
+
+# 6.3 SUVA -------------------------------------
+#Don't separate horizons
+ggplot(All, aes(meanWL,meanSUVA,col=station)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA254") + 
+  ggtitle("SUVA254 vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.0)+
+  stat_cor(label.x = -0.5)
+
+
+# 6.4 HIX -------------------------------------
+ggplot(All, aes(meanWL,meanHIX,col=station)) +
+  geom_point(size=2.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("HIX") + 
+  ggtitle("HIX vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.0)+
+  stat_cor(label.x = -0.5)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#6.0 Other Plots -------------------------------------
+#7.0 Variability between wetlands-------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-##6.1 CV of Water Level-----------------------------
+#EOC vs Mean WL colored by wetland
+ggplot(All, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
+  geom_point(size=4) +
+  xlab("Mean Water Elev (m)") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("Wetland EOC vs Mean WL") + 
+  theme_bw()
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#8.0 Other Plots -------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+##7.1 CV of Water Level-----------------------------
 #CV by transect point
-ggplot(data, aes(station,CV_waterLevel,fill=station))+
-  geom_boxplot()+
+ggplot(data, aes(station,CV_waterLevel,col=station))+
+  geom_point(size=4)+
   xlab("Transect Point") +
   ylab("CV") + 
   ggtitle("Coefficient of Variation By Transect Point") + 
-  theme_bw()
+  theme_bw()+
+  facet_wrap(~wetland)
 
-#6.2 Potential vs realized DOM---------------------------------
+#7.2 Potential vs realized DOM---------------------------------
 
 subset <- data %>% dplyr::select(wetland,station,Generic_Horizon,EOC_mgC_L,Layer_Thickness_cm, 
                                min_waterLevel,mean_waterLevel,median_waterLevel,max_waterLevel,
