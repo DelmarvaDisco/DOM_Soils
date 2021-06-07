@@ -18,9 +18,13 @@ library(tidyverse)
 library(dplyr)
 
 #load data
-#depth<-read_csv("data//waterLevel_at_sampling_location.csv") #all data
-depth <- read_csv("data//waterLevel_2020only.csv") #2020 water year
-metrics<-read_csv("data//annual_metrics_2020_threshold.csv")
+#2017-2020
+depth<-read_csv("data//waterLevel_at_sampling_location.csv") 
+depth<-depth %>% drop_na(y_n)
+metrics<-read_csv("data//annual_metrics_2017-2020_threshold.csv")
+#2020 water year only
+#depth <- read_csv("data//waterLevel_2020only.csv") 
+#metrics<-read_csv("data//annual_metrics_2020_threshold.csv")
 
 #Remove SC-A because it was inundaded and not samples
 #depth<-depth %>% filter(!(station == 'KW-4U' & wetland == 'QB'))
@@ -62,6 +66,7 @@ cols<-c(
   'Transition' = '#74a9cf', 
   'Upland' = '#bdc9e1') #,
   #'E' = '#f1eef6')
+
 line_col<-"grey50"
 
 #Start ggplot
@@ -104,8 +109,8 @@ hyd<-ggplot() +
   #Legend/color
   scale_fill_manual(name=NULL, values=cols) +
   #Clip to water year
-  #coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
-  coord_cartesian(xlim=as.Date(c("2019-09-30", "2020-10-01"))) +
+  coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
+  #coord_cartesian(xlim=as.Date(c("2019-09-30", "2020-10-01"))) +
   #theme options
   theme_bw() + 
   ylab("Water Level [cm]") + 
@@ -121,19 +126,20 @@ hyd
 
 #2.2 Water Level Plot---------------------------------------
 dep<-depth %>%
-  #Convert depth-to-water-table to water level
-  mutate(d_n = -1*y_n) %>% 
+  #Convert depth-to-water-table to water level (ignore so I keep water level)
+  #mutate(d_n = -1*y_n) %>% 
   #Select SC stations
   filter(str_detect(station, 'KW')) %>% 
   #Summarise duration by transect and station
   mutate(transect = substr(station,4,4)) %>% 
   group_by(transect, wetland) %>%
-  summarise(d_n = mean(d_n, na.rm=T), na.rm=T) %>% 
+  summarise(y_n = mean(y_n, na.rm=T), na.rm=T) %>% 
+  #summarise(d_n = mean(d_n, na.rm=T), na.rm=T) %>% 
   #Summarise by transect
   group_by(transect) %>% 
-  summarise(mean = mean(d_n, na.rm=T)*100, 
-            upr    = (mean(d_n, na.rm=T) + sd(d_n, na.rm = T)/sqrt(n()))*100,
-            lwr    = (mean(d_n, na.rm=T) - sd(d_n, na.rm = T)/sqrt(n()))*100) %>% 
+  summarise(mean = mean(y_n, na.rm=T)*100, 
+            upr    = (mean(y_n, na.rm=T) + sd(y_n, na.rm = T)/sqrt(n()))*100,
+            lwr    = (mean(y_n, na.rm=T) - sd(y_n, na.rm = T)/sqrt(n()))*100) %>% 
   #plot!
   ggplot() + 
   geom_hline(aes(yintercept=0), lty=2,lwd=1.25, col="grey30")+
@@ -147,7 +153,7 @@ dep<-depth %>%
              fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3'), 
              alpha = 70) + 
   theme_bw() + 
-  ylab("Depth to Water Table [cm]") + 
+  ylab("Water Elevation [cm]") + 
   xlab("Hydrologic Zone") + 
   theme(axis.title = element_text(size = 14),
         axis.text = element_text(size = 12)) 
