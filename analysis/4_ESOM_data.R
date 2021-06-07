@@ -835,8 +835,8 @@ ggplot(WetSynoptic,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   facet_wrap(~Month)
 
 #FI by Horizon - All wetland sites
-ggplot(WetSynoptic, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
-  geom_point(size=2.5) +
+ggplot(WetSynoptic, aes(EOC_mgC_L,FI,col=Generic_Horizon,shape=Wetland_ID)) +
+  geom_point(size=3.5) +
   #stat_ellipse()+
   xlab("EOC (mg/L)") +
   ylab("FI") + 
