@@ -1464,44 +1464,44 @@ All <- data %>%
 
 # 6.1 EOC -----------------------------------
 #Upland
-UpEOC <- ggplot(Upland, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
+UpEOC <- ggplot(Upland, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Upland EOC vs Mean WL") + 
   theme_bw() +
-  geom_smooth(method = 'lm')+
-  stat_regline_equation(label.x = -1.1)+
-  stat_cor(label.x = -1.05)
+  geom_smooth(method = 'lm')#+
+  #stat_regline_equation(label.x = -1.1)+
+  #stat_cor(label.x = -1.05)
 #Transition
-TransEOC <- ggplot(Trans, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
+TransEOC <- ggplot(Trans, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Transition EOC vs Mean WL") + 
-  theme_bw() +
-  geom_smooth(method = 'lm')+
-  stat_regline_equation(label.x = -1.0)+
-  stat_cor(label.x = -0.9)
+  theme_bw()+
+  geom_smooth(method = 'lm')#+
+  #stat_regline_equation(label.x = -1.0)+
+  #stat_cor(label.x = -0.9)
 #Edge
-EdgeEOC <- ggplot(Edge, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
+EdgeEOC <- ggplot(Edge, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Edge EOC vs Mean WL") + 
   theme_bw() +
-  geom_smooth(method = 'lm')+
-  stat_regline_equation(label.x = -1.0)#+
+  geom_smooth(method = 'lm')#+
+  #stat_regline_equation(label.x = -1.0)#+
   #stat_cor(label.x = -0.9)
 #Wetland
-WetlandEOC <- ggplot(Wet, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
+WetlandEOC <- ggplot(Wet, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw() +
-  geom_smooth(method = 'lm')+
-  stat_regline_equation(label.x = -1.0)#+
+  geom_smooth(method = 'lm')#+
+  #stat_regline_equation(label.x = -1.0)#+
 #stat_cor(label.x = -0.9)
 
 figureEOC <- ggarrange( UpEOC, 
@@ -1531,6 +1531,55 @@ ggplot(All, aes(x=reorder(station,meanWL,FUN=mean),y=meanEOC,fill=wetland)) +
   theme_bw()
 
 # 6.2 FI -------------------------------------
+#Upland
+UpFI <- ggplot(Upland, aes(meanWL,meanFI,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("FI") + 
+  ggtitle("Upland FI vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+  #stat_regline_equation(label.x = -1.1)+
+  #stat_cor(label.x = -1.05)
+#Transition
+TransFI <- ggplot(Trans, aes(meanWL,meanFI,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("FI)") + 
+  ggtitle("Transition FI vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+  #stat_regline_equation(label.x = -1.0)+
+  #stat_cor(label.x = -0.9)
+#Edge
+EdgeFI <- ggplot(Edge, aes(meanWL,meanFI,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("FI") + 
+  ggtitle("Edge FI vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+  #stat_regline_equation(label.x = -1.0)#+
+#stat_cor(label.x = -0.9)
+#Wetland
+WetlandFI <- ggplot(Wet, aes(meanWL,meanFI,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("FI") + 
+  ggtitle("Wetland FI vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+  #stat_regline_equation(label.x = -1.0)#+
+#stat_cor(label.x = -0.9)
+
+figureFI <- ggarrange(  UpFI, 
+                        TransFI, 
+                        EdgeFI, 
+                        WetlandFI,
+                        labels = c("A", "B","C","D"),
+                        ncol = 2, nrow = 2)
+figureFI
+
 #Don't separate horizons
 ggplot(All, aes(meanWL,meanFI,col=station)) +
   geom_point(size=2.5) +
@@ -1541,8 +1590,64 @@ ggplot(All, aes(meanWL,meanFI,col=station)) +
   geom_smooth(method = 'lm')+
   stat_regline_equation(label.x = -1.0)+
   stat_cor(label.x = -0.5)
+ggplot(All, aes(meanWL,meanFI,col=station,shape=wetland)) +
+  geom_point(size=4) +
+  xlab("Mean Water Elev (m)") +
+  ylab("FI") + 
+  ggtitle("FI vs Mean WL") + 
+  theme_bw() 
+
 
 # 6.3 SUVA -------------------------------------
+#Upland
+UpSUVA <- ggplot(Upland, aes(meanWL,meanSUVA,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA") + 
+  ggtitle("Upland SUVA vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+#stat_regline_equation(label.x = -1.1)+
+#stat_cor(label.x = -1.05)
+#Transition
+TransSUVA <- ggplot(Trans, aes(meanWL,meanSUVA,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA254") + 
+  ggtitle("Transition SUVA vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+#stat_regline_equation(label.x = -1.0)+
+#stat_cor(label.x = -0.9)
+#Edge
+EdgeSUVA <- ggplot(Edge, aes(meanWL,meanSUVA,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA254") + 
+  ggtitle("Edge SUVA vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+#stat_regline_equation(label.x = -1.0)#+
+#stat_cor(label.x = -0.9)
+#Wetland
+WetlandSUVA <- ggplot(Wet, aes(meanWL,meanSUVA,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA254") + 
+  ggtitle("Wetland SUVA vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+#stat_regline_equation(label.x = -1.0)#+
+#stat_cor(label.x = -0.9)
+
+figureSUVA <- ggarrange(  UpSUVA, 
+                        TransSUVA, 
+                        EdgeSUVA, 
+                        WetlandSUVA,
+                        labels = c("A", "B","C","D"),
+                        ncol = 2, nrow = 2)
+figureSUVA
+
 #Don't separate horizons
 ggplot(All, aes(meanWL,meanSUVA,col=station)) +
   geom_point(size=2.5) +
@@ -1553,9 +1658,65 @@ ggplot(All, aes(meanWL,meanSUVA,col=station)) +
   geom_smooth(method = 'lm')+
   stat_regline_equation(label.x = -1.0)+
   stat_cor(label.x = -0.5)
-
+ggplot(All, aes(meanWL,meanSUVA,col=station,shape=wetland)) +
+  geom_point(size=4) +
+  xlab("Mean Water Elev (m)") +
+  ylab("SUVA254") + 
+  ggtitle("SUVA254 vs Mean WL") + 
+  theme_bw() 
 
 # 6.4 HIX -------------------------------------
+#Upland
+UpHIX<- ggplot(Upland, aes(meanWL,meanHIX,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("HIX") + 
+  ggtitle("Upland HIX vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+#stat_regline_equation(label.x = -1.1)+
+#stat_cor(label.x = -1.05)
+#Transition
+TransHIX <- ggplot(Trans, aes(meanWL,meanHIX,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("HIX") + 
+  ggtitle("Transition HIX vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+#stat_regline_equation(label.x = -1.0)+
+#stat_cor(label.x = -0.9)
+#Edge
+EdgeHIX <- ggplot(Edge, aes(meanWL,meanHIX,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("HIX") + 
+  ggtitle("Edge HIX vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+#stat_regline_equation(label.x = -1.0)#+
+#stat_cor(label.x = -0.9)
+#Wetland
+WetlandHIX <- ggplot(Wet, aes(meanWL,meanHIX,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("HIX") + 
+  ggtitle("Wetland HIX vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')#+
+#stat_regline_equation(label.x = -1.0)#+
+#stat_cor(label.x = -0.9)
+
+figureHIX <- ggarrange(  UpHIX, 
+                          TransHIX, 
+                          EdgeHIX, 
+                          WetlandHIX,
+                          labels = c("A", "B","C","D"),
+                          ncol = 2, nrow = 2)
+figureHIX
+
+
+#dont separate horizons
 ggplot(All, aes(meanWL,meanHIX,col=station)) +
   geom_point(size=2.5) +
   xlab("Mean Water Elev (m)") +
@@ -1565,6 +1726,12 @@ ggplot(All, aes(meanWL,meanHIX,col=station)) +
   geom_smooth(method = 'lm')+
   stat_regline_equation(label.x = -1.0)+
   stat_cor(label.x = -0.5)
+ggplot(All, aes(meanWL,meanHIX,col=station,shape=wetland)) +
+  geom_point(size=4) +
+  xlab("Mean Water Elev (m)") +
+  ylab("HIX") + 
+  ggtitle("HIX vs Mean WL") + 
+  theme_bw()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #7.0 Variability between wetlands-------------------------------------
