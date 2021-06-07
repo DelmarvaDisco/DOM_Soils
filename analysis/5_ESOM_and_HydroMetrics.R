@@ -1464,8 +1464,8 @@ All <- data %>%
 
 # 6.1 EOC -----------------------------------
 #Upland
-UpEOC <- ggplot(Upland, aes(meanWL,meanEOC,col=Generic_Horizon)) +
-  geom_point(size=2.5) +
+UpEOC <- ggplot(Upland, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
+  geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Upland EOC vs Mean WL") + 
@@ -1474,8 +1474,8 @@ UpEOC <- ggplot(Upland, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   stat_regline_equation(label.x = -1.1)+
   stat_cor(label.x = -1.05)
 #Transition
-TransEOC <- ggplot(Trans, aes(meanWL,meanEOC,col=Generic_Horizon)) +
-  geom_point(size=2.5) +
+TransEOC <- ggplot(Trans, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
+  geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Transition EOC vs Mean WL") + 
@@ -1484,8 +1484,8 @@ TransEOC <- ggplot(Trans, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   stat_regline_equation(label.x = -1.0)+
   stat_cor(label.x = -0.9)
 #Edge
-EdgeEOC <- ggplot(Edge, aes(meanWL,meanEOC,col=Generic_Horizon)) +
-  geom_point(size=2.5) +
+EdgeEOC <- ggplot(Edge, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
+  geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Edge EOC vs Mean WL") + 
@@ -1494,8 +1494,8 @@ EdgeEOC <- ggplot(Edge, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   stat_regline_equation(label.x = -1.0)#+
   #stat_cor(label.x = -0.9)
 #Wetland
-WetlandEOC <- ggplot(Wet, aes(meanWL,meanEOC,col=Generic_Horizon)) +
-  geom_point(size=2.5) +
+WetlandEOC <- ggplot(Wet, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
+  geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
@@ -1504,16 +1504,31 @@ WetlandEOC <- ggplot(Wet, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   stat_regline_equation(label.x = -1.0)#+
 #stat_cor(label.x = -0.9)
 
+figureEOC <- ggarrange( UpEOC, 
+                        TransEOC, 
+                        EdgeEOC, 
+                        WetlandEOC,
+                        labels = c("A", "B","C","D"),
+                        ncol = 2, nrow = 2)
+figureEOC
+
 #Don't separate horizons
-ggplot(All, aes(meanWL,meanEOC,col=station)) +
-  geom_point(size=2.5) +
+ggplot(All, aes(meanWL,meanEOC,col=station,shape=wetland)) +
+  geom_point(size=3) +
   xlab("Mean Water Elev (m)") +
   ylab("EOC (mg/L)") + 
   ggtitle("EOC vs Mean WL") + 
-  theme_bw() +
-  geom_smooth(method = 'lm')+
-  stat_regline_equation(label.x = -1.0)+
-  stat_cor(label.x = -0.5)
+  theme_bw() 
+  #geom_smooth(method = 'lm')+
+  #stat_regline_equation(label.x = -1.0)+
+  #stat_cor(label.x = -0.5)
+
+ggplot(All, aes(x=reorder(station,meanWL,FUN=mean),y=meanEOC,fill=wetland)) +
+  geom_boxplot() +
+  xlab("Station") +
+  ylab("EOC (mg/L)") + 
+  ggtitle("EOC vs Mean WL") + 
+  theme_bw()
 
 # 6.2 FI -------------------------------------
 #Don't separate horizons
