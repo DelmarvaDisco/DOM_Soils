@@ -38,6 +38,8 @@ WetlandsNoLL <- Wetlands %>% filter(Point != "5 LL")
 #Join metrics and ESOM data
 data <- inner_join(df, threshold_annual, by=c("wetland","station"))
 
+horiz_metrics <- inner_join(df,soil_annual,by=c("wetland","station"))
+
 #Filter water level data to just 2020 water year
 waterlevel <- waterlevel %>% filter(Timestamp > "2019-10-01" & Timestamp < "2020-10-01")
 
@@ -56,6 +58,7 @@ Station <- WetlandsNoLL$station
 Horizon <- WetlandsNoLL$Generic_Horizon
 
 #Summarize data
+#By horizon
 ESOM_Horizon_Summary <- WetlandsNoLL %>% 
         group_by(Generic_Horizon) %>% 
         summarise( MeanEOC = mean(EOC_mgC_L),
@@ -68,7 +71,7 @@ ESOM_Horizon_Summary <- WetlandsNoLL %>%
                    sdHIX = sd(HIX),
                    MeanSSR = mean(SSR,na.rm=T),
                    sdSSR = sd(SSR,na.rm = T))
-
+#By station
 ESOM_Station_Summary <- WetlandsNoLL %>% 
   group_by(station) %>% 
   summarise( MeanEOC = mean(EOC_mgC_L),
@@ -83,6 +86,7 @@ ESOM_Station_Summary <- WetlandsNoLL %>%
              sdSSR = sd(SSR,na.rm = T))
 
 ### Water Level Metrics###
+#by station
 threshold_annual_summary <-threshold_annual %>% 
   #Group by wetland and sampling station
   group_by(station) %>% 
@@ -131,6 +135,23 @@ maxWL <-   threshold_annual$max_waterLevel
 durday <-  threshold_annual$dur_day
 nevents <- threshold_annual$n_events
 
+#N events + sat duration by horizon
+soil_summary <- soil_annual %>% group_by(station) %>% 
+  summarise(#O horizon
+            O_dur_day_mean = mean(O_dur_day,na.rm=T),
+            O_dur_day_sd = sd(O_dur_day,na.rm=T),
+            O_nevents_mean = mean(O_n_events,na.rm=T),
+            O_nevents_sd = sd(O_n_events,na.rm=T),
+            #A horizon
+            A_dur_day_mean = mean(A_dur_day,na.rm=T),
+            A_dur_day_sd = sd(A_dur_day,na.rm=T),
+            A_nevents_mean = mean(A_n_events,na.rm=T),
+            A_nevents_sd = sd(A_n_events,na.rm=T),
+            #B horizon
+            B_dur_day_mean = mean(B_dur_day,na.rm=T),
+            B_dur_day_sd = sd(B_dur_day,na.rm=T),
+            B_nevents_mean = mean(B_n_events,na.rm=T),
+            B_nevents_sd = sd(B_n_events,na.rm=T))
 
 ### 2.1 EOC -----------------------------------
 hist(WetlandsNoLL$EOC_mgC_L)
@@ -266,12 +287,12 @@ qqnorm(durday)
 logdurday <- log(durday)
 shapiro.test(durday) #not normally distributed
 bartlett.test(durday~station) #not equal variance
-leveneTest(durday,station,center=median) #equal variance with levene - use kruskal wallis
+leveneTest(durday,station,center=median) #no equal variance with levene - use onway
 #n events
 qqnorm(nevents)
 shapiro.test(nevents) #not normally distributed
 bartlett.test(nevents~station) #not equal variance
-leveneTest(nevents,station,center=median) #equal variance levene - use kruskal wallis
+leveneTest(nevents,station,center=median) #no equal variance levene - use oneway
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 ANOVA/TukeyHSD/Kruskal-Wallis/Oneway Test --------------------------------------------------
@@ -369,13 +390,15 @@ medianWL.HSD <- HSD.test(medianWL.aov,"station",group=T);medianWL.HSD
 maxWL.aov <-aov(maxWL~station); summary(medianWL.aov)
 maxWL.HSD <-   TukeyHSD(maxWL.aov); maxWL.HSD
 maxWL.HSD <- HSD.test(maxWL.aov,"station",group=T);maxWL.HSD
-#inundation duration - need Kruskal wallis instead of ANOVA
-durday.KW <- kruskal.test(durday~station)
+#inundation duration - need onway instead of ANOVA
+durday.OW <- oneway.test(durday~station);durday.OW
+durday.KW <- kruskal.test(durday~station);durday.KW 
 #durday.aov <-  aov(durday~station); summary(durday.aov)
 #durday.HSD <-   TukeyHSD(durday.aov); durday.HSD
 #durday.HSD <- HSD.test(durday.aov,"station",group=T);durday.HSD
-#n events - need Kruskal wallis instead of ANOVA
-nevent.KW <- kruskal.test(nevents~station)
+#n events - need onway test instead of ANOVA
+nevent.OW <- oneway.test(nevents~station);nevent.OW
+#nevent.KW <- kruskal.test(nevents~station);nevent.KW
 #nevents.aov <- aov(nevents~station); summary(nevents.aov)
 #nevents.HSD <-   TukeyHSD(nevents.aov); nevents.HSD
 #nevents.HSD <- HSD.test(nevents.aov,"station",group=T);nevents.HSD
