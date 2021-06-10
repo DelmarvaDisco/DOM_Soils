@@ -1745,6 +1745,30 @@ ggplot(All, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw()
 
+#mean water level along transect colored by wetland
+ggplot(annual, aes(station,mean_waterLevel,col=wetland)) +
+  geom_point(size=4) +
+  xlab("Transect Station") +
+  ylab("Mean Water Elev (m)") + 
+  ggtitle("Mean Water Level by Wetland") + 
+  theme_bw()
+
+#min water level along transect colored by wetland
+ggplot(annual, aes(station,min_waterLevel,col=wetland)) +
+  geom_point(size=4) +
+  xlab("Transect Station") +
+  ylab("Min Water Elev (m)") + 
+  ggtitle("Min Water Level by Wetland") + 
+  theme_bw()
+
+#max water level along transect colored by wetland
+ggplot(annual, aes(station,max_waterLevel,col=wetland)) +
+  geom_point(size=4) +
+  xlab("Transect Station") +
+  ylab("Max Water Elev (m)") + 
+  ggtitle("Max Water Level by Wetland") + 
+  theme_bw()
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #8.0 Other Plots -------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
