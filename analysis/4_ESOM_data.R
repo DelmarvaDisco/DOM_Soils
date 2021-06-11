@@ -759,10 +759,10 @@ ggplot(data=WetlandsNoLL)+
   theme_bw()
 
 ggplot(data=WetlandsNoLL)+
-  geom_point(aes(x=FI,y=DMV_C3,col=Generic_Horizon,shape=Point,size=2)) +
+  geom_point(aes(x=FI,y=DMV_C4,col=Generic_Horizon,shape=Point,size=2)) +
   xlab("FI") +
-  ylab("%C3")+
-  ggtitle("%C3 vs FI")+
+  ylab("%C4")+
+  ggtitle("%C4 vs FI")+
   theme_bw()
 
 ggplot(data=WetlandsNoLL)+
