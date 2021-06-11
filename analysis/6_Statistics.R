@@ -53,10 +53,6 @@ threshold_annual <- left_join(threshold_annual,elev,by=c("wetland","station"))
 #Look at distributions/normality/equal variance 
 
 ###ESOM DATA###
-#Define station vs horizon
-Station <- WetlandsNoLL$station
-Horizon <- WetlandsNoLL$Generic_Horizon
-
 #Summarize data
 #By horizon
 ESOM_Horizon_Summary <- WetlandsNoLL %>% 
@@ -140,18 +136,28 @@ soil_summary <- soil_annual %>% group_by(station) %>%
   summarise(#O horizon
             O_dur_day_mean = mean(O_dur_day,na.rm=T),
             O_dur_day_sd = sd(O_dur_day,na.rm=T),
+            O_dur_day_se = O_dur_day_sd/sqrt(4),
             O_nevents_mean = mean(O_n_events,na.rm=T),
             O_nevents_sd = sd(O_n_events,na.rm=T),
+            O_nevents_se = O_nevents_sd/sqrt(4),
             #A horizon
             A_dur_day_mean = mean(A_dur_day,na.rm=T),
             A_dur_day_sd = sd(A_dur_day,na.rm=T),
+            A_dur_day_se = A_dur_day_sd/sqrt(4),
             A_nevents_mean = mean(A_n_events,na.rm=T),
             A_nevents_sd = sd(A_n_events,na.rm=T),
+            A_nevents_se = A_nevents_sd/sqrt(4),
             #B horizon
             B_dur_day_mean = mean(B_dur_day,na.rm=T),
             B_dur_day_sd = sd(B_dur_day,na.rm=T),
+            B_dur_day_se = B_dur_day_sd/sqrt(4),
             B_nevents_mean = mean(B_n_events,na.rm=T),
-            B_nevents_sd = sd(B_n_events,na.rm=T))
+            B_nevents_sd = sd(B_n_events,na.rm=T),
+            B_nevents_se = B_nevents_sd/sqrt(4))
+
+#Define station vs horizon
+Station <- WetlandsNoLL$station
+Horizon <- WetlandsNoLL$Generic_Horizon
 
 ### 2.1 EOC -----------------------------------
 hist(WetlandsNoLL$EOC_mgC_L)
@@ -300,24 +306,21 @@ leveneTest(nevents,station,center=median) #no equal variance levene - use oneway
 
 ### 3.1 EOC --------------------------------------------------
 #3.1.1 EOC by horizon------------------------------------------
-logEOC.horiz.aov <- aov(logEOC~Horizon)
-summary(logEOC.horiz.aov)
+logEOC.horiz.aov <- aov(logEOC~Horizon);summary(logEOC.horiz.aov)
 logEOC.horiz.HSD <- TukeyHSD(logEOC.horiz.aov);logEOC.horiz.HSD
 logEOCL.HSD <- HSD.test(logEOC.horiz.aov,"Horizon",group=T);logEOCL.HSD 
 #one-way anova test for unequal variance
 oneway.test(logEOC~Horizon)
 
 #3.1.2 EOC by station------------------------------------------
-logEOC.sta.aov <- aov(logEOC~Station)
-summary(logEOC.sta.aov)
+logEOC.sta.aov <- aov(logEOC~Station);summary(logEOC.sta.aov)
 logEOC.sta.HSD <- TukeyHSD(logEOC.sta.aov);logEOC.sta.HSD 
 logEOC.sta.HSD <- HSD.test(logEOC.sta.aov,"Station",group=T);logEOC.sta.HSD 
 #one-way anova test for unequal variance
 oneway.test(logEOC~Station)
 
 #3.1.3 EOC by both horizon and transect location (ANOCVA) --------------------
-logEOC.both.aov <- aov(logEOC~Horizon+Station)
-summary(logEOC.both.aov)
+logEOC.both.aov <- aov(logEOC~Horizon*Station);summary(logEOC.both.aov)
 logEOC.both.HSD <- TukeyHSD(logEOC.both.aov);logEOC.both.HSD  
 logEOC.both.HSD <- HSD.test(logEOC.both.aov,trt = c("Horizon", "Station"),group=T);logEOC.both.HSD  
 
@@ -328,6 +331,9 @@ pairwise.t.test(FI,Horizon,p.adj="bonferroni") #O not diff from A but all other 
 #3.2.2 FI by station------------------------------------------
 oneway.test(FI~Station)
 pairwise.t.test(FI,Station,p.adj="bonferroni") 
+#I think I can get away with Kruskal-Wallis here
+kruskal.test(FI~Station)
+kruskalmc(Fi,Station, probs=0.05) 
 
 ### 3.3 SUVA ------------------------------------------
 #3.3.1 SVUA by horizon------------------------------------------
@@ -361,6 +367,7 @@ summary(waterlevel.aov)
 waterlevel.HSD <- TukeyHSD(waterlevel.aov);waterlevel.HSD 
 
 ### 3.7 2020 Water Level Metrics--------------------------------
+#3.7.1 Theshold metrics -----------------------------------
 station <- threshold_annual$station
 elev <-    threshold_annual$elevation
 minWL <-   threshold_annual$min_waterLevel
@@ -390,20 +397,75 @@ medianWL.HSD <- HSD.test(medianWL.aov,"station",group=T);medianWL.HSD
 maxWL.aov <-aov(maxWL~station); summary(medianWL.aov)
 maxWL.HSD <-   TukeyHSD(maxWL.aov); maxWL.HSD
 maxWL.HSD <- HSD.test(maxWL.aov,"station",group=T);maxWL.HSD
-#inundation duration - need onway instead of ANOVA
+#inundation duration - need onway instead of ANOVA?
 durday.OW <- oneway.test(durday~station);durday.OW
 durday.KW <- kruskal.test(durday~station);durday.KW 
-#durday.aov <-  aov(durday~station); summary(durday.aov)
-#durday.HSD <-   TukeyHSD(durday.aov); durday.HSD
-#durday.HSD <- HSD.test(durday.aov,"station",group=T);durday.HSD
-#n events - need onway test instead of ANOVA
+durday.aov <-  aov(durday~station); summary(durday.aov)
+durday.HSD <-   TukeyHSD(durday.aov); durday.HSD
+durday.HSD <- HSD.test(durday.aov,"station",group=T);durday.HSD
+#n events - need onway test instead of ANOVA?
 nevent.OW <- oneway.test(nevents~station);nevent.OW
-#nevent.KW <- kruskal.test(nevents~station);nevent.KW
-#nevents.aov <- aov(nevents~station); summary(nevents.aov)
-#nevents.HSD <-   TukeyHSD(nevents.aov); nevents.HSD
-#nevents.HSD <- HSD.test(nevents.aov,"station",group=T);nevents.HSD
+nevent.KW <- kruskal.test(nevents~station);nevent.KW
+nevents.aov <- aov(nevents~station); summary(nevents.aov)
+nevents.HSD <-   TukeyHSD(nevents.aov); nevents.HSD
+nevents.HSD <- HSD.test(nevents.aov,"station",group=T);nevents.HSD
 
+#3.7.2 Soil horizon events and duration of saturation -------------------------
+Odur <- soil_annual$O_dur_day
+Oev <- soil_annual$O_n_events
+Adur <- soil_annual$A_dur_day
+Aev <- soil_annual$A_n_events
+Bdur <- soil_annual$B_dur_day
+Bev <- soil_annual$B_n_events
+station <- soil_annual$station
 
+#O
+#N events
+qqnorm(Oev)
+shapiro.test(Oev) #fail
+bartlett.test(Oev~station) #fail
+Oev.aov <-    aov(Oev~station);summary(Oev.aov)
+Oev.HSD <- TukeyHSD(Oev.aov);Oev.HSD
+Oev.HSD <- HSD.test(Oev.aov,"station",group=T);Oev.HSD
+#Duration
+qqnorm(Odur)
+shapiro.test(Odur) #fail
+bartlett.test(Odur~station) #fail
+Odur.aov <-  aov(Odur~station);summary(Odur.aov)
+Odur.HSD <- TukeyHSD(Odur.aov);Odur.HSD
+Odur.HSD <- HSD.test(Odur.aov,"station",group=T);Odur.HSD
+
+#A
+#N events
+qqnorm(Aev)
+shapiro.test(Aev) #fail
+bartlett.test(Aev~station) #fail
+Aev.aov <-    aov(Aev~station);summary(Aev.aov)
+Aev.HSD <- TukeyHSD(Aev.aov);Aev.HSD
+Aev.HSD <- HSD.test(Aev.aov,"station",group=T);Aev.HSD
+#Duration
+qqnorm(Adur)
+shapiro.test(Adur) #fail
+bartlett.test(Adur~station) #fail
+Adur.aov <-  aov(Adur~station);summary(Adur.aov)
+Adur.HSD <- TukeyHSD(Adur.aov);Adur.HSD
+Adur.HSD <- HSD.test(Adur.aov,"station",group=T);Adur.HSD
+
+#B
+#N events
+qqnorm(Bev)
+shapiro.test(Bev) #fail
+bartlett.test(Bev~station) #fail
+Bev.aov <-    aov(Bev~station);summary(Bev.aov)
+Bev.HSD <- TukeyHSD(Bev.aov);Bev.HSD
+Bev.HSD <- HSD.test(Bev.aov,"station",group=T);Bev.HSD
+#Duration
+qqnorm(Bdur)
+shapiro.test(Bdur) #fail
+bartlett.test(Bdur~station) #fail
+Bdur.aov <-  aov(Bdur~station);summary(Bdur.aov)
+Bdur.HSD <- TukeyHSD(Bdur.aov);Bdur.HSD
+Bdur.HSD <- HSD.test(Bdur.aov,"station",group=T);Bdur.HSD
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #4.0 Simple Linear Regression ---------------------------------------
@@ -424,7 +486,6 @@ A <- data %>% filter(Generic_Horizon == "2A")
 B <- data %>% filter(Generic_Horizon == "3B")
 
 ### 4.1 Mean WL ------------------------------
-
 # 4.1.1 EOC ------------------------------
 lmEOCO <- lm(O$EOC_mgC_L~O$mean_waterLevel)
 summary(lmEOCO)
@@ -579,7 +640,6 @@ data <- data %>%
                                        station == "KW-4U" ~ 3))
 
 #5.1 EOC -----------------------------
-
 #EOC ~ All variables
 lmall <- lm(data$EOC_mgC_L~data$Horizon_Indicator+
               data$Station_Indicator+
