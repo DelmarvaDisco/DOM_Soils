@@ -23,16 +23,16 @@ library(ggpubr)
 df<-read_csv("data/R_Extraction_Results_All.csv") #extraction data
 synoptic <- read_csv("data/R_Extraction_Synoptic_Combined.csv") #extraction combined with synoptic
 
-#Separate months
-JanMar <- df %>% filter(Month %in% c('2020-01','2020-03'))
-Sept <- df %>% filter(Month == '2020-09')
-Nov <- df %>% filter(Month == "2020-11")
-
 #Filter out Channel and Forested Flat
 Wetlands <- df %>% filter(wetland %in% c("QB","TB","DB","ND"))
 WetSynoptic <- synoptic %>% filter(Wetland_ID %in% c("QB","TB","DB","ND")) 
 #Filter out Leaf Litter
 WetlandsNoLL <- Wetlands %>% filter(Point != "5 LL")
+
+#Separate months
+JanMar <- WetlandsNoLL %>% filter(Month %in% c('2020-01','2020-03'))
+Sept <- WetlandsNoLL %>% filter(Month == '2020-09')
+Nov <- WetlandsNoLL %>% filter(Month == "2020-11")
 
 #Separate wetland sites
 QB <- WetlandsNoLL %>% filter(wetland == "QB")
@@ -68,6 +68,35 @@ ggplot(WetlandsNoLL,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   xlab("EOC (mg/L)") +
   ylab("Transect Point and Soil Horizon") + 
   ggtitle("EOC by Horizon and Transect Spot")
+#no leaf litter by month
+#spring
+ggplot(JanMar,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  xlab("mg EOC/L") +
+  ylab("Transect Point and Soil Horizon") + 
+  ggtitle("Spring EOC by Horizon and Transect Spot")+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#autumn
+ggplot(Sept,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  xlab("mg EOC/L") +
+  ylab("Transect Point and Soil Horizon") + 
+  ggtitle("Autumn EOC by Horizon and Transect Spot")+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+
 
 #2.2 FI------------------------------------------
 #FI by Horizon - All wetland sites, no LL
@@ -77,6 +106,36 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   xlab("EOC (mg/L)") +
   ylab("FI") + 
   ggtitle("All Sites FI")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#spring
+ggplot(JanMar, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("EOC (mg/L)") +
+  ylab("FI") + 
+  ggtitle("Spring FI vs EOC")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#autumn
+ggplot(Sept, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("EOC (mg/L)") +
+  ylab("FI") + 
+  ggtitle("Autumn FI vs EOC")+ 
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -141,6 +200,32 @@ ggplot(WetlandsNoLL, aes(Point,FI,fill=Generic_Horizon)) +
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#spring
+ggplot(JanMar, aes(Point,FI,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Transect Point") +
+  ylab("FI") + 
+  ggtitle("Spring FI - All Sites")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#autumn
+ggplot(Sept, aes(Point,FI,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Transect Point") +
+  ylab("FI") + 
+  ggtitle("Autumn FI - All Sites")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #FI boxplot by transect point and horizon, wrap by wetland
 #Note: DB and ND show more variability in values
@@ -159,7 +244,7 @@ ggplot(WetlandsNoLL, aes(Point,FI,fill=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #2.3 SUVA254 -------------------------------------------
-#SUVA by Horizon - All wetalnd sites, No LL
+#SUVA by Horizon - All wetland sites, No LL
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   stat_ellipse()+
@@ -174,7 +259,81 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-#SUVA by Point - All wetalnd sites, No LL
+#spring
+ggplot(JanMar, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("EOC (mg/L)") +
+  ylab("SUVA254") + 
+  ggtitle("Spring SUVA254 vs EOC") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#autumn
+ggplot(Sept, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("EOC (mg/L)") +
+  ylab("SUVA254") + 
+  ggtitle("Autumn SUVA254 vs EOC") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#SUVA vs FI
+ggplot(WetlandsNoLL, aes(FI,SUVA254_L_mgm,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("FI") +
+  ylab("SUVA254") + 
+  ggtitle("All Sites FI vs SUVA254") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#spring
+ggplot(JanMar, aes(FI,SUVA254_L_mgm,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("FI") +
+  ylab("SUVA254") + 
+  ggtitle("Spring FI vs SUVA254") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#autumn
+ggplot(Sept, aes(FI,SUVA254_L_mgm,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("FI") +
+  ylab("SUVA254") + 
+  ggtitle("Autumn FI vs SUVA254") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#SUVA by Point - All wetland sites, No LL
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,shape=Point,col=Point)) +
   geom_point(size=2.5) +
   #stat_ellipse()+
@@ -217,6 +376,36 @@ ggplot(WetlandsNoLL, aes(Point,SUVA254_L_mgm,fill=Point)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+#SUVA boxplot by Point - All wetalnd sites, No LL
+#Spring
+ggplot(JanMar, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SUVA254") + 
+  ylim(0,3.5)+
+  ggtitle("Spring SUVA254") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#Autumn
+ggplot(Sept, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SUVA254") + 
+  ggtitle("Autumn SUVA254") + 
+  theme_bw() +
+  ylim(0,3.5)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 #SUVA boxplot by Horizon - All wetalnd sites, No LL
 ggplot(WetlandsNoLL, aes(Generic_Horizon,SUVA254_L_mgm,fill=Generic_Horizon)) +
   geom_boxplot()+
@@ -231,8 +420,8 @@ ggplot(WetlandsNoLL, aes(Generic_Horizon,SUVA254_L_mgm,fill=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-#SUVA boxplot by transect point and horizon, wrap by wetland
-#Note: DB and ND show more variability in values
+#SUVA boxplot by transect point and horizon
+#Note: DB and ND show more variability in values (when wrap by wetland)
 ggplot(WetlandsNoLL, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
   geom_boxplot()+
   xlab("Point") +
@@ -332,6 +521,63 @@ ggplot(WetlandsNoLL, aes(Point,HIX,fill=Point)) +
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#spring
+ggplot(JanMar, aes(Point,HIX,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("HIX") + 
+  ggtitle("Spring HIX") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#autumn
+ggplot(Sept, aes(Point,HIX,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("HIX") + 
+  ggtitle("Autumn HIX") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#HIX vs FI
+#spring
+ggplot(JanMar, aes(FI,HIX,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("FI") +
+  ylab("SUVA254") + 
+  ggtitle("Spring FI vs HIX") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#autumn
+ggplot(Sept, aes(FI,HIX,col=Generic_Horizon)) +
+  geom_point(size=2.5) +
+  stat_ellipse()+
+  xlab("FI") +
+  ylab("HIX") + 
+  ggtitle("Autumn FI vs HIX") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 # 2.6 SSR -------------------------------------
 ggplot(WetlandsNoLL, aes(Point,SSR,fill=Point)) +
@@ -359,6 +605,35 @@ ggplot(WetlandsNoLL, aes(Point,SSR,fill=Generic_Horizon)) +
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#spring
+ggplot(JanMar, aes(Point,SSR,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SSR") + 
+  ggtitle("Spring SSR") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#autumn
+ggplot(Sept, aes(Point,SSR,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SSR") + 
+  ggtitle("Autumn SSR") + 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 
 #2.7 Compare months --------------------------------------------------
 
