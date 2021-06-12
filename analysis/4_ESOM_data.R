@@ -792,6 +792,50 @@ boxplot(WetlandsNoLL$C1,
         ylab="Loading (%)",
         xlab="Component")
 
+#by sampling period
+#loadings across all sites
+#spring
+boxplot(JanMar$C1, 
+        JanMar$C2_Q2, 
+        JanMar$C3, 
+        JanMar$C4_HQ, 
+        JanMar$C5_SQ1, 
+        JanMar$C6,
+        JanMar$C7_SQ2, 
+        JanMar$C8_Trypto, 
+        JanMar$C9_SQ3, 
+        JanMar$C10,
+        JanMar$C11_Q1,
+        JanMar$C12_Q3,
+        JanMar$C13_Tyrosine,
+        ylim=c(0,0.6),
+        main="Spring Percent Loading of Each Component",
+        names=c("C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13"),
+        ylab="Loading (%)",
+        xlab="Component")
+
+#autumn
+boxplot(Sept$C1, 
+        Sept$C2_Q2, 
+        Sept$C3, 
+        Sept$C4_HQ, 
+        Sept$C5_SQ1, 
+        Sept$C6,
+        Sept$C7_SQ2, 
+        Sept$C8_Trypto, 
+        Sept$C9_SQ3, 
+        Sept$C10,
+        Sept$C11_Q1,
+        Sept$C12_Q3,
+        Sept$C13_Tyrosine,
+        ylim=c(0,0.6),
+        main="Autumn Percent Loading of Each Component",
+        names=c("C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13"),
+        ylab="Loading (%)",
+        xlab="Component")
+
+
+
 #boxplot of most notable components broken out by horizon
 CM_C2 <- ggplot(data=WetlandsNoLL) +
   geom_boxplot(aes(x=Point,y=C2_Q2,fill=Generic_Horizon)) +
@@ -970,6 +1014,27 @@ boxplot(WetlandsNoLL$DMV_C1,
         names=c("C1","C2","C3","C4"),
         ylab="Loading (%)",
         xlab="Component")
+#spring
+boxplot(JanMar$DMV_C1, 
+        JanMar$DMV_C2, 
+        JanMar$DMV_C3, 
+        JanMar$DMV_C4,
+        ylim=c(0,0.75),
+        main="Spring Percent Loading of Each Component",
+        names=c("C1","C2","C3","C4"),
+        ylab="Loading (%)",
+        xlab="Component")
+#autumn
+boxplot(Sept$DMV_C1, 
+        Sept$DMV_C2, 
+        Sept$DMV_C3, 
+        Sept$DMV_C4,
+        ylim=c(0,0.75),
+        main="Autumn Percent Loading of Each Component",
+        names=c("C1","C2","C3","C4"),
+        ylab="Loading (%)",
+        xlab="Component")
+
 
 #boxplot of loadings across all samples - including leaf litter
 boxplot(Wetlands$DMV_C1, 
