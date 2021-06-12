@@ -73,7 +73,8 @@ ggplot(WetlandsNoLL,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
 ggplot(JanMar,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
-  xlab("mg EOC/L") +
+  xlab("mg EOC/L") + 
+  xlim(0,25)+
   ylab("Transect Point and Soil Horizon") + 
   ggtitle("Spring EOC by Horizon and Transect Spot")+
   theme(legend.text = element_text(size=16),
@@ -86,7 +87,8 @@ ggplot(JanMar,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
 ggplot(Sept,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
-  xlab("mg EOC/L") +
+  xlab("mg EOC/L") + 
+  xlim(0,25)+
   ylab("Transect Point and Soil Horizon") + 
   ggtitle("Autumn EOC by Horizon and Transect Spot")+
   theme(legend.text = element_text(size=16),
@@ -120,6 +122,8 @@ ggplot(JanMar, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   stat_ellipse()+
   xlab("EOC (mg/L)") +
   ylab("FI") + 
+  ylim(1.3,1.9)+
+  xlim(0,26)+ 
   ggtitle("Spring FI vs EOC")+ 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -134,7 +138,9 @@ ggplot(Sept, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   stat_ellipse()+
   xlab("EOC (mg/L)") +
-  ylab("FI") + 
+  ylab("FI") +
+  ylim(1.3,1.9)+
+  xlim(0,26)+
   ggtitle("Autumn FI vs EOC")+ 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -205,6 +211,7 @@ ggplot(JanMar, aes(Point,FI,fill=Generic_Horizon)) +
   geom_boxplot()+
   xlab("Transect Point") +
   ylab("FI") + 
+  ylim(1.3,1.9)+
   ggtitle("Spring FI - All Sites")+ 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -218,6 +225,7 @@ ggplot(Sept, aes(Point,FI,fill=Generic_Horizon)) +
   geom_boxplot()+
   xlab("Transect Point") +
   ylab("FI") + 
+  ylim(1.3,1.9)+
   ggtitle("Autumn FI - All Sites")+ 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -265,6 +273,8 @@ ggplot(JanMar, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
   stat_ellipse()+
   xlab("EOC (mg/L)") +
   ylab("SUVA254") + 
+  xlim(0,26)+
+  ylim(0,4)+
   ggtitle("Spring SUVA254 vs EOC") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -279,6 +289,8 @@ ggplot(Sept, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
   stat_ellipse()+
   xlab("EOC (mg/L)") +
   ylab("SUVA254") + 
+  xlim(0,26)+
+  ylim(0,4)+
   ggtitle("Autumn SUVA254 vs EOC") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -293,7 +305,8 @@ ggplot(WetlandsNoLL, aes(FI,SUVA254_L_mgm,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   stat_ellipse()+
   xlab("FI") +
-  ylab("SUVA254") + 
+  ylab("SUVA254") +
+  ylim(0,4)+
   ggtitle("All Sites FI vs SUVA254") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -308,7 +321,9 @@ ggplot(JanMar, aes(FI,SUVA254_L_mgm,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   stat_ellipse()+
   xlab("FI") +
-  ylab("SUVA254") + 
+  ylab("SUVA254") +
+  ylim(0,4)+
+  xlim(1.3,1.9)+
   ggtitle("Spring FI vs SUVA254") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -324,6 +339,8 @@ ggplot(Sept, aes(FI,SUVA254_L_mgm,col=Generic_Horizon)) +
   stat_ellipse()+
   xlab("FI") +
   ylab("SUVA254") + 
+  ylim(0,4)+
+  xlim(1.3,1.9)+
   ggtitle("Autumn FI vs SUVA254") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -526,6 +543,7 @@ ggplot(JanMar, aes(Point,HIX,fill=Generic_Horizon)) +
   geom_boxplot()+
   xlab("Point") +
   ylab("HIX") + 
+  ylim(0.35,0.6)+
   ggtitle("Spring HIX") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -539,6 +557,7 @@ ggplot(Sept, aes(Point,HIX,fill=Generic_Horizon)) +
   geom_boxplot()+
   xlab("Point") +
   ylab("HIX") + 
+  ylim(0.35,0.6)+
   ggtitle("Autumn HIX") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -555,6 +574,8 @@ ggplot(JanMar, aes(FI,HIX,col=Generic_Horizon)) +
   stat_ellipse()+
   xlab("FI") +
   ylab("SUVA254") + 
+  xlim(1.35,1.95)+
+  ylim(0.3,0.65)+
   ggtitle("Spring FI vs HIX") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -570,6 +591,8 @@ ggplot(Sept, aes(FI,HIX,col=Generic_Horizon)) +
   stat_ellipse()+
   xlab("FI") +
   ylab("HIX") + 
+  xlim(1.35,1.95)+
+  ylim(0.3,0.65)+
   ggtitle("Autumn FI vs HIX") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -597,6 +620,7 @@ ggplot(WetlandsNoLL, aes(Point,SSR,fill=Generic_Horizon)) +
   geom_boxplot()+
   xlab("Point") +
   ylab("SSR") + 
+  ylim(1,5)+
   ggtitle("All Sites SSR") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -611,6 +635,7 @@ ggplot(JanMar, aes(Point,SSR,fill=Generic_Horizon)) +
   geom_boxplot()+
   xlab("Point") +
   ylab("SSR") + 
+  ylim(1,4.5)+
   ggtitle("Spring SSR") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
@@ -624,7 +649,8 @@ ggplot(JanMar, aes(Point,SSR,fill=Generic_Horizon)) +
 ggplot(Sept, aes(Point,SSR,fill=Generic_Horizon)) +
   geom_boxplot()+
   xlab("Point") +
-  ylab("SSR") + 
+  ylab("SSR") +
+  ylim(1,4.5) +
   ggtitle("Autumn SSR") + 
   theme_bw() +
   theme(legend.text = element_text(size=16),
