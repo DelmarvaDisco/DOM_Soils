@@ -28,11 +28,18 @@ Wetlands <- df %>% filter(wetland %in% c("QB","TB","DB","ND"))
 WetSynoptic <- synoptic %>% filter(Wetland_ID %in% c("QB","TB","DB","ND")) 
 #Filter out Leaf Litter
 WetlandsNoLL <- Wetlands %>% filter(Point != "5 LL")
+WetSynopticNoLL <- WetSynoptic %>% filter(Point != "6 LL")
 
 #Separate months
+#ESOM only
 JanMar <- WetlandsNoLL %>% filter(Month %in% c('2020-01','2020-03'))
 Sept <- WetlandsNoLL %>% filter(Month == '2020-09')
 Nov <- WetlandsNoLL %>% filter(Month == "2020-11")
+
+#Synoptic
+JanMar <- WetSynopticNoLL  %>% filter(Month %in% c('2020-01','2020-03'))
+Sept <- WetSynopticNoLL  %>% filter(Month == '2020-09')
+Nov <- WetSynopticNoLL  %>% filter(Month == "2020-11")
 
 #Separate wetland sites
 QB <- WetlandsNoLL %>% filter(wetland == "QB")
@@ -573,7 +580,7 @@ ggplot(JanMar, aes(FI,HIX,col=Generic_Horizon)) +
   geom_point(size=2.5) +
   stat_ellipse()+
   xlab("FI") +
-  ylab("SUVA254") + 
+  ylab("HIX") + 
   xlim(1.35,1.95)+
   ylim(0.3,0.65)+
   ggtitle("Spring FI vs HIX") + 
@@ -1193,6 +1200,23 @@ ggplot(WetSynoptic,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   theme_bw()+
   ggtitle("EOC by Horizon and Transect Spot")
 
+#spring
+ggplot(JanMar,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
+  geom_boxplot()+
+  ylab("Transect Point and Horizon")+
+  xlab("EOC / DOC (mg C/L)")+
+  xlim(0,40)+
+  theme_bw()+
+  ggtitle("Spring EOC and DOC")
+#autumn
+ggplot(Sept,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
+    geom_boxplot()+
+    ylab("Transect Point and Horizon")+
+    xlab("EOC / DOC (mg C/L)")+
+    xlim(0,40)+
+    theme_bw()+
+    ggtitle("Autumn EOC and DOC")
+  
 #EOC by Month
 ggplot(WetSynoptic,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   geom_boxplot()+
@@ -1204,7 +1228,7 @@ ggplot(WetSynoptic,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
 ggplot(WetSynoptic, aes(EOC_mgC_L,FI,col=Generic_Horizon,shape=Wetland_ID)) +
   geom_point(size=3.5) +
   #stat_ellipse()+
-  xlab("EOC (mg/L)") +
+  xlab("EOC / DOC (mg/L)") +
   ylab("FI") + 
   #stat_ellipse()+
   ggtitle("All Sites FI")+ 
@@ -1215,6 +1239,41 @@ ggplot(WetSynoptic, aes(EOC_mgC_L,FI,col=Generic_Horizon,shape=Wetland_ID)) +
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#Spring
+ggplot(JanMar, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  #stat_ellipse()+
+  xlab("EOC / DOC (mg/L)") +
+  ylab("FI") +  
+  xlim(0,40)+
+  ylim(1.4,2.0)+
+  ggtitle("Spring All Sites FI")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#Aumtun
+ggplot(Sept, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
+  #stat_ellipse()+
+  xlab("EOC / DOC (mg/L)") +
+  ylab("FI") + 
+  xlim(0,40)+
+  ylim(1.4,2.0)+
+  #stat_ellipse()+
+  ggtitle("Autumn All Sites FI")+ 
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 
 #FI vs Location
 ggplot(WetSynoptic,aes(x=Point,y=FI,fill=Generic_Horizon)) + 
@@ -1222,6 +1281,23 @@ ggplot(WetSynoptic,aes(x=Point,y=FI,fill=Generic_Horizon)) +
   xlab("Transect Point") +
   ylab("FI")+
   ggtitle("FI vs Horizon") +
+  theme_bw()
+
+#Spring
+ggplot(JanMar,aes(x=Point,y=FI,fill=Generic_Horizon)) + 
+  geom_boxplot() +
+  xlab("Transect Point") +
+  ylab("FI")+
+  ylim(1.4,2.1)+
+  ggtitle("Spring FI") +
+  theme_bw()
+#Autumn
+ggplot(Sept,aes(x=Point,y=FI,fill=Generic_Horizon)) + 
+  geom_boxplot() +
+  xlab("Transect Point") +
+  ylab("FI")+
+  ylim(1.4,2.1)+
+  ggtitle("Autumn FI") +
   theme_bw()
 
 #FI vs Month boxplot by transect point
