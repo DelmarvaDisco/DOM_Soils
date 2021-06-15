@@ -1467,7 +1467,7 @@ All <- data %>%
 UpEOC <- ggplot(Upland, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
-  ylab("EOC (mg/L)") + 
+  ylab("Mean EOC (mg/L)") + 
   ggtitle("Upland EOC vs Mean WL") + 
   theme_bw() +
   geom_smooth(method = 'lm')#+
@@ -1477,7 +1477,7 @@ UpEOC <- ggplot(Upland, aes(meanWL,meanEOC,col=Generic_Horizon)) +
 TransEOC <- ggplot(Trans, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
-  ylab("EOC (mg/L)") + 
+  ylab("Mean EOC (mg/L)") + 
   ggtitle("Transition EOC vs Mean WL") + 
   theme_bw()+
   geom_smooth(method = 'lm')#+
@@ -1487,7 +1487,7 @@ TransEOC <- ggplot(Trans, aes(meanWL,meanEOC,col=Generic_Horizon)) +
 EdgeEOC <- ggplot(Edge, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
-  ylab("EOC (mg/L)") + 
+  ylab("Mean EOC (mg/L)") + 
   ggtitle("Edge EOC vs Mean WL") + 
   theme_bw() +
   geom_smooth(method = 'lm')#+
@@ -1497,7 +1497,7 @@ EdgeEOC <- ggplot(Edge, aes(meanWL,meanEOC,col=Generic_Horizon)) +
 WetlandEOC <- ggplot(Wet, aes(meanWL,meanEOC,col=Generic_Horizon)) +
   geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
-  ylab("EOC (mg/L)") + 
+  ylab("Mean EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
   theme_bw() +
   geom_smooth(method = 'lm')#+
@@ -1513,15 +1513,39 @@ figureEOC <- ggarrange( UpEOC,
 figureEOC
 
 #Don't separate horizons
-ggplot(All, aes(meanWL,meanEOC,col=station,shape=wetland)) +
-  geom_point(size=3) +
+#regression
+ggplot(All, aes(meanWL,meanEOC,col=station)) +
+  geom_point(size=3.5) +
   xlab("Mean Water Elev (m)") +
-  ylab("EOC (mg/L)") + 
-  ggtitle("EOC vs Mean WL") + 
-  theme_bw() 
-  #geom_smooth(method = 'lm')+
-  #stat_regline_equation(label.x = -1.0)+
-  #stat_cor(label.x = -0.5)
+  ylab("Mean EOC (mg/L)") + 
+  ggtitle("Mean EOC vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.0)+
+  stat_cor(label.x = -0.5)+
+    theme(legend.text = element_text(size=16),
+      axis.text.y   = element_text(size=16),
+      axis.text.x   = element_text(size=16),
+      axis.title.y  = element_text(size=16),
+      axis.title.x  = element_text(size=16),
+      panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#look at wetlands
+ggplot(All, aes(meanWL,meanEOC,col=station,shape=wetland)) +
+  geom_point(size=3.5) +
+  xlab("Mean Water Elev (m)") +
+  ylab("Mean EOC (mg/L)") + 
+  ggtitle("Mean EOC vs Mean WL") + 
+  theme_bw() +
+  geom_smooth(method = 'lm')+
+  stat_regline_equation(label.x = -1.0)+
+  stat_cor(label.x = -0.5)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 
 ggplot(All, aes(x=reorder(station,meanWL,FUN=mean),y=meanEOC,fill=wetland)) +
   geom_boxplot() +
@@ -1584,12 +1608,19 @@ figureFI
 ggplot(All, aes(meanWL,meanFI,col=station)) +
   geom_point(size=2.5) +
   xlab("Mean Water Elev (m)") +
-  ylab("FI") + 
-  ggtitle("FI vs Mean WL") + 
+  ylab("Mean FI") + 
+  ggtitle("Mean FI vs Mean WL") + 
   theme_bw() +
   geom_smooth(method = 'lm')+
   stat_regline_equation(label.x = -1.0)+
-  stat_cor(label.x = -0.5)
+  stat_cor(label.x = -0.5)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 ggplot(All, aes(meanWL,meanFI,col=station,shape=wetland)) +
   geom_point(size=4) +
   xlab("Mean Water Elev (m)") +
@@ -1652,13 +1683,20 @@ figureSUVA
 ggplot(All, aes(meanWL,meanSUVA,col=station)) +
   geom_point(size=2.5) +
   xlab("Mean Water Elev (m)") +
-  ylab("SUVA254") + 
-  ggtitle("SUVA254 vs Mean WL") + 
+  ylab("Mean SUVA254") + 
+  ggtitle("Mean SUVA254 vs Mean WL") + 
   theme_bw() +
   geom_smooth(method = 'lm')+
   stat_regline_equation(label.x = -1.0)+
-  stat_cor(label.x = -0.5)
-ggplot(All, aes(meanWL,meanSUVA,col=station,shape=wetland)) +
+  stat_cor(label.x = -0.5)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+ggplot(All, aes(meanWL,meanSUVA,col=station,shape=wetland)) 
   geom_point(size=4) +
   xlab("Mean Water Elev (m)") +
   ylab("SUVA254") + 
@@ -1741,9 +1779,16 @@ ggplot(All, aes(meanWL,meanHIX,col=station,shape=wetland)) +
 ggplot(All, aes(meanWL,meanEOC,col=Generic_Horizon,shape=wetland)) +
   geom_point(size=4) +
   xlab("Mean Water Elev (m)") +
-  ylab("EOC (mg/L)") + 
+  ylab("Mean EOC (mg/L)") + 
   ggtitle("Wetland EOC vs Mean WL") + 
-  theme_bw()
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 
 #mean water level along transect colored by wetland
 ggplot(annual, aes(station,mean_waterLevel,col=wetland)) +
