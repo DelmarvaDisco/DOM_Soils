@@ -845,3 +845,50 @@ summary(lmHIXBall) #percent clay significant, model overal is
 plot(residuals(lmHIXBall))
 qqnorm(resid(lmHIXBall))
 shapiro.test(resid(lmHIXBall))
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#6.0 Cluster Analysis --------------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#Packages 
+library(cluster)    # clustering algorithms
+library(factoextra) # clustering algorithms & visualization
+
+#Step 1 scale data
+#using extraction results: Wetlands no leaf litter (WetlandsNoLL)
+
+#trial run using all the variables (I think this leads to PCA)
+#select only data you want in cluster analysis, ensure no NA's
+data <- WetlandsNoLL %>% select(#Month,wetland,station,Generic_Horizon,
+                                 EOC_mgC_L,FI,HIX,SUVA254_L_mgm)
+data <- drop_na(data)
+
+#scale data (only columns with numeric values)
+data[c(5,9)] <- scale(data[c(5,9)])
+
+#scale using data only (no wetland or horizon name)
+data <- scale(data)
+
+#Step 2 K-means algorithm
+#specify number of clusters, number of configurations (usually start with 25)
+k3 <- kmeans(data,centers=3,nstart=25);k3
+k4 <- kmeans(data,centers=4,nstart=25);k4
+k5 <- kmeans(data,centers=5,nstart=25);k5
+k6 <- kmeans(data,centers=6,nstart=25);k6
+
+#Step 3 view results
+p3 <- fviz_cluster(k3,data=data)
+p4 <- fviz_cluster(k4,data=data)
+p5 <- fviz_cluster(k5,data=data)
+p6 <- fviz_cluster(k6,data=data)
+
+library(gridExtra)
+grid.arrange(p3, p4, p5, p6, nrow = 2)
+
+#Step 4 determine optical number of clusters
+#want average silhouette width to be high for determining optimal number
+fviz_nbclust(data, kmeans, method = "silhouette")
+#look for bend in plot to determine optimal number
+fviz_nbclust(data, kmeans, method = "wss")
+#two is best, 4 second best for optimizing number of clusters
+
