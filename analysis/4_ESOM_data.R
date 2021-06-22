@@ -882,6 +882,83 @@ CM_Boxplot <- ggarrange( CM_C2,
                          CM_C13,
                          ncol = 2, nrow = 3)
 
+#boxplot of most notable components broken out by horizon - Spring
+CM_C2 <- ggplot(data=JanMar) +
+  geom_boxplot(aes(x=Point,y=C2_Q2,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C2")+
+  ggtitle("%C2 by Point")+
+  theme_bw()
+CM_C4 <- ggplot(data=JanMar) +
+  geom_boxplot(aes(x=Point,y=C4_HQ,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C4")+
+  ggtitle("%C4 by Point")+
+  theme_bw()
+CM_C8 <- ggplot(data=JanMar) +
+  geom_boxplot(aes(x=Point,y=C8_Trypto,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C8")+
+  ggtitle("%C8 by Point")+
+  theme_bw()
+CM_C12 <- ggplot(data=JanMar) +
+  geom_boxplot(aes(x=Point,y=C12_Q3,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C12")+
+  ggtitle("%C12 by Point")+
+  theme_bw()
+CM_C13 <- ggplot(data=JanMar) +
+  geom_boxplot(aes(x=Point,y=C13_Tyrosine,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C13")+
+  ggtitle("%C13 by Point")+
+  theme_bw()
+
+CM_Boxplot <- ggarrange( CM_C2, 
+                         CM_C4, 
+                         CM_C8, 
+                         CM_C12,
+                         CM_C13,
+                         ncol = 2, nrow = 3)
+
+#boxplot of most notable components broken out by horizon - Fall
+CM_C2 <- ggplot(data=Sept) +
+  geom_boxplot(aes(x=Point,y=C2_Q2,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C2")+
+  ggtitle("%C2 by Point")+
+  theme_bw()
+CM_C4 <- ggplot(data=Sept) +
+  geom_boxplot(aes(x=Point,y=C4_HQ,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C4")+
+  ggtitle("%C4 by Point")+
+  theme_bw()
+CM_C8 <- ggplot(data=Sept) +
+  geom_boxplot(aes(x=Point,y=C8_Trypto,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C8")+
+  ggtitle("%C8 by Point")+
+  theme_bw()
+CM_C12 <- ggplot(data=Sept) +
+  geom_boxplot(aes(x=Point,y=C12_Q3,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C12")+
+  ggtitle("%C12 by Point")+
+  theme_bw()
+CM_C13 <- ggplot(data=Sept) +
+  geom_boxplot(aes(x=Point,y=C13_Tyrosine,fill=Generic_Horizon)) +
+  xlab("Point") +
+  ylab("%C13")+
+  ggtitle("%C13 by Point")+
+  theme_bw()
+
+CM_Boxplot <- ggarrange( CM_C2, 
+                         CM_C4, 
+                         CM_C8, 
+                         CM_C12,
+                         CM_C13,
+                         ncol = 2, nrow = 3)
 ##C2##
 #EOC
 ggplot(data=WetlandsNoLL) +
@@ -1086,6 +1163,39 @@ DMV_Boxplot <- ggarrange(Box_C1,
                          labels = c("1", "2","3","4"),
                          ncol = 2, nrow = 2)
 
+#loading by horizon - spring
+Box_C1 <- ggplot(data=JanMar)+
+  geom_boxplot(aes(x=Point,y=DMV_C1,fill=Generic_Horizon))+ 
+  xlab("Transect Point") +
+  ylab("%C1")+
+  ggtitle("%C1 by Point")+
+  theme_bw()
+Box_C2 <- ggplot(data=JanMar)+
+  geom_boxplot(aes(x=Point,y=DMV_C2,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C2")+
+  ggtitle("%C2 by Point")+
+  theme_bw()
+Box_C3 <- ggplot(data=JanMar)+
+  geom_boxplot(aes(x=Point,y=DMV_C3,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C3")+
+  ggtitle("%C3 by Point")+
+  theme_bw()
+Box_C4 <- ggplot(data=JanMar)+
+  geom_boxplot(aes(x=Point,y=DMV_C4,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C4")+
+  ggtitle("%C4 by Point")+
+  theme_bw()
+
+DMV_Boxplot <- ggarrange(Box_C1, 
+                         Box_C2, 
+                         Box_C3, 
+                         Box_C4,
+                         labels = c("1", "2","3","4"),
+                         ncol = 2, nrow = 2)
+
 #component by wetland
 DMV_C1 <- ggplot(data=WetlandsNoLL)+
   geom_boxplot(aes(x=Point,y=DMV_C1,fill=Generic_Horizon))+ 
@@ -1121,6 +1231,39 @@ DMV_Boxplot <- ggarrange(DMV_C1,
                          DMV_C3, 
                          DMV_C4,
                          labels = c("C1", "C2","C3","C4"),
+                         ncol = 2, nrow = 2)
+
+#loading by horizon - spring
+Box_C1 <- ggplot(data=Sept)+
+  geom_boxplot(aes(x=Point,y=DMV_C1,fill=Generic_Horizon))+ 
+  xlab("Transect Point") +
+  ylab("%C1")+
+  ggtitle("%C1 by Point")+
+  theme_bw()
+Box_C2 <- ggplot(data=Sept)+
+  geom_boxplot(aes(x=Point,y=DMV_C2,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C2")+
+  ggtitle("%C2 by Point")+
+  theme_bw()
+Box_C3 <- ggplot(data=Sept)+
+  geom_boxplot(aes(x=Point,y=DMV_C3,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C3")+
+  ggtitle("%C3 by Point")+
+  theme_bw()
+Box_C4 <- ggplot(data=Sept)+
+  geom_boxplot(aes(x=Point,y=DMV_C4,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C4")+
+  ggtitle("%C4 by Point")+
+  theme_bw()
+
+DMV_Boxplot <- ggarrange(Box_C1, 
+                         Box_C2, 
+                         Box_C3, 
+                         Box_C4,
+                         labels = c("1", "2","3","4"),
                          ncol = 2, nrow = 2)
 
 #Components vs fluorescence metrics

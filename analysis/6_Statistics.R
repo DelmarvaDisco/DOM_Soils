@@ -2,7 +2,7 @@
 #Title: Statistical Analyses
 #Coder: Katie Wardinski (wardinskik@vt.edu)
 #Created: 4/9/2021
-#Updated: 
+#Updated: 6/20/2021
 #Purpose: Evaluate statistical significance of ESOM and Water Level Metrics
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -35,6 +35,11 @@ elev <- read_csv("data/xs_survey.csv")
 Wetlands <- df %>% filter(wetland %in% c("QB","TB","DB","ND"))
 WetlandsNoLL <- Wetlands %>% filter(Point != "5 LL")
 
+#Filter to specific months
+JanMar <- WetlandsNoLL %>% filter(Month %in% c('2020-01','2020-03'))
+Sept <- WetlandsNoLL %>% filter(Month == '2020-09')
+Nov <- WetlandsNoLL %>% filter(Month == "2020-11")
+
 #Join metrics and ESOM data
 data <- inner_join(df, threshold_annual, by=c("wetland","station"))
 
@@ -50,11 +55,9 @@ threshold_annual <- left_join(threshold_annual,elev,by=c("wetland","station"))
 #2.0 Exploratory Data Analysis--------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#Look at distributions/normality/equal variance 
-
 ###ESOM DATA###
 #Summarize data
-#By horizon
+#By horizon all data
 ESOM_Horizon_Summary <- WetlandsNoLL %>% 
         group_by(Generic_Horizon) %>% 
         summarise( MeanEOC = mean(EOC_mgC_L),
@@ -67,8 +70,61 @@ ESOM_Horizon_Summary <- WetlandsNoLL %>%
                    sdHIX = sd(HIX),
                    MeanSSR = mean(SSR,na.rm=T),
                    sdSSR = sd(SSR,na.rm = T))
-#By station
+
+Spring_ESOM_Horizon_Summary <- JanMar %>% 
+  group_by(Generic_Horizon) %>% 
+  summarise( MeanEOC = mean(EOC_mgC_L),
+             sdEOC = sd(EOC_mgC_L),
+             MeanFI = mean(FI),
+             sdFI = sd(FI),
+             MeanSUVA = mean(SUVA254_L_mgm),
+             sdSUVA = sd(SUVA254_L_mgm),
+             MeanHIX = mean(HIX),
+             sdHIX = sd(HIX),
+             MeanSSR = mean(SSR,na.rm=T),
+             sdSSR = sd(SSR,na.rm = T))
+
+Autumn_ESOM_Horizon_Summary <- Sept %>% 
+  group_by(Generic_Horizon) %>% 
+  summarise( MeanEOC = mean(EOC_mgC_L),
+             sdEOC = sd(EOC_mgC_L),
+             MeanFI = mean(FI),
+             sdFI = sd(FI),
+             MeanSUVA = mean(SUVA254_L_mgm),
+             sdSUVA = sd(SUVA254_L_mgm),
+             MeanHIX = mean(HIX),
+             sdHIX = sd(HIX),
+             MeanSSR = mean(SSR,na.rm=T),
+             sdSSR = sd(SSR,na.rm = T))
+
+#By station - all data
 ESOM_Station_Summary <- WetlandsNoLL %>% 
+  group_by(station) %>% 
+  summarise( MeanEOC = mean(EOC_mgC_L),
+             sdEOC = sd(EOC_mgC_L),
+             MeanFI = mean(FI),
+             sdFI = sd(FI),
+             MeanSUVA = mean(SUVA254_L_mgm),
+             sdSUVA = sd(SUVA254_L_mgm),
+             MeanHIX = mean(HIX),
+             sdHIX = sd(HIX),
+             MeanSSR = mean(SSR,na.rm=T),
+             sdSSR = sd(SSR,na.rm = T))
+
+Spring_ESOM_Station_Summary <- JanMar %>% 
+  group_by(station) %>% 
+  summarise( MeanEOC = mean(EOC_mgC_L),
+             sdEOC = sd(EOC_mgC_L),
+             MeanFI = mean(FI),
+             sdFI = sd(FI),
+             MeanSUVA = mean(SUVA254_L_mgm),
+             sdSUVA = sd(SUVA254_L_mgm),
+             MeanHIX = mean(HIX),
+             sdHIX = sd(HIX),
+             MeanSSR = mean(SSR,na.rm=T),
+             sdSSR = sd(SSR,na.rm = T))
+
+Autumn_ESOM_Station_Summary <- Sept %>% 
   group_by(station) %>% 
   summarise( MeanEOC = mean(EOC_mgC_L),
              sdEOC = sd(EOC_mgC_L),
@@ -159,7 +215,14 @@ soil_summary <- soil_annual %>% group_by(station) %>%
 Station <- WetlandsNoLL$station
 Horizon <- WetlandsNoLL$Generic_Horizon
 
-### 2.1 EOC -----------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#3.0 ANOVA/TukeyHSD/Kruskal-Wallis/Oneway Test --------------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Step 1 Check normality
+#Step 2 Check equal variance
+#Step 3 Run ANOVA/TukeyHSD or other tests
+
+### 3.1 EOC --------------------------------------------------
 hist(WetlandsNoLL$EOC_mgC_L)
 qqnorm(WetlandsNoLL$EOC_mgC_L)
 shapiro.test(WetlandsNoLL$EOC_mgC_L) #EOC values are not normally distributed
@@ -178,8 +241,27 @@ bartlett.test(logEOC~Horizon)
 leveneTest(logEOC,Station,center=median) #Levene test doesn't meet equal variance assumptions
 leveneTest(logEOC,Horizon,center=median)
 
+#3.1.1 EOC by horizon------------------------------------------
+logEOC.horiz.aov <- aov(logEOC~Horizon);summary(logEOC.horiz.aov)
+logEOC.horiz.HSD <- TukeyHSD(logEOC.horiz.aov);logEOC.horiz.HSD
+logEOCL.HSD <- HSD.test(logEOC.horiz.aov,"Horizon",group=T);logEOCL.HSD 
+#one-way anova test for unequal variance
+oneway.test(logEOC~Horizon)
 
-### 2.2 FI -----------------------------------
+#3.1.2 EOC by station------------------------------------------
+logEOC.sta.aov <- aov(logEOC~Station);summary(logEOC.sta.aov)
+logEOC.sta.HSD <- TukeyHSD(logEOC.sta.aov);logEOC.sta.HSD 
+logEOC.sta.HSD <- HSD.test(logEOC.sta.aov,"Station",group=T);logEOC.sta.HSD 
+#one-way anova test for unequal variance
+oneway.test(logEOC~Station)
+
+#3.1.3 EOC by both horizon and transect location (ANOCVA) --------------------
+logEOC.both.aov <- aov(logEOC~Horizon*Station);summary(logEOC.both.aov)
+logEOC.both.HSD <- TukeyHSD(logEOC.both.aov);logEOC.both.HSD  
+logEOC.both.HSD <- HSD.test(logEOC.both.aov,trt = c("Horizon", "Station"),group=T);logEOC.both.HSD  
+
+
+### 3.2 FI -----------------------------------
 FI <- WetlandsNoLL$FI 
 qqnorm(FI)
 hist(FI)
@@ -198,7 +280,17 @@ qqnorm(logFI)
 shapiro.test(logFI) #logging FI data is not normally distributed
 bartlett.test(logFI~Horizon)
 
-### 2.3 SUVA -----------------------------------
+#3.2.1 FI by horizon------------------------------------------
+oneway.test(FI~Horizon)
+pairwise.t.test(FI,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
+#3.2.2 FI by station------------------------------------------
+oneway.test(FI~Station)
+pairwise.t.test(FI,Station,p.adj="bonferroni") 
+#I think I can get away with Kruskal-Wallis here
+kruskal.test(FI~Station)
+kruskalmc(Fi,Station, probs=0.05) 
+
+### 3.3 SUVA -----------------------------------
 SUVA <- WetlandsNoLL$SUVA254_L_mgm
 hist(SUVA)
 shapiro.test(SUVA) #not normally distributed
@@ -215,8 +307,14 @@ sqrtSUVA <- sqrt(SUVA)
 hist(sqrtSUVA)
 shapiro.test(sqrtSUVA) #not normally distributed
 
+#3.3.1 SVUA by horizon------------------------------------------
+kruskal.test(SUVA~Horizon)
+kruskalmc(SUVA, Horizon, probs=0.05) #O and A not diff, but all others yes
+#3.3.1 SVUA by station------------------------------------------
+kruskal.test(SUVA~Station)
+kruskalmc(SUVA,Station, probs=0.05)
 
-### 2.4 HIX -----------------------------------
+### 3.4 HIX -----------------------------------
 HIX <- WetlandsNoLL$HIX
 hist(HIX)
 shapiro.test(HIX) #not normally distributed
@@ -234,7 +332,15 @@ shapiro.test(sqrtHIX) #not normally distributed
 bartlett.test(sqrtHIX~Horizon)
 leveneTest(sqrtHIX,Horizon,center=median)
 
-### 2.5 SSR -----------------------------------
+#3.4.1 HIX by horizon------------------------------------------
+oneway.test(HIX~Horizon)
+pairwise.t.test(HIX,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
+#3.4.1 HIX by station------------------------------------------
+kruskal.test(HIX~Station)
+kruskalmc(HIX,Station, probs=0.05) #W and E / T and U not diff, but all others yes
+
+
+### 3.5 SSR -----------------------------------
 SSR <- WetlandsNoLL$SSR
 hist(SSR)
 shapiro.test(SSR) #not normally distributed
@@ -253,7 +359,16 @@ shapiro.test(logSSR)
 bartlett.test(logSSR~Horizon)#no equal variance
 leveneTest(logSSR,Horizon,center=median) 
 
-### 2.6 Water Level Data -----------------------------------
+#3.5.1 SSR by horizon------------------------------------------
+oneway.test(SSR~Horizon)
+pairwise.t.test(SSR,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
+#3.5.1 SSR by station------------------------------------------
+kruskal.test(SSR~Station)
+kruskalmc(SSR,Station, probs=0.05) #edge and upland only different 
+
+
+
+### 3.6 Water Level Data -----------------------------------
 #break out variables
 y_n <- waterlevel$y_n
 station <- waterlevel$station
@@ -267,7 +382,11 @@ shapiro.test(y_n) #shapiro doesn't work when n>5,000 :(
 bartlett.test(y_n~station) #big fail p = 9.4x10^-5
 leveneTest(y_n,station,center=median) #p = 5.97x10-7
 
-### 2.7 2020 Annual Metrics ----------------------------------
+waterlevel.aov <- aov(y_n~station)
+summary(waterlevel.aov)
+waterlevel.HSD <- TukeyHSD(waterlevel.aov);waterlevel.HSD 
+
+### 3.7 2020 Annual Metrics ----------------------------------
 #elev
 qqnorm(elev)
 shapiro.test(elev) #normal
@@ -300,73 +419,6 @@ shapiro.test(nevents) #not normally distributed
 bartlett.test(nevents~station) #not equal variance
 leveneTest(nevents,station,center=median) #no equal variance levene - use oneway
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#3.0 ANOVA/TukeyHSD/Kruskal-Wallis/Oneway Test --------------------------------------------------
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-### 3.1 EOC --------------------------------------------------
-#3.1.1 EOC by horizon------------------------------------------
-logEOC.horiz.aov <- aov(logEOC~Horizon);summary(logEOC.horiz.aov)
-logEOC.horiz.HSD <- TukeyHSD(logEOC.horiz.aov);logEOC.horiz.HSD
-logEOCL.HSD <- HSD.test(logEOC.horiz.aov,"Horizon",group=T);logEOCL.HSD 
-#one-way anova test for unequal variance
-oneway.test(logEOC~Horizon)
-
-#3.1.2 EOC by station------------------------------------------
-logEOC.sta.aov <- aov(logEOC~Station);summary(logEOC.sta.aov)
-logEOC.sta.HSD <- TukeyHSD(logEOC.sta.aov);logEOC.sta.HSD 
-logEOC.sta.HSD <- HSD.test(logEOC.sta.aov,"Station",group=T);logEOC.sta.HSD 
-#one-way anova test for unequal variance
-oneway.test(logEOC~Station)
-
-#3.1.3 EOC by both horizon and transect location (ANOCVA) --------------------
-logEOC.both.aov <- aov(logEOC~Horizon*Station);summary(logEOC.both.aov)
-logEOC.both.HSD <- TukeyHSD(logEOC.both.aov);logEOC.both.HSD  
-logEOC.both.HSD <- HSD.test(logEOC.both.aov,trt = c("Horizon", "Station"),group=T);logEOC.both.HSD  
-
-### 3.2 FI -------------------------------------------
-#3.2.1 FI by horizon------------------------------------------
-oneway.test(FI~Horizon)
-pairwise.t.test(FI,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
-#3.2.2 FI by station------------------------------------------
-oneway.test(FI~Station)
-pairwise.t.test(FI,Station,p.adj="bonferroni") 
-#I think I can get away with Kruskal-Wallis here
-kruskal.test(FI~Station)
-kruskalmc(Fi,Station, probs=0.05) 
-
-### 3.3 SUVA ------------------------------------------
-#3.3.1 SVUA by horizon------------------------------------------
-kruskal.test(SUVA~Horizon)
-kruskalmc(SUVA, Horizon, probs=0.05) #O and A not diff, but all others yes
-#3.3.1 SVUA by station------------------------------------------
-kruskal.test(SUVA~Station)
-kruskalmc(SUVA,Station, probs=0.05) 
-
-
-### 3.4 HIX ------------------------------------------
-#3.4.1 HIX by horizon------------------------------------------
-oneway.test(HIX~Horizon)
-pairwise.t.test(HIX,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
-#3.4.1 HIX by station------------------------------------------
-kruskal.test(HIX~Station)
-kruskalmc(HIX,Station, probs=0.05) #W and E / T and U not diff, but all others yes
-
-### 3.5 SSR ------------------------------------------
-#3.5.1 SSR by horizon------------------------------------------
-oneway.test(SSR~Horizon)
-pairwise.t.test(SSR,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
-#3.5.1 SSR by station------------------------------------------
-kruskal.test(SSR~Station)
-kruskalmc(SSR,Station, probs=0.05) #edge and upland only different 
-
-
-### 3.6 Water Level Data--------------------------------
-waterlevel.aov <- aov(y_n~station)
-summary(waterlevel.aov)
-waterlevel.HSD <- TukeyHSD(waterlevel.aov);waterlevel.HSD 
-
-### 3.7 2020 Water Level Metrics--------------------------------
 #3.7.1 Theshold metrics -----------------------------------
 station <- threshold_annual$station
 elev <-    threshold_annual$elevation
