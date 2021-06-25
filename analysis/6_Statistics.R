@@ -1311,7 +1311,7 @@ library(cluster)    # clustering algorithms
 library(factoextra) # clustering algorithms & visualization
 
 #Step 1 scale data
-#using extraction results: Wetlands no leaf litter (WetlandsNoLL)
+#using extraction results: Wetlands no leaf litter (WetlandsNoLL) separated by month
 
 #trial run using all the variables (I think this leads to PCA)
 #select only data you want in cluster analysis, ensure no NA's
@@ -1347,4 +1347,25 @@ fviz_nbclust(data, kmeans, method = "silhouette")
 #look for bend in plot to determine optimal number
 fviz_nbclust(data, kmeans, method = "wss")
 #two is best, 4 second best for optimizing number of clusters
+
+#6.1 SUVA vs FI ------------------------------------
+
+#6.1.1 Spring---------------------------------------
+
+#Step 1 select and scale data
+#select only data you want in cluster analysis, ensure no NA's
+data <- JanMar %>% select(FI,SUVA254_L_mgm)
+data <- drop_na(data)
+
+#scale data (only columns with numeric values)
+data <- scale(data)
+
+#6.1.2 Autumn-------------------------------------
+
+
+#6.2 HIX vs FI -------------------------------------
+
+#6.3 FI vs EOC --------------------------------------
+
+#6.4 SUVA vs EOC---------------------------------------
 
