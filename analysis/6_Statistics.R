@@ -359,6 +359,11 @@ FI.sta.aov <- aov(FI~Station);summary(FI.sta.aov)
 FI.sta.HSD <- TukeyHSD(FI.sta.aov);FI.sta.HSD 
 FI.sta.HSD <- HSD.test(FI.sta.aov,"Station",group=T);FI.sta.HSD 
 
+#ANCOVA - interaction of horizon and station
+FI.both.aov <- aov(FI~Horizon*Station);summary(FI.both.aov)
+FI.both.HSD <- TukeyHSD(FI.both.aov);FI.both.HSD  
+FI.both.HSD <- HSD.test(FI.both.aov,trt = c("Horizon", "Station"),group=T);FI.both.HSD
+
 #Step 3 Normality of residuals
 qqnorm(FI)
 hist(FI)
@@ -463,6 +468,11 @@ SUVA.sta.aov <- aov(SUVA~Station);summary(SUVA.sta.aov)
 SUVA.sta.HSD <- TukeyHSD(SUVA.sta.aov);SUVA.sta.HSD 
 SUVA.sta.HSD <- HSD.test(SUVA.sta.aov,"Station",group=T);SUVA.sta.HSD 
 
+#ANCOVA - interaction of horizon and station
+SUVA.both.aov <- aov(SUVA~Horizon*Station);summary(SUVA.both.aov)
+SUVA.both.HSD <- TukeyHSD(SUVA.both.aov);SUVA.both.HSD  
+SUVA.both.HSD <- HSD.test(SUVA.both.aov,trt = c("Horizon", "Station"),group=T);SUVA.both.HSD
+
 
 #Step 3 Check normality of residuals
 hist(SUVA)
@@ -566,6 +576,11 @@ kruskalmc(HIX,Station, probs=0.05) #W and E / T and U not diff, but all others y
 HIX.sta.aov <- aov(HIX~Station);summary(HIX.sta.aov)
 HIX.sta.HSD <- TukeyHSD(HIX.sta.aov);HIX.sta.HSD 
 HIX.sta.HSD <- HSD.test(HIX.sta.aov,"Station",group=T);HIX.sta.HSD 
+
+#ANCOVA - interaction of horizon and station
+HIX.both.aov <- aov(HIX~Horizon*Station);summary(HIX.both.aov)
+HIX.both.HSD <- TukeyHSD(HIX.both.aov);HIX.both.HSD  
+HIX.both.HSD <- HSD.test(HIX.both.aov,trt = c("Horizon", "Station"),group=T);HIX.both.HSD
 
 #Step 3 Normality of residuals
 hist(HIX)
@@ -674,7 +689,12 @@ kruskal.test(SSR~Station)
 kruskalmc(SSR,Station, probs=0.05) #edge and upland only different
 SSR.sta.aov <- aov(SSR~Station);summary(SSR.sta.aov)
 SSR.sta.HSD <- TukeyHSD(SSR.sta.aov);SSR.sta.HSD 
-SSR.sta.HSD <- HSD.test(SSR.sta.aov,"Station",group=T);SSR.sta.HSD 
+SSR.sta.HSD <- HSD.test(SSR.sta.aov,"Station",group=T);SSR.sta.HSD
+
+#ANCOVA - interaction of horizon and station
+SSR.both.aov <- aov(SSR~Horizon*Station);summary(SSR.both.aov)
+SSR.both.HSD <- TukeyHSD(SSR.both.aov);SSR.both.HSD  
+SSR.both.HSD <- HSD.test(SSR.both.aov,trt = c("Horizon", "Station"),group=T);SSR.both.HSD
 
 #Step 3 Normality of residuals
 hist(SSR)
