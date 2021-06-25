@@ -82,7 +82,8 @@ Spring_ESOM_Horizon_Summary <- JanMar %>%
              MeanHIX = mean(HIX),
              sdHIX = sd(HIX),
              MeanSSR = mean(SSR,na.rm=T),
-             sdSSR = sd(SSR,na.rm = T))
+             sdSSR = sd(SSR,na.rm = T),
+             nobserv = length(EOC_mgC_L))
 
 Autumn_ESOM_Horizon_Summary <- Sept %>% 
   group_by(Generic_Horizon) %>% 
@@ -95,7 +96,8 @@ Autumn_ESOM_Horizon_Summary <- Sept %>%
              MeanHIX = mean(HIX),
              sdHIX = sd(HIX),
              MeanSSR = mean(SSR,na.rm=T),
-             sdSSR = sd(SSR,na.rm = T))
+             sdSSR = sd(SSR,na.rm = T),
+             nobserv = length(EOC_mgC_L))
 
 #By station - all data
 ESOM_Station_Summary <- WetlandsNoLL %>% 
@@ -122,7 +124,8 @@ Spring_ESOM_Station_Summary <- JanMar %>%
              MeanHIX = mean(HIX),
              sdHIX = sd(HIX),
              MeanSSR = mean(SSR,na.rm=T),
-             sdSSR = sd(SSR,na.rm = T))
+             sdSSR = sd(SSR,na.rm = T),
+             nobserv = length(EOC_mgC_L))
 
 Autumn_ESOM_Station_Summary <- Sept %>% 
   group_by(station) %>% 
@@ -135,7 +138,8 @@ Autumn_ESOM_Station_Summary <- Sept %>%
              MeanHIX = mean(HIX),
              sdHIX = sd(HIX),
              MeanSSR = mean(SSR,na.rm=T),
-             sdSSR = sd(SSR,na.rm = T))
+             sdSSR = sd(SSR,na.rm = T),
+             nobserv = length(EOC_mgC_L))
 
 ### Water Level Metrics###
 #by station
@@ -212,88 +216,228 @@ soil_summary <- soil_annual %>% group_by(station) %>%
             B_nevents_se = B_nevents_sd/sqrt(4))
 
 #Define station vs horizon
-Station <- WetlandsNoLL$station
-Horizon <- WetlandsNoLL$Generic_Horizon
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 ANOVA/TukeyHSD/Kruskal-Wallis/Oneway Test --------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#Step 1 Check normality
-#Step 2 Check equal variance
-#Step 3 Run ANOVA/TukeyHSD or other tests
+#Step 1 Check equal variance
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#Step 3 Check normality of residuals 
 
-### 3.1 EOC --------------------------------------------------
-hist(WetlandsNoLL$EOC_mgC_L)
-qqnorm(WetlandsNoLL$EOC_mgC_L)
-shapiro.test(WetlandsNoLL$EOC_mgC_L) #EOC values are not normally distributed
-
-#Log transform data
-#EOC
+### 3.1.1 ALL EOC --------------------------------------------------
+Station <- WetlandsNoLL$station
+Horizon <- WetlandsNoLL$Generic_Horizon
 logEOC <- log10(WetlandsNoLL$EOC_mgC_L)
-qqnorm(logEOC)
 
-#test for normal distribution of log transformed data
-shapiro.test(logEOC) #Log of values is normally distributed
-
-#test for equal variance
+#Step 1 Check equal variance
 bartlett.test(logEOC~Station) #Barlett test doesn't meet equal variance assumptions but barely, Dr G says ok to proceed 
 bartlett.test(logEOC~Horizon) 
 leveneTest(logEOC,Station,center=median) #Levene test doesn't meet equal variance assumptions
 leveneTest(logEOC,Horizon,center=median)
 
-#3.1.1 EOC by horizon------------------------------------------
+#Step 2 ANOVA
+#EOC by horizon 
 logEOC.horiz.aov <- aov(logEOC~Horizon);summary(logEOC.horiz.aov)
 logEOC.horiz.HSD <- TukeyHSD(logEOC.horiz.aov);logEOC.horiz.HSD
 logEOCL.HSD <- HSD.test(logEOC.horiz.aov,"Horizon",group=T);logEOCL.HSD 
 #one-way anova test for unequal variance
 oneway.test(logEOC~Horizon)
 
-#3.1.2 EOC by station------------------------------------------
+#EOC by station
 logEOC.sta.aov <- aov(logEOC~Station);summary(logEOC.sta.aov)
 logEOC.sta.HSD <- TukeyHSD(logEOC.sta.aov);logEOC.sta.HSD 
 logEOC.sta.HSD <- HSD.test(logEOC.sta.aov,"Station",group=T);logEOC.sta.HSD 
 #one-way anova test for unequal variance
 oneway.test(logEOC~Station)
 
-#3.1.3 EOC by both horizon and transect location (ANOCVA) --------------------
+#ANCOVA - interaction of horizon and station
 logEOC.both.aov <- aov(logEOC~Horizon*Station);summary(logEOC.both.aov)
 logEOC.both.HSD <- TukeyHSD(logEOC.both.aov);logEOC.both.HSD  
-logEOC.both.HSD <- HSD.test(logEOC.both.aov,trt = c("Horizon", "Station"),group=T);logEOC.both.HSD  
+logEOC.both.HSD <- HSD.test(logEOC.both.aov,trt = c("Horizon", "Station"),group=T);logEOC.both.HSD
 
+#Step 3 Check normality of residuals 
+qqnorm(logEOC)
+shapiro.test(logEOC) #Log of values is normally distributed
+hist(WetlandsNoLL$EOC_mgC_L)
+qqnorm(WetlandsNoLL$EOC_mgC_L)
+shapiro.test(WetlandsNoLL$EOC_mgC_L) #EOC values are not normally distributed
+ 
+
+#3.1.2 Spring EOC ------------------------------------------
+Station <- JanMar$station
+Horizon <- JanMar$Generic_Horizon
+SpEOC <- JanMar$EOC_mgC_L
+logSpEOC <- log10(SpEOC)
+
+#Step 1 Check equal variance
+bartlett.test(logSpEOC~Station) #Barlett works for both horz and stat on log transformed EOC
+bartlett.test(logSpEOC~Horizon) 
+leveneTest(logSpEOC,Station,center=median) #Levene test works 
+leveneTest(logSpEOC,Horizon,center=median)
+
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#EOC by horizon 
+logSpEOC.horiz.aov <- aov(logSpEOC~Horizon);summary(logSpEOC.horiz.aov)
+logSpEOC.horiz.HSD <- TukeyHSD(logSpEOC.horiz.aov);logSpEOC.horiz.HSD
+logSpEOC.HSD <- HSD.test(logSpEOC.horiz.aov,"Horizon",group=T);logSpEOC.HSD 
+
+#EOC by station
+logSpEOC.sta.aov <- aov(logSpEOC~Station);summary(logSpEOC.sta.aov)
+logSpEOC.sta.HSD <- TukeyHSD(logSpEOC.sta.aov);logSpEOC.sta.HSD 
+logSpEOC.sta.HSD <- HSD.test(logSpEOC.sta.aov,"Station",group=T);logSpEOC.sta.HSD 
+
+#ANCOVA
+logSpEOC.both.aov <- aov(logSpEOC~Horizon*Station);summary(logSpEOC.both.aov)
+logSpEOC.both.HSD <- TukeyHSD(logSpEOC.both.aov);logSpEOC.both.HSD  
+logSpEOC.both.HSD <- HSD.test(logSpEOC.both.aov,trt = c("Horizon", "Station"),group=T);logSpEOC.both.HSD 
+
+#Step 3 Check normality of data and residuals 
+qqnorm(logSpEOC)
+shapiro.test(logSpEOC) #Log of values is normally distributed
+shapiro.test(resid(logSpEOC.horiz.aov))
+shapiro.test(resid(logSpEOC.sta.aov))
+
+#3.1.3 Autumn EOC------------------------------------------
+Station <- Sept$station
+Horizon <- Sept$Generic_Horizon
+AuEOC <- Sept$EOC_mgC_L
+logAuEOC <- log10(AuEOC)
+
+#Step 1 Check equal variance
+bartlett.test(logAuEOC~Station) #Barlett works for both horz and stat on log transformed EOC
+bartlett.test(logAuEOC~Horizon) 
+leveneTest(logAuEOC,Station,center=median) #Levene test works 
+leveneTest(logAuEOC,Horizon,center=median)
+
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#EOC by horizon 
+logAuEOC.horiz.aov <- aov(logAuEOC~Horizon);summary(logAuEOC.horiz.aov)
+logAuEOC.horiz.HSD <- TukeyHSD(logAuEOC.horiz.aov);logAuEOC.horiz.HSD
+logAuEOC.HSD <- HSD.test(logAuEOC.horiz.aov,"Horizon",group=T);logAuEOC.HSD 
+
+#EOC by station
+logAuEOC.sta.aov <- aov(logAuEOC~Station);summary(logAuEOC.sta.aov)
+logAuEOC.sta.HSD <- TukeyHSD(logAuEOC.sta.aov);logAuEOC.sta.HSD 
+logAuEOC.sta.HSD <- HSD.test(logAuEOC.sta.aov,"Station",group=T);logAuEOC.sta.HSD 
+
+#ANCOVA
+logAuEOC.both.aov <- aov(logAuEOC~Horizon*Station);summary(logAuEOC.both.aov)
+logAuEOC.both.HSD <- TukeyHSD(logAuEOC.both.aov);logAuEOC.both.HSD  
+logAuEOC.both.HSD <- HSD.test(logAuEOC.both.aov,trt = c("Horizon", "Station"),group=T);logAuEOC.both.HSD 
+
+#Step 3 Check normality of data and residuals 
+qqnorm(logAuEOC)
+shapiro.test(logAuEOC) #Log of values is normally distributed
+shapiro.test(resid(logAuEOC.horiz.aov))
+shapiro.test(resid(logAuEOC.sta.aov))
 
 ### 3.2 FI -----------------------------------
-FI <- WetlandsNoLL$FI 
-qqnorm(FI)
-hist(FI)
-shapiro.test(FI) #not normally distributed
+#3.2.1 All FI data ------------------------------
+Horizon <- WetlandsNoLL$Generic_Horizon
+Station <- WetlandsNoLL$station
+FI <- WetlandsNoLL$FI
+logFI <- log10(FI)
+
+#Step 1 Check equal variance
 #horizon
-bartlett.test(FI~Horizon) #no equal variance
+bartlett.test(logFI~Horizon) #no equal variance
 leveneTest(FI,Horizon,center=median) #no equal variance - fail barlett, levene, shapiro - use oneway.test? 
 #station
 bartlett.test(FI~Station) #equal variance
 leveneTest(FI,Station,center=median)
 
-#transform data
-logFI <- log10(FI)
-hist(logFI)
-qqnorm(logFI)
-shapiro.test(logFI) #logging FI data is not normally distributed
-bartlett.test(logFI~Horizon)
-
-#3.2.1 FI by horizon------------------------------------------
+#Step 2 ANOVA
+#FI by horizon
 oneway.test(FI~Horizon)
 pairwise.t.test(FI,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
-#3.2.2 FI by station------------------------------------------
+
+#FI by station
 oneway.test(FI~Station)
 pairwise.t.test(FI,Station,p.adj="bonferroni") 
 #I think I can get away with Kruskal-Wallis here
 kruskal.test(FI~Station)
 kruskalmc(Fi,Station, probs=0.05) 
 
+#Step 3 Normality of residuals
+qqnorm(FI)
+hist(FI)
+shapiro.test(FI) #not normally distributed
+
+#3.2.2 Spring FI ------------------------------------------
+Station <- JanMar$station
+Horizon <- JanMar$Generic_Horizon
+SpFI <- JanMar$FI
+logSpFI <- log10(SpFI)
+
+#Step 1 Check equal variance
+bartlett.test(logSpFI~Station) #Works for stat
+bartlett.test(logSpFI~Horizon) #misses but sd within 2x of eachother - allow it
+leveneTest(logSpFI,Station,center=median) #Levene test works 
+leveneTest(logSpFI,Horizon,center=median)
+
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#EOC by horizon 
+logSpFI.horiz.aov <- aov(logSpFI~Horizon);summary(logSpFI.horiz.aov)
+logSpFI.horiz.HSD <- TukeyHSD(logSpFI.horiz.aov);logSpFI.horiz.HSD
+logSpFI.HSD <- HSD.test(logSpFI.horiz.aov,"Horizon",group=T);logSpFI.HSD 
+
+#EOC by station
+logSpFI.sta.aov <- aov(logSpFI~Station);summary(logSpFI.sta.aov)
+logSpFI.sta.HSD <- TukeyHSD(logSpFI.sta.aov);logSpFI.sta.HSD 
+logSpFI.sta.HSD <- HSD.test(logSpFI.sta.aov,"Station",group=T);logSpFI.sta.HSD 
+
+#ANCOVA
+logSpFI.both.aov <- aov(logSpFI~Horizon*Station);summary(logSpFI.both.aov)
+logSpFI.both.HSD <- TukeyHSD(logSpFI.both.aov);logSpFI.both.HSD  
+logSpFI.both.HSD <- HSD.test(logSpFI.both.aov,trt = c("Horizon", "Station"),group=T);logSpFI.both.HSD 
+
+#Step 3 Check normality of data and residuals 
+qqnorm(logSpFI)
+shapiro.test(logSpFI) #fail
+shapiro.test(resid(logSpFI.horiz.aov)) #only slightly under - let it slide?
+shapiro.test(resid(logSpFI.sta.aov)) #only slightly under - let it slide?
+
+#3.2.2 Autumn FI ------------------------------------------
+Station <- Sept$station
+Horizon <- Sept$Generic_Horizon
+AuFI <- Sept$FI
+logAuFI <- log10(AuFI)
+
+#Step 1 Check equal variance
+bartlett.test(logAuFI~Station) #Works for stat
+bartlett.test(logAuFI~Horizon) #misses but sd within 2x of eachother - allow it
+leveneTest(logAuFI,Station,center=median) #Levene test works 
+leveneTest(logAuFI,Horizon,center=median)
+
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#EOC by horizon 
+logAuFI.horiz.aov <- aov(logAuFI~Horizon);summary(logAuFI.horiz.aov)
+logAuFI.horiz.HSD <- TukeyHSD(logAuFI.horiz.aov);logAuFI.horiz.HSD
+logAuFI.HSD <- HSD.test(logAuFI.horiz.aov,"Horizon",group=T);logAuFI.HSD 
+
+#EOC by station
+logAuFI.sta.aov <- aov(logAuFI~Station);summary(logAuFI.sta.aov)
+logAuFI.sta.HSD <- TukeyHSD(logAuFI.sta.aov);logAuFI.sta.HSD 
+logAuFI.sta.HSD <- HSD.test(logAuFI.sta.aov,"Station",group=T);logAuFI.sta.HSD 
+
+#ANCOVA
+logAuFI.both.aov <- aov(logAuFI~Horizon*Station);summary(logAuFI.both.aov)
+logAuFI.both.HSD <- TukeyHSD(logAuFI.both.aov);logAuFI.both.HSD  
+logAuFI.both.HSD <- HSD.test(logAuFI.both.aov,trt = c("Horizon", "Station"),group=T);logAuFI.both.HSD 
+
+#Step 3 Check normality of data and residuals 
+qqnorm(logAuFI)
+shapiro.test(logAuFI) #fail
+shapiro.test(resid(logAuFI.horiz.aov)) #passes
+shapiro.test(resid(logAuFI.sta.aov)) #only slightly under - let it slide?
+
 ### 3.3 SUVA -----------------------------------
+#3.3.1 All SUVA Data------------------------------------------
+Station <- WetlandsNoLL$station
+Horizon <- WetlandsNoLL$Generic_Horizon
 SUVA <- WetlandsNoLL$SUVA254_L_mgm
-hist(SUVA)
-shapiro.test(SUVA) #not normally distributed
+
+#Step 1 Check equal variance
 #horizon
 bartlett.test(SUVA~Horizon)
 leveneTest(SUVA,Horizon,center=median) #passes levene but fails bartlett and normality - use kruskal wallis
@@ -301,23 +445,93 @@ leveneTest(SUVA,Horizon,center=median) #passes levene but fails bartlett and nor
 bartlett.test(SUVA~Station)
 leveneTest(SUVA,Station,center=median) #passes levene/bartlett but not normality - use kruskal wallis
 
-
-#transform data
-sqrtSUVA <- sqrt(SUVA) 
-hist(sqrtSUVA)
-shapiro.test(sqrtSUVA) #not normally distributed
-
-#3.3.1 SVUA by horizon------------------------------------------
+#Step 2 ANOVA 
+#By horizon
 kruskal.test(SUVA~Horizon)
 kruskalmc(SUVA, Horizon, probs=0.05) #O and A not diff, but all others yes
-#3.3.1 SVUA by station------------------------------------------
+#By station
 kruskal.test(SUVA~Station)
 kruskalmc(SUVA,Station, probs=0.05)
 
+#Step 3 Check normality of residuals
+hist(SUVA)
+shapiro.test(SUVA) #not normally distributed
+
+#3.3.2 Spring SUVA ------------------------------------------
+Station <- JanMar$station
+Horizon <- JanMar$Generic_Horizon
+SpSUVA <- JanMar$SUVA254_L_mgm
+#logSpSUVA <- log10(SpSUVA)
+
+#Step 1 Check equal variance
+bartlett.test(SpSUVA~Station) #pass
+bartlett.test(SpSUVA~Horizon) #pass
+leveneTest(SpSUVA,Station,center=median) #pass 
+leveneTest(SpSUVA,Horizon,center=median) #pass
+
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#EOC by horizon 
+SpSUVA.horiz.aov <- aov(SpSUVA~Horizon);summary(SpSUVA.horiz.aov)
+SpSUVA.horiz.HSD <- TukeyHSD(SpSUVA.horiz.aov);SpSUVA.horiz.HSD
+SpSUVA.HSD <- HSD.test(SpSUVA.horiz.aov,"Horizon",group=T);SpSUVA.HSD 
+
+#EOC by station
+SpSUVA.sta.aov <- aov(SpSUVA~Station);summary(SpSUVA.sta.aov)
+SpSUVA.sta.HSD <- TukeyHSD(SpSUVA.sta.aov);SpSUVA.sta.HSD 
+SpSUVA.sta.HSD <- HSD.test(SpSUVA.sta.aov,"Station",group=T);SpSUVA.sta.HSD 
+
+#ANCOVA
+SpSUVA.both.aov <- aov(SpSUVA~Horizon*Station);summary(SpSUVA.both.aov)
+SpSUVA.both.HSD <- TukeyHSD(SpSUVA.both.aov);SpSUVA.both.HSD  
+SpSUVA.both.HSD <- HSD.test(SpSUVA.both.aov,trt = c("Horizon", "Station"),group=T);SpSUVA.both.HSD 
+
+#Step 3 Check normality of data and residuals 
+qqnorm(SpSUVA)
+shapiro.test(SpSUVA) #fail
+shapiro.test(resid(SpSUVA.horiz.aov)) #only slightly under - let it slide?
+shapiro.test(resid(SpSUVA.sta.aov)) #only slightly under - let it slide?
+
+#3.3.3 Autumn SUVA ------------------------------------------
+Station <- Sept$station
+Horizon <- Sept$Generic_Horizon
+AuSUVA <- Sept$SUVA254_L_mgm
+#logAuSUVA <- log10(AuSUVA)
+
+#Step 1 Check equal variance
+bartlett.test(AuSUVA~Station) #pass
+bartlett.test(AuSUVA~Horizon) #pass
+leveneTest(AuSUVA,Station,center=median) #pass 
+leveneTest(AuSUVA,Horizon,center=median) #pass
+
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#EOC by horizon 
+AuSUVA.horiz.aov <- aov(AuSUVA~Horizon);summary(AuSUVA.horiz.aov)
+AuSUVA.horiz.HSD <- TukeyHSD(AuSUVA.horiz.aov);AuSUVA.horiz.HSD
+AuSUVA.HSD <- HSD.test(AuSUVA.horiz.aov,"Horizon",group=T);AuSUVA.HSD 
+
+#EOC by station
+AuSUVA.sta.aov <- aov(AuSUVA~Station);summary(AuSUVA.sta.aov)
+AuSUVA.sta.HSD <- TukeyHSD(AuSUVA.sta.aov);AuSUVA.sta.HSD 
+AuSUVA.sta.HSD <- HSD.test(AuSUVA.sta.aov,"Station",group=T);AuSUVA.sta.HSD 
+
+#ANCOVA
+AuSUVA.both.aov <- aov(AuSUVA~Horizon*Station);summary(AuSUVA.both.aov)
+AuSUVA.both.HSD <- TukeyHSD(AuSUVA.both.aov);AuSUVA.both.HSD  
+AuSUVA.both.HSD <- HSD.test(AuSUVA.both.aov,trt = c("Horizon", "Station"),group=T);AuSUVA.both.HSD 
+
+#Step 3 Check normality of data and residuals 
+qqnorm(AuSUVA)
+shapiro.test(AuSUVA) #fail
+shapiro.test(resid(AuSUVA.horiz.aov)) #only slightly under - let it slide?
+shapiro.test(resid(AuSUVA.sta.aov)) #only slightly under - let it slide?
+
 ### 3.4 HIX -----------------------------------
+#3.4.1 All HIX ------------------------------------------
+Station <- WetlandsNoLL$station
+Horizon <- WetlandsNoLL$Generic_Horizon
 HIX <- WetlandsNoLL$HIX
-hist(HIX)
-shapiro.test(HIX) #not normally distributed
+
+#Step 1 check equal variance 
 #horizon
 bartlett.test(HIX~Horizon) #no equal variance 
 leveneTest(HIX,Horizon,center=median) #no equal variance - fails bartlett/levene and normality - use oneway.test?
@@ -325,6 +539,17 @@ leveneTest(HIX,Horizon,center=median) #no equal variance - fails bartlett/levene
 bartlett.test(HIX~Station) #just barely fails 
 leveneTest(HIX,Station,center=median) # equal variance - use kursal wallis
 
+#Step 2 ANOVA
+#By horizon
+oneway.test(HIX~Horizon)
+pairwise.t.test(HIX,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
+#By station
+kruskal.test(HIX~Station)
+kruskalmc(HIX,Station, probs=0.05) #W and E / T and U not diff, but all others yes
+
+#Step 3 Normality of residuals
+hist(HIX)
+shapiro.test(HIX) #not normally distributed
 #transform data
 sqrtHIX <- sqrt(HIX)
 hist(sqrtHIX) 
@@ -332,18 +557,82 @@ shapiro.test(sqrtHIX) #not normally distributed
 bartlett.test(sqrtHIX~Horizon)
 leveneTest(sqrtHIX,Horizon,center=median)
 
-#3.4.1 HIX by horizon------------------------------------------
-oneway.test(HIX~Horizon)
-pairwise.t.test(HIX,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
-#3.4.1 HIX by station------------------------------------------
-kruskal.test(HIX~Station)
-kruskalmc(HIX,Station, probs=0.05) #W and E / T and U not diff, but all others yes
 
+#3.4.2 Spring HIX ------------------------------------------
+Station <- JanMar$station
+Horizon <- JanMar$Generic_Horizon
+SpHIX <- JanMar$HIX
+#logSpSUVA <- log10(SpSUVA)
+
+#Step 1 Check equal variance
+bartlett.test(SpHIX~Station) #pass
+bartlett.test(SpHIX~Horizon) #pass
+leveneTest(SpHIX,Station,center=median) #pass 
+leveneTest(SpHIX,Horizon,center=median) #pass
+
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#EOC by horizon 
+SpHIX.horiz.aov <- aov(SpHIX~Horizon);summary(SpHIX.horiz.aov)
+SpHIX.horiz.HSD <- TukeyHSD(SpHIX.horiz.aov);SpHIX.horiz.HSD
+SpHIX.HSD <- HSD.test(SpHIX.horiz.aov,"Horizon",group=T);SpHIX.HSD 
+
+#EOC by station
+SpHIX.sta.aov <- aov(SpHIX~Station);summary(SpHIX.sta.aov)
+SpHIX.sta.HSD <- TukeyHSD(SpHIX.sta.aov);SpHIX.sta.HSD 
+SpHIX.sta.HSD <- HSD.test(SpHIX.sta.aov,"Station",group=T);SpHIX.sta.HSD 
+
+#ANCOVA
+SpHIX.both.aov <- aov(SpHIX~Horizon*Station);summary(SpHIX.both.aov)
+SpHIX.both.HSD <- TukeyHSD(SpHIX.both.aov);SpHIX.both.HSD  
+SpHIX.both.HSD <- HSD.test(SpHIX.both.aov,trt = c("Horizon", "Station"),group=T);SpHIX.both.HSD 
+
+#Step 3 Check normality of data and residuals 
+qqnorm(SpHIX)
+shapiro.test(SpHIX) #fail
+shapiro.test(resid(SpHIX.horiz.aov)) #only slightly under - let it slide?
+shapiro.test(resid(SpHIX.sta.aov)) #only slightly under - let it slide?
+
+#3.4.3 Autumn HIX ------------------------------------------
+Station <- Sept$station
+Horizon <- Sept$Generic_Horizon
+AuHIX <- Sept$HIX
+#logAuSUVA <- log10(AuSUVA)
+
+#Step 1 Check equal variance
+bartlett.test(AuHIX~Station) #pass
+bartlett.test(AuHIX~Horizon) #pass
+leveneTest(AuHIX,Station,center=median) #pass 
+leveneTest(AuHIX,Horizon,center=median) #pass
+
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#EOC by horizon 
+AuHIX.horiz.aov <- aov(AuHIX~Horizon);summary(AuHIX.horiz.aov)
+AuHIX.horiz.HSD <- TukeyHSD(AuHIX.horiz.aov);AuHIX.horiz.HSD
+AuHIX.HSD <- HSD.test(AuHIX.horiz.aov,"Horizon",group=T);AuHIX.HSD 
+
+#EOC by station
+AuHIX.sta.aov <- aov(AuHIX~Station);summary(AuHIX.sta.aov)
+AuHIX.sta.HSD <- TukeyHSD(AuHIX.sta.aov);AuHIX.sta.HSD 
+AuHIX.sta.HSD <- HSD.test(AuHIX.sta.aov,"Station",group=T);AuHIX.sta.HSD 
+
+#ANCOVA
+AuHIX.both.aov <- aov(AuHIX~Horizon*Station);summary(AuHIX.both.aov)
+AuHIX.both.HSD <- TukeyHSD(AuHIX.both.aov);AuHIX.both.HSD  
+AuHIX.both.HSD <- HSD.test(AuHIX.both.aov,trt = c("Horizon", "Station"),group=T);AuHIX.both.HSD 
+
+#Step 3 Check normality of data and residuals 
+qqnorm(AuHIX)
+shapiro.test(AuHIX) #fail
+shapiro.test(resid(AuHIX.horiz.aov)) #only slightly under - let it slide?
+shapiro.test(resid(AuHIX.sta.aov)) #only slightly under - let it slide?
 
 ### 3.5 SSR -----------------------------------
+#3.5.1 All SSR data------------------------------------------
+Station <- WetlandsNoLL$station
+Horizon <- WetlandsNoLL$Generic_Horizon
 SSR <- WetlandsNoLL$SSR
-hist(SSR)
-shapiro.test(SSR) #not normally distributed
+
+#Step 1 Equal variance
 #horizon
 bartlett.test(SSR~Horizon)#no equal variance
 leveneTest(SSR,Horizon,center=median) #no equal variance - fails bartlett/levene and normality - use oneway.test?
@@ -351,7 +640,17 @@ leveneTest(SSR,Horizon,center=median) #no equal variance - fails bartlett/levene
 bartlett.test(SSR~Station)#no equal variance
 leveneTest(SSR,Station,center=median) #no equal variance - fails bartlett/levene and normality - use oneway.test?
 
+#Step 2 ANOVA
+#by horizon
+oneway.test(SSR~Horizon)
+pairwise.t.test(SSR,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
+#by station
+kruskal.test(SSR~Station)
+kruskalmc(SSR,Station, probs=0.05) #edge and upland only different
 
+#Step 3 Normality of residuals
+hist(SSR)
+shapiro.test(SSR) #not normally distributed
 #transform data
 logSSR <- log10(SSR)
 hist(logSSR)
@@ -359,14 +658,73 @@ shapiro.test(logSSR)
 bartlett.test(logSSR~Horizon)#no equal variance
 leveneTest(logSSR,Horizon,center=median) 
 
-#3.5.1 SSR by horizon------------------------------------------
-oneway.test(SSR~Horizon)
-pairwise.t.test(SSR,Horizon,p.adj="bonferroni") #O not diff from A but all other comparisons significant
-#3.5.1 SSR by station------------------------------------------
-kruskal.test(SSR~Station)
-kruskalmc(SSR,Station, probs=0.05) #edge and upland only different 
+
+#3.5.2 Spring SSR ------------------------------------------
+Station <- JanMar$station
+Horizon <- JanMar$Generic_Horizon
+SpSSR <- JanMar$SSR
+
+#Step 1 Check equal variance
+bartlett.test(SpSSR~Station) #pass
+bartlett.test(SpSSR~Horizon) #pass
+leveneTest(SpSSR,Station,center=median) #pass 
+leveneTest(SpSSR,Horizon,center=median) #pass
+
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#EOC by horizon 
+SpSSR.horiz.aov <- aov(SpSSR~Horizon);summary(SpSSR.horiz.aov)
+SpSSR.horiz.HSD <- TukeyHSD(SpSSR.horiz.aov);SpSSR.horiz.HSD
+SpSSR.HSD <- HSD.test(SpSSR.horiz.aov,"Horizon",group=T);SpSSR.HSD 
+
+#EOC by station
+SpSSR.sta.aov <- aov(SpSSR~Station);summary(SpSSR.sta.aov)
+SpSSR.sta.HSD <- TukeyHSD(SpSSR.sta.aov);SpSSR.sta.HSD 
+SpSSR.sta.HSD <- HSD.test(SpSSR.sta.aov,"Station",group=T);SpSSR.sta.HSD 
+
+#ANCOVA
+SpSSR.both.aov <- aov(SpSSR~Horizon*Station);summary(SpSSR.both.aov)
+SpSSR.both.HSD <- TukeyHSD(SpSSR.both.aov);SpSSR.both.HSD  
+SpSSR.both.HSD <- HSD.test(SpSSR.both.aov,trt = c("Horizon", "Station"),group=T);SpSSR.both.HSD 
+
+#Step 3 Check normality of data and residuals 
+qqnorm(SpSSR)
+shapiro.test(SpSSR) #fail
+shapiro.test(resid(SpSSR.horiz.aov)) #only slightly under - let it slide?
+shapiro.test(resid(SpSSR.sta.aov)) #only slightly under - let it slide?
 
 
+#3.5.3 Autumn SSR ------------------------------------------ 
+Station <- Sept$station
+Horizon <- Sept$Generic_Horizon
+AuSSR <- Sept$SSR
+
+#Step 1 Check equal variance
+bartlett.test(AuSSR~Station) #pass
+bartlett.test(AuSSR~Horizon) #pass
+leveneTest(AuSSR,Station,center=median) #pass 
+leveneTest(AuSSR,Horizon,center=median) #pass
+
+#Step 2 Run ANOVA/TukeyHSD or other tests
+#EOC by horizon 
+AuSSR.horiz.aov <- aov(AuSSR~Horizon);summary(AuSSR.horiz.aov)
+AuSSR.horiz.HSD <- TukeyHSD(AuSSR.horiz.aov);AuSSR.horiz.HSD
+AuSSR.HSD <- HSD.test(AuSSR.horiz.aov,"Horizon",group=T);AuSSR.HSD 
+
+#EOC by station
+AuSSR.sta.aov <- aov(AuSSR~Station);summary(AuSSR.sta.aov)
+AuSSR.sta.HSD <- TukeyHSD(AuSSR.sta.aov);AuSSR.sta.HSD 
+AuSSR.sta.HSD <- HSD.test(AuSSR.sta.aov,"Station",group=T);AuSSR.sta.HSD 
+
+#ANCOVA
+AuSSR.both.aov <- aov(AuSSR~Horizon*Station);summary(AuSSR.both.aov)
+AuSSR.both.HSD <- TukeyHSD(AuSSR.both.aov);AuSSR.both.HSD  
+AuSSR.both.HSD <- HSD.test(AuSSR.both.aov,trt = c("Horizon", "Station"),group=T);AuSSR.both.HSD 
+
+#Step 3 Check normality of data and residuals 
+qqnorm(AuSSR)
+shapiro.test(AuSSR) #fail
+shapiro.test(resid(AuSSR.horiz.aov)) #only slightly under - let it slide?
+shapiro.test(resid(AuSSR.sta.aov)) #only slightly under - let it slide?
 
 ### 3.6 Water Level Data -----------------------------------
 #break out variables
