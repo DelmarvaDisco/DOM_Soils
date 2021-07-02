@@ -31,6 +31,7 @@ df<-read_csv("data/R_Extraction_Results_All.csv")
 annual <- read_csv("data/annual_metrics_2020_threshold.csv") #annual_metrics used for water level
 soil <- read_csv("data/horizon_annual_metrics_2020.csv") #horizon metrics used for duration/n events
 event <- read_csv("data//horizon_event_summary_2020.csv") #event duration calculated separately from other metrics
+elev <- read_csv("data//20210516_KW_SoilHorizElev.csv")
 
 #Join tables
 #extraction results and annual WL metrics
@@ -42,6 +43,8 @@ glimpse(soildata)
 #extraction results and horizon event duration
 eventdata <- inner_join(df,event,by=c("wetland","station"))
 glimpse(eventdata)
+#WL metrics and x-sec survey data
+horiz <- inner_join(annual,elev,by=c("wetland","station"))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Mean/Min/Max WL and ESOM ----------------------------------------------------------
@@ -1815,7 +1818,7 @@ ggplot(annual, aes(station,max_waterLevel,col=wetland)) +
   theme_bw()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#8.0 Other Plots -------------------------------------
+#7.0 Other Plots -------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ##7.1 CV of Water Level-----------------------------
@@ -1828,14 +1831,22 @@ ggplot(data, aes(station,CV_waterLevel,col=station))+
   theme_bw()+
   facet_wrap(~wetland)
 
-#7.2 Potential vs realized DOM---------------------------------
+##7.2 Mean WL and Soil Horiz Elev--------------------------
+#Pull from elev data - mutate to create dummy metric for plotting
+horiz <- horiz %>% mutate(O_sat = if_else(mean_waterLevel > O_lower,"yes","no"),
+                          A_sat = if_else(mean_waterLevel > A_lower,"yes","no"),
+                          B_sat = if_else(mean_waterLevel > B_lower,"yes","no"))
 
-subset <- data %>% dplyr::select(wetland,station,Generic_Horizon,EOC_mgC_L,Layer_Thickness_cm, 
-                               min_waterLevel,mean_waterLevel,median_waterLevel,max_waterLevel,
-                               dur_day,n_events)
-subset <- subset %>% mutate(Bulk_EOC = EOC_mgC_L*Layer_Thickness_cm,
-                            EOC_mgC_gSoil = (EOC_mgC_L/1000)/30,
-                            EOC_Realized = EOC_mgC_L*abs(mean_waterLevel))
+ggplot(data=horiz)+ 
+  geom_point(aes(mean_waterLevel,O_lower,shape=O_sat,size=2))+
+  geom_point(aes(mean_waterLevel,A_lower,shape=A_sat,size=2))+
+  geom_point(aes(mean_waterLevel,B_lower,shape=B_sat,size=2))+
+  theme_bw()+
+  xlab("Mean Water Elevation (m)")+
+  ylab("Lower Horizon Elevation (m)")+
+  ylim(-1.5,0.5)+
+  xlim(-1.5,0.5)
+  
 
 
 
