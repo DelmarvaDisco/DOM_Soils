@@ -52,7 +52,7 @@ waterlevel <- waterlevel %>% filter(Timestamp > "2019-10-01" & Timestamp < "2020
 threshold_annual <- left_join(threshold_annual,elev,by=c("wetland","station"))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#2.0 Exploratory Data Analysis--------------------------------------------------
+#2.0 Summarize Data --------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ###ESOM DATA###
@@ -790,40 +790,7 @@ waterlevel.aov <- aov(y_n~station)
 summary(waterlevel.aov)
 waterlevel.HSD <- TukeyHSD(waterlevel.aov);waterlevel.HSD 
 
-### 3.7 2020 Annual Metrics ----------------------------------
-#elev
-qqnorm(elev)
-shapiro.test(elev) #normal
-bartlett.test(elev~station) #equal variance
-#min water level
-qqnorm(minWL)
-shapiro.test(minWL) #normal
-bartlett.test(minWL~station) #equal variance
-#mean water level
-qqnorm(meanWL)
-shapiro.test(meanWL) #normal
-bartlett.test(meanWL~station) #equal variance
-#median water level
-qqnorm(medianWL)
-shapiro.test(medianWL) #normal
-bartlett.test(medianWL~station) #equal variance
-#max water level
-qqnorm(maxWL)
-shapiro.test(maxWL) #normal
-bartlett.test(maxWL~station) #equal variance
-#duration
-qqnorm(durday)
-logdurday <- log(durday)
-shapiro.test(durday) #not normally distributed
-bartlett.test(durday~station) #not equal variance
-leveneTest(durday,station,center=median) #no equal variance with levene - use onway
-#n events
-qqnorm(nevents)
-shapiro.test(nevents) #not normally distributed
-bartlett.test(nevents~station) #not equal variance
-leveneTest(nevents,station,center=median) #no equal variance levene - use oneway
-
-#3.7.1 Theshold metrics -----------------------------------
+### 3.7.1 2020 Threshold Metrics ----------------------------------
 station <- threshold_annual$station
 elev <-    threshold_annual$elevation
 minWL <-   threshold_annual$min_waterLevel
@@ -833,38 +800,66 @@ maxWL <-   threshold_annual$max_waterLevel
 durday <-  threshold_annual$dur_day
 nevents <- threshold_annual$n_events
 
+#Step 1 Check equal variance
+#Step 2 Run ANOVA
+#Step 3 Check normality of residuals
+
 #elev
+bartlett.test(elev~station) #equal variance
 elev.aov <-    aov(elev~station);summary(elev.aov)
 elev.HSD <- TukeyHSD(elev.aov);elev.HSD
-elev.HSD <- HSD.test(elev.aov,"station",group=T);elev.HSD 
+elev.HSD <- HSD.test(elev.aov,"station",group=T);elev.HSD
+qqnorm(elev)
+shapiro.test(resid(elev.aov)) #normal
 #min water level
+bartlett.test(minWL~station) #equal variance
 minWL.aov <-   aov(minWL~station); summary(minWL.aov)
 minWL.HSD <-   TukeyHSD(minWL.aov); minWL.HSD
 minWL.HSD <- HSD.test(elev.aov,"station",group=T);minWL.HSD
+qqnorm(minWL)
+shapiro.test(resid(minWL.aov)) #normal
 #mean water level
+bartlett.test(meanWL~station) #equal variance
 meanWL.aov <-  aov(meanWL~station); summary(meanWL.aov)
 meanWL.HSD <-   TukeyHSD(meanWL.aov); meanWL.HSD
 meanWL.HSD <- HSD.test(meanWL.aov,"station",group=T);meanWL.HSD
+qqnorm(meanWL)
+shapiro.test(resid(meanWL.aov)) #normal
 #median water level
+bartlett.test(medianWL~station) #equal variance
 medianWL.aov <-aov(medianWL~station); summary(medianWL.aov)
 medianWL.HSD <-   TukeyHSD(medianWL.aov); medianWL.HSD
 medianWL.HSD <- HSD.test(medianWL.aov,"station",group=T);medianWL.HSD
+qqnorm(medianWL)
+shapiro.test(resid(medianWL.aov)) #normal
 #max water level
+bartlett.test(maxWL~station) #equal variance
 maxWL.aov <-aov(maxWL~station); summary(medianWL.aov)
 maxWL.HSD <-   TukeyHSD(maxWL.aov); maxWL.HSD
 maxWL.HSD <- HSD.test(maxWL.aov,"station",group=T);maxWL.HSD
-#inundation duration - need onway instead of ANOVA?
+qqnorm(maxWL)
+shapiro.test(resid(maxWL.aov)) #normal
+#duration
+bartlett.test(durday~station) #not equal variance
+leveneTest(durday,station,center=median) #no equal variance with levene - use onway
 durday.OW <- oneway.test(durday~station);durday.OW
 durday.KW <- kruskal.test(durday~station);durday.KW 
 durday.aov <-  aov(durday~station); summary(durday.aov)
 durday.HSD <-   TukeyHSD(durday.aov); durday.HSD
 durday.HSD <- HSD.test(durday.aov,"station",group=T);durday.HSD
-#n events - need onway test instead of ANOVA?
+qqnorm(durday)
+logdurday <- log(durday)
+shapiro.test(resid(durday.aov)) #not normally distributed
+#n events
+bartlett.test(nevents~station) #not equal variance
+leveneTest(nevents,station,center=median) #no equal variance levene - use oneway
 nevent.OW <- oneway.test(nevents~station);nevent.OW
 nevent.KW <- kruskal.test(nevents~station);nevent.KW
 nevents.aov <- aov(nevents~station); summary(nevents.aov)
 nevents.HSD <-   TukeyHSD(nevents.aov); nevents.HSD
 nevents.HSD <- HSD.test(nevents.aov,"station",group=T);nevents.HSD
+qqnorm(nevents)
+shapiro.test(resid(nevents.aov)) #not normally distributed
 
 #3.7.2 Soil horizon events and duration of saturation -------------------------
 Odur <- soil_annual$O_dur_day
@@ -877,51 +872,60 @@ station <- soil_annual$station
 
 #O
 #N events
-qqnorm(Oev)
-shapiro.test(Oev) #fail
 bartlett.test(Oev~station) #fail
-Oev.aov <-    aov(Oev~station);summary(Oev.aov)
+leveneTest(Oev,station,center=median)
+Oev.aov <- aov(Oev~station);summary(Oev.aov)
 Oev.HSD <- TukeyHSD(Oev.aov);Oev.HSD
 Oev.HSD <- HSD.test(Oev.aov,"station",group=T);Oev.HSD
+qqnorm(Oev)
+shapiro.test(resid(Oev.aov)) 
 #Duration
-qqnorm(Odur)
-shapiro.test(Odur) #fail
 bartlett.test(Odur~station) #fail
+leveneTest(Odur,station,center=median)
 Odur.aov <-  aov(Odur~station);summary(Odur.aov)
 Odur.HSD <- TukeyHSD(Odur.aov);Odur.HSD
 Odur.HSD <- HSD.test(Odur.aov,"station",group=T);Odur.HSD
+qqnorm(Odur)
+shapiro.test(resid(Odur.aov)) 
 
 #A
 #N events
-qqnorm(Aev)
-shapiro.test(Aev) #fail
 bartlett.test(Aev~station) #fail
+leveneTest(Aev,station,center=median) #pass
 Aev.aov <-    aov(Aev~station);summary(Aev.aov)
 Aev.HSD <- TukeyHSD(Aev.aov);Aev.HSD
 Aev.HSD <- HSD.test(Aev.aov,"station",group=T);Aev.HSD
+qqnorm(Aev)
+shapiro.test(resid(Aev.aov)) #fail
+Anevent.KW <- kruskal.test(Aev~station);Anevent.KW #not significant
 #Duration
-qqnorm(Adur)
-shapiro.test(Adur) #fail
 bartlett.test(Adur~station) #fail
+leveneTest(Adur,station,center=median)
 Adur.aov <-  aov(Adur~station);summary(Adur.aov)
 Adur.HSD <- TukeyHSD(Adur.aov);Adur.HSD
 Adur.HSD <- HSD.test(Adur.aov,"station",group=T);Adur.HSD
+qqnorm(Adur)
+shapiro.test(resid(Adur.aov)) #fail
+Adur.KW <- kruskal.test(Adur~station);Adur.KW #significant
 
 #B
 #N events
-qqnorm(Bev)
-shapiro.test(Bev) #fail
 bartlett.test(Bev~station) #fail
+leveneTest(Bev,station,center=median)
 Bev.aov <-    aov(Bev~station);summary(Bev.aov)
 Bev.HSD <- TukeyHSD(Bev.aov);Bev.HSD
 Bev.HSD <- HSD.test(Bev.aov,"station",group=T);Bev.HSD
+qqnorm(Bev)
+shapiro.test(resid(Bev.aov)) #fail
+Bnevent.KW <- kruskal.test(Bev~station);Bnevent.KW #significant
 #Duration
-qqnorm(Bdur)
-shapiro.test(Bdur) #fail
 bartlett.test(Bdur~station) #fail
+leveneTest(Bdur,station,center=median) #fall
 Bdur.aov <-  aov(Bdur~station);summary(Bdur.aov)
 Bdur.HSD <- TukeyHSD(Bdur.aov);Bdur.HSD
 Bdur.HSD <- HSD.test(Bdur.aov,"station",group=T);Bdur.HSD
+qqnorm(Bdur)
+shapiro.test(resid(Bdur.aov)) #fail
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #4.0 Simple Linear Regression ---------------------------------------
