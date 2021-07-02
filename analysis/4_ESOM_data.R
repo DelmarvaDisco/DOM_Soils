@@ -967,13 +967,41 @@ ggplot(data=WetlandsNoLL) +
   ylab("%C2")+
   ggtitle("%C2 vs EOC")+
   theme_bw()
-#SUVA
+#C2 vs SUVA
 ggplot(data=WetlandsNoLL) +
   geom_point(aes(x=SUVA254_L_mgm,y=C2_Q2,col=Generic_Horizon),size=3) +
   xlab("SUVA254 (L/mg-m)") +
   ylab("%C2")+
   ggtitle("%C2 vs SUVA254")+
   theme_bw()+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#Spring - C2 vs SUVA
+ggplot(data=JanMar) +
+  geom_point(aes(x=SUVA254_L_mgm,y=C2_Q2,col=Generic_Horizon),size=3) +
+  xlab("SUVA254 (L/mg-m)") +
+  ylab("%C2")+
+  ggtitle("Spring %C2 vs SUVA254")+
+  xlim(0,3.25)+
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#Autumn - C2 vs SUVA
+ggplot(data=Sept) +
+  geom_point(aes(x=SUVA254_L_mgm,y=C2_Q2,col=Generic_Horizon),size=3) +
+  xlab("SUVA254 (L/mg-m)") +
+  ylab("%C2")+
+  ggtitle("Autumn %C2 vs SUVA254")+
+  theme_bw()+
+  xlim(0,3.25)+
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
@@ -1524,6 +1552,37 @@ ggplot(WetlandsNoLL,aes(x=FI,y=Percent_Protein,col=Generic_Horizon)) +
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#FI vs %Protein - Spring
+ggplot(JanMar,aes(x=FI,y=Percent_Protein,col=Generic_Horizon)) + 
+  geom_point(size=3) +
+  xlab("FI")+
+  ylab("%Protein") +
+  ggtitle("Spring %Protein vs FI") +
+  theme_bw()+
+  ylim(0,0.2)+
+  xlim(1.4,1.9)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#FI vs %Protein - Autumn
+ggplot(Sept,aes(x=FI,y=Percent_Protein,col=Generic_Horizon)) + 
+  geom_point(size=3) +
+  xlab("FI")+
+  ylab("%Protein") +
+  ggtitle("Autumn %Protein vs FI") +
+  theme_bw()+
+  ylim(0,0.2)+
+  xlim(1.4,1.9)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 ggplot(WetlandsNoLL,aes(x=FI,y=Percent_Protein,col=Point)) + 
   geom_point(size=2) +
   xlab("FI")+
