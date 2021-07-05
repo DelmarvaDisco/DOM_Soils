@@ -23,6 +23,7 @@ library(car)
 library(ggpmisc)
 library(performance)
 library(agricolae)
+library(onewaytests)
 
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv")
@@ -222,6 +223,7 @@ soil_summary <- soil_annual %>% group_by(station) %>%
 #Step 2 Run ANOVA/TukeyHSD or other tests
 #Step 3 Check normality of residuals 
 
+##3.1 EOC -----------------------------------------------
 ### 3.1.1 ALL EOC --------------------------------------------------
 Station <- WetlandsNoLL$station
 Horizon <- WetlandsNoLL$Generic_Horizon
@@ -256,7 +258,7 @@ shapiro.test(resid(logEOC.horiz.aov)) #pass
 shapiro.test(resid(logEOC.sta.aov)) #pass
 
 
-#3.1.2 Spring EOC ------------------------------------------
+###3.1.2 Spring EOC ------------------------------------------
 Station <- JanMar$station
 Horizon <- JanMar$Generic_Horizon
 SpEOC <- JanMar$EOC_mgC_L
@@ -290,7 +292,7 @@ shapiro.test(logSpEOC) #Log of values is normally distributed
 shapiro.test(resid(logSpEOC.horiz.aov))
 shapiro.test(resid(logSpEOC.sta.aov))
 
-#3.1.3 Autumn EOC------------------------------------------
+###3.1.3 Autumn EOC------------------------------------------
 Station <- Sept$station
 Horizon <- Sept$Generic_Horizon
 AuEOC <- Sept$EOC_mgC_L
@@ -324,8 +326,8 @@ shapiro.test(logAuEOC) #Log of values is normally distributed
 shapiro.test(resid(logAuEOC.horiz.aov))
 shapiro.test(resid(logAuEOC.sta.aov))
 
-### 3.2 FI -----------------------------------
-#3.2.1 All FI data ------------------------------
+## 3.2 FI -----------------------------------
+###3.2.1 All FI data ------------------------------
 Horizon <- WetlandsNoLL$Generic_Horizon
 Station <- WetlandsNoLL$station
 FI <- WetlandsNoLL$FI
@@ -371,7 +373,7 @@ shapiro.test(FI) #not normally distributed
 shapiro.test(resid(FI.horiz.aov))
 shapiro.test(resid(FI.sta.aov))
 
-#3.2.2 Spring FI ------------------------------------------
+###3.2.2 Spring FI ------------------------------------------
 Station <- JanMar$station
 Horizon <- JanMar$Generic_Horizon
 SpFI <- JanMar$FI
@@ -393,6 +395,7 @@ logSpFI.HSD <- HSD.test(logSpFI.horiz.aov,"Horizon",group=T);logSpFI.HSD
 logSpFI.sta.aov <- aov(logSpFI~Station);summary(logSpFI.sta.aov)
 logSpFI.sta.HSD <- TukeyHSD(logSpFI.sta.aov);logSpFI.sta.HSD 
 logSpFI.sta.HSD <- HSD.test(logSpFI.sta.aov,"Station",group=T);logSpFI.sta.HSD 
+logSpFI.sta.KW <- kruskal.test(logSpFI~Station);logSpFI.sta.KW
 
 #ANCOVA
 logSpFI.both.aov <- aov(logSpFI~Horizon*Station);summary(logSpFI.both.aov)
@@ -405,7 +408,7 @@ shapiro.test(logSpFI) #fail
 shapiro.test(resid(logSpFI.horiz.aov)) #only slightly under - let it slide?
 shapiro.test(resid(logSpFI.sta.aov)) #only slightly under - let it slide?
 
-#3.2.2 Autumn FI ------------------------------------------
+###3.2.2 Autumn FI ------------------------------------------
 Station <- Sept$station
 Horizon <- Sept$Generic_Horizon
 AuFI <- Sept$FI
@@ -427,6 +430,7 @@ logAuFI.HSD <- HSD.test(logAuFI.horiz.aov,"Horizon",group=T);logAuFI.HSD
 logAuFI.sta.aov <- aov(logAuFI~Station);summary(logAuFI.sta.aov)
 logAuFI.sta.HSD <- TukeyHSD(logAuFI.sta.aov);logAuFI.sta.HSD 
 logAuFI.sta.HSD <- HSD.test(logAuFI.sta.aov,"Station",group=T);logAuFI.sta.HSD 
+logAuFI.sta.KW <- kruskal.test(logAuFI~Station);logAuFI.sta.KW
 
 #ANCOVA
 logAuFI.both.aov <- aov(logAuFI~Horizon*Station);summary(logAuFI.both.aov)
@@ -439,8 +443,8 @@ shapiro.test(logAuFI) #fail
 shapiro.test(resid(logAuFI.horiz.aov)) #passes
 shapiro.test(resid(logAuFI.sta.aov)) #only slightly under - let it slide?
 
-### 3.3 SUVA -----------------------------------
-#3.3.1 All SUVA Data------------------------------------------
+## 3.3 SUVA -----------------------------------
+###3.3.1 All SUVA Data------------------------------------------
 Station <- WetlandsNoLL$station
 Horizon <- WetlandsNoLL$Generic_Horizon
 SUVA <- WetlandsNoLL$SUVA254_L_mgm
@@ -480,7 +484,7 @@ shapiro.test(SUVA) #not normally distributed
 shapiro.test(resid(SUVA.horiz.aov))
 shapiro.test(resid(SUVA.sta.aov))
 
-#3.3.2 Spring SUVA ------------------------------------------
+###3.3.2 Spring SUVA ------------------------------------------
 Station <- JanMar$station
 Horizon <- JanMar$Generic_Horizon
 SpSUVA <- JanMar$SUVA254_L_mgm
@@ -514,7 +518,7 @@ shapiro.test(SpSUVA) #fail
 shapiro.test(resid(SpSUVA.horiz.aov)) #only slightly under - let it slide?
 shapiro.test(resid(SpSUVA.sta.aov)) #only slightly under - let it slide?
 
-#3.3.3 Autumn SUVA ------------------------------------------
+###3.3.3 Autumn SUVA ------------------------------------------
 Station <- Sept$station
 Horizon <- Sept$Generic_Horizon
 AuSUVA <- Sept$SUVA254_L_mgm
@@ -548,8 +552,8 @@ shapiro.test(AuSUVA) #fail
 shapiro.test(resid(AuSUVA.horiz.aov)) #only slightly under - let it slide?
 shapiro.test(resid(AuSUVA.sta.aov)) #only slightly under - let it slide?
 
-### 3.4 HIX -----------------------------------
-#3.4.1 All HIX ------------------------------------------
+## 3.4 HIX -----------------------------------
+###3.4.1 All HIX ------------------------------------------
 Station <- WetlandsNoLL$station
 Horizon <- WetlandsNoLL$Generic_Horizon
 HIX <- WetlandsNoLL$HIX
@@ -593,7 +597,7 @@ shapiro.test(sqrtHIX) #not normally distributed
 shapiro.test(resid(HIX.horiz.aov)) #only slightly under - let it slide?
 shapiro.test(resid(HIX.sta.aov)) #only slightly under - let it slide?
 
-#3.4.2 Spring HIX ------------------------------------------
+###3.4.2 Spring HIX ------------------------------------------
 Station <- JanMar$station
 Horizon <- JanMar$Generic_Horizon
 SpHIX <- JanMar$HIX
@@ -627,11 +631,10 @@ shapiro.test(SpHIX) #fail
 shapiro.test(resid(SpHIX.horiz.aov)) #only slightly under - let it slide?
 shapiro.test(resid(SpHIX.sta.aov)) #only slightly under - let it slide?
 
-#3.4.3 Autumn HIX ------------------------------------------
+###3.4.3 Autumn HIX ------------------------------------------
 Station <- Sept$station
 Horizon <- Sept$Generic_Horizon
 AuHIX <- Sept$HIX
-#logAuSUVA <- log10(AuSUVA)
 
 #Step 1 Check equal variance
 bartlett.test(AuHIX~Station) #pass
@@ -661,8 +664,8 @@ shapiro.test(AuHIX) #fail
 shapiro.test(resid(AuHIX.horiz.aov)) #only slightly under - let it slide?
 shapiro.test(resid(AuHIX.sta.aov)) #only slightly under - let it slide?
 
-### 3.5 SSR -----------------------------------
-#3.5.1 All SSR data------------------------------------------
+## 3.5 SSR -----------------------------------
+###3.5.1 All SSR data------------------------------------------
 Station <- WetlandsNoLL$station
 Horizon <- WetlandsNoLL$Generic_Horizon
 SSR <- WetlandsNoLL$SSR
@@ -705,16 +708,17 @@ shapiro.test(logSSR)
 shapiro.test(resid(SSR.horiz.aov)) #only slightly under - let it slide?
 shapiro.test(resid(SSR.sta.aov)) #only slightly under - let it slide?
 
-#3.5.2 Spring SSR ------------------------------------------
+###3.5.2 Spring SSR ------------------------------------------
 Station <- JanMar$station
 Horizon <- JanMar$Generic_Horizon
 SpSSR <- JanMar$SSR
 
 #Step 1 Check equal variance
 bartlett.test(SpSSR~Station) #pass
-bartlett.test(SpSSR~Horizon) #pass
+bartlett.test(SpSSR~Horizon) #fail
 leveneTest(SpSSR,Station,center=median) #pass 
-leveneTest(SpSSR,Horizon,center=median) #pass
+leveneTest(SpSSR,Horizon,center=median) #fail
+bf.test(SSR~Generic_Horizon,data=JanMar) #fail
 
 #Step 2 Run ANOVA/TukeyHSD or other tests
 #EOC by horizon 
@@ -739,16 +743,17 @@ shapiro.test(resid(SpSSR.horiz.aov)) #only slightly under - let it slide?
 shapiro.test(resid(SpSSR.sta.aov)) #only slightly under - let it slide?
 
 
-#3.5.3 Autumn SSR ------------------------------------------ 
+###3.5.3 Autumn SSR ------------------------------------------ 
 Station <- Sept$station
 Horizon <- Sept$Generic_Horizon
 AuSSR <- Sept$SSR
 
 #Step 1 Check equal variance
 bartlett.test(AuSSR~Station) #pass
-bartlett.test(AuSSR~Horizon) #pass
+bartlett.test(AuSSR~Horizon) #fail
 leveneTest(AuSSR,Station,center=median) #pass 
-leveneTest(AuSSR,Horizon,center=median) #pass
+leveneTest(AuSSR,Horizon,center=median) #fail
+bf.test(SSR~Generic_Horizon,data=Sept) #fail
 
 #Step 2 Run ANOVA/TukeyHSD or other tests
 #EOC by horizon 
@@ -760,6 +765,7 @@ AuSSR.HSD <- HSD.test(AuSSR.horiz.aov,"Horizon",group=T);AuSSR.HSD
 AuSSR.sta.aov <- aov(AuSSR~Station);summary(AuSSR.sta.aov)
 AuSSR.sta.HSD <- TukeyHSD(AuSSR.sta.aov);AuSSR.sta.HSD 
 AuSSR.sta.HSD <- HSD.test(AuSSR.sta.aov,"Station",group=T);AuSSR.sta.HSD 
+AuSSR.sta.KW <- kruskal.test(AuSSR~Station);AuSSR.sta.KW
 
 #ANCOVA
 AuSSR.both.aov <- aov(AuSSR~Horizon*Station);summary(AuSSR.both.aov)
@@ -772,7 +778,7 @@ shapiro.test(AuSSR) #fail
 shapiro.test(resid(AuSSR.horiz.aov)) #only slightly under - let it slide?
 shapiro.test(resid(AuSSR.sta.aov)) #only slightly under - let it slide?
 
-### 3.6 Water Level Data -----------------------------------
+## 3.6 Water Level Data -----------------------------------
 #break out variables
 y_n <- waterlevel$y_n
 station <- waterlevel$station
@@ -790,7 +796,7 @@ waterlevel.aov <- aov(y_n~station)
 summary(waterlevel.aov)
 waterlevel.HSD <- TukeyHSD(waterlevel.aov);waterlevel.HSD 
 
-### 3.7.1 2020 Threshold Metrics ----------------------------------
+### 3.6.1 2020 Threshold Metrics ----------------------------------
 station <- threshold_annual$station
 elev <-    threshold_annual$elevation
 minWL <-   threshold_annual$min_waterLevel
@@ -842,7 +848,8 @@ shapiro.test(resid(maxWL.aov)) #normal
 #duration
 bartlett.test(durday~station) #not equal variance
 leveneTest(durday,station,center=median) #no equal variance with levene - use onway
-durday.OW <- oneway.test(durday~station);durday.OW
+bf.test(dur_day ~ station, data=threshold_annual) #not equal variance
+durday.OW <- oneway.test(dur_day~station,data=threshold_annual,var.equal=F);durday.OW
 durday.KW <- kruskal.test(durday~station);durday.KW 
 durday.aov <-  aov(durday~station); summary(durday.aov)
 durday.HSD <-   TukeyHSD(durday.aov); durday.HSD
@@ -853,6 +860,7 @@ shapiro.test(resid(durday.aov)) #not normally distributed
 #n events
 bartlett.test(nevents~station) #not equal variance
 leveneTest(nevents,station,center=median) #no equal variance levene - use oneway
+bf.test(n_events ~ station, data=threshold_annual) #not equal variance (Barely)
 nevent.OW <- oneway.test(nevents~station);nevent.OW
 nevent.KW <- kruskal.test(nevents~station);nevent.KW
 nevents.aov <- aov(nevents~station); summary(nevents.aov)
@@ -861,7 +869,7 @@ nevents.HSD <- HSD.test(nevents.aov,"station",group=T);nevents.HSD
 qqnorm(nevents)
 shapiro.test(resid(nevents.aov)) #not normally distributed
 
-#3.7.2 Soil horizon events and duration of saturation -------------------------
+###3.6.2 Soil horizon events and duration of saturation -------------------------
 Odur <- soil_annual$O_dur_day
 Oev <- soil_annual$O_n_events
 Adur <- soil_annual$A_dur_day
@@ -874,17 +882,21 @@ station <- soil_annual$station
 #N events
 bartlett.test(Oev~station) #fail
 leveneTest(Oev,station,center=median)
+bf.test(O_n_events ~ station, data=soil_annual) #pass
 Oev.aov <- aov(Oev~station);summary(Oev.aov)
 Oev.HSD <- TukeyHSD(Oev.aov);Oev.HSD
 Oev.HSD <- HSD.test(Oev.aov,"station",group=T);Oev.HSD
 qqnorm(Oev)
 shapiro.test(resid(Oev.aov)) 
+shapiro.test(Oev)
 #Duration
 bartlett.test(Odur~station) #fail
-leveneTest(Odur,station,center=median)
+leveneTest(Odur,station,center=median) #fail
+bf.test(O_dur_day ~ station, data=soil_annual) #not equal variance (Barely)
 Odur.aov <-  aov(Odur~station);summary(Odur.aov)
 Odur.HSD <- TukeyHSD(Odur.aov);Odur.HSD
 Odur.HSD <- HSD.test(Odur.aov,"station",group=T);Odur.HSD
+Odur.OW <- oneway.test(Odur~station);Odur.OW
 qqnorm(Odur)
 shapiro.test(resid(Odur.aov)) 
 
@@ -920,13 +932,15 @@ shapiro.test(resid(Bev.aov)) #fail
 Bnevent.KW <- kruskal.test(Bev~station);Bnevent.KW #significant
 #Duration
 bartlett.test(Bdur~station) #fail
-leveneTest(Bdur,station,center=median) #fall
+leveneTest(Bdur,station,center=median) #fail
+bf.test(B_dur_day ~ station, data=soil_annual) #pass
 Bdur.aov <-  aov(Bdur~station);summary(Bdur.aov)
 Bdur.HSD <- TukeyHSD(Bdur.aov);Bdur.HSD
 Bdur.HSD <- HSD.test(Bdur.aov,"station",group=T);Bdur.HSD
 qqnorm(Bdur)
 shapiro.test(resid(Bdur.aov)) #fail
-
+shapiro.test(Bdur)
+Bdur.KW <- kruskal.test(Bdur~station);Bdur.KW #significant
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #4.0 Simple Linear Regression ---------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -945,8 +959,8 @@ O <- data %>% filter(Generic_Horizon == "1O")
 A <- data %>% filter(Generic_Horizon == "2A")
 B <- data %>% filter(Generic_Horizon == "3B")
 
-### 4.1 Mean WL ------------------------------
-# 4.1.1 EOC ------------------------------
+## 4.1 Mean WL ------------------------------
+### 4.1.1 EOC ------------------------------
 lmEOCO <- lm(O$EOC_mgC_L~O$mean_waterLevel)
 summary(lmEOCO)
 plot(residuals(lmEOCO))
@@ -962,7 +976,7 @@ plot(residuals(lmoverall))
 
 compEOC <- compare_performance(lmEOCO,lmEOCA,lmEOCB)
 
-# 4.1.2 SUVA ------------------------------
+### 4.1.2 SUVA ------------------------------
 lmSUVAO <- lm(O$SUVA254_L_mgm~O$mean_waterLevel)
 summary(lmSUVAO)
 plot(residuals(lmSUVAO))
@@ -976,12 +990,12 @@ lmoverall <- lm(data$SUVA254_L_mgm~data$mean_waterLevel)
 summary(lmoverall)
 plot(residuals(lmoverall))
 
-# 4.1.3 HIX ------------------------------
+### 4.1.3 HIX ------------------------------
 lmHIXoverall <- lm(data$HIX~data$mean_waterLevel)
 summary(lmoverall)
 plot(residuals(lmHIXoverall))
 
-### 4.2 N_events -----------------------------
+## 4.2 N_events -----------------------------
 lmNO <- lm(O$EOC_mgC_L~O$n_events)
 summary(lmNO) 
 lmNA <- lm(A$EOC_mgC_L~A$n_events)
@@ -989,7 +1003,7 @@ summary(lmNA)
 lmNB <- lm(B$EOC_mgC_L~B$n_events)
 summary(lmNB) #non significant 
 
-### 4.3 Duration -----------------------------
+## 4.3 Duration -----------------------------
 
 lmFIO <- lm(O$FI~O$dur_day)
 summary(lmFIO)
@@ -1004,7 +1018,7 @@ lmFIoverall <-(data$FI~data$dur_day)
 summary(lmFIoverall)
 plot(residuals(lmFIoverall))
 
-### 4.4 Station indicator------------------------
+## 4.4 Station indicator------------------------
 lmstatO <- lm(O$EOC_mgC_L~O$Station_Indicator)
 summary(lmstatO) #station signf for O only
 lmstatA <- lm(A$EOC_mgC_L~A$Station_Indicator)
@@ -1012,8 +1026,8 @@ summary(lmstatA)
 lmstatB <- lm(B$EOC_mgC_L~B$Station_Indicator)
 summary(lmstatB)
 
-### 4.5 Keep horizons together----------------------
-#4.5.1 EOC ------------------------------------
+## 4.5 Keep horizons together----------------------
+###4.5.1 EOC ------------------------------------
 #EOC ~ Horizon
 lmEOChoriz <- lm(data$EOC_mgC_L~data$Horizon_Indicator)
 summary(lmEOChoriz)
@@ -1029,7 +1043,7 @@ lmmeanwl <- lm(data$EOC_mgC_L~data$mean_waterLevel)
 summary(lmmeanwl) #mean not significant
 plot(residuals(lmmeanwl))
 
-# 4.5.2 FI --------------------------------------
+### 4.5.2 FI --------------------------------------
 #FI ~ Horizon
 lmFIhoriz <- lm(data$FI~data$Horizon_Indicator)
 summary(lmFIhoriz)
@@ -1045,7 +1059,7 @@ lmmeanwl <- lm(data$FI~data$mean_waterLevel)
 summary(lmmeanwl) #mean not significant
 plot(residuals(lmmeanwl))
 
-# 4.5.3 SUVA ----------------------------------
+### 4.5.3 SUVA ----------------------------------
 #SUVA ~ Horizon
 lmSUVAhoriz <- lm(data$SUVA254_L_mgm~data$Horizon_Indicator)
 summary(lmSUVAhoriz)
@@ -1065,7 +1079,7 @@ plot(residuals(lmmeanwl))
 qqnorm(resid(lmmeanwl))
 shapiro.test(resid(lmmeanwl))
 
-# 4.5.4 HIX -----------------------------
+### 4.5.4 HIX -----------------------------
 #HIX ~ Horizon
 lmHIXhoriz <- lm(data$HIX~data$Horizon_Indicator)
 summary(lmHIXhoriz)
@@ -1099,7 +1113,7 @@ data <- data %>%
                                        station == "KW-3T" ~ 2,
                                        station == "KW-4U" ~ 3))
 
-#5.1 EOC -----------------------------
+##5.1 EOC -----------------------------
 #EOC ~ All variables
 lmall <- lm(data$EOC_mgC_L~data$Horizon_Indicator+
               data$Station_Indicator+
@@ -1113,7 +1127,7 @@ plot(residuals(lmall))
 qqnorm(resid(lmall))
 shapiro.test(resid(lmall))
 
-#5.2 FI ------------------------------
+##5.2 FI ------------------------------
 #FI ~ All variables
 lmall <- lm(data$FI~data$Horizon_Indicator+
               data$Station_Indicator+
@@ -1127,7 +1141,7 @@ plot(residuals(lmall))
 qqnorm(resid(lmall))
 shapiro.test(resid(lmall))
 
-#5.3 SUVA -----------------------------
+##5.3 SUVA -----------------------------
 #SUVA ~ All variables
 lmall <- lm(data$SUVA254_L_mgm~data$Horizon_Indicator+
               data$Station_Indicator+
@@ -1142,7 +1156,7 @@ qqnorm(resid(lmall))
 shapiro.test(resid(lmall))
 
 
-#5.4 HIX -----------------------------
+##5.4 HIX -----------------------------
 #HIX ~ All variables
 lmall <- lm(data$HIX~data$Horizon_Indicator+
               data$Station_Indicator+
@@ -1156,8 +1170,8 @@ plot(residuals(lmall))
 qqnorm(resid(lmall))
 shapiro.test(resid(lmall))
 
-#5.5 Now separate horizons and look at multiple variable influence--------------
-#5.5.1 EOC ------------------------------
+##5.5 Now separate horizons and look at multiple variable influence--------------
+###5.5.1 EOC ------------------------------
 lmOall <- lm(O$EOC_mgC_L~
                O$Station_Indicator+
                O$Percent_Clay+
@@ -1194,7 +1208,7 @@ plot(residuals(lmBall))
 qqnorm(resid(lmBall))
 shapiro.test(resid(lmBall))
 
-#5.5.2 FI ------------------------------
+###5.5.2 FI ------------------------------
 
 lmFIOall <- lm(O$FI~
                O$Station_Indicator+
@@ -1232,7 +1246,7 @@ plot(residuals(lmFIBall))
 qqnorm(resid(lmFIBall))
 shapiro.test(resid(lmFIBall))
 
-#5.5.3 SUVA ------------------------------
+###5.5.3 SUVA ------------------------------
 lmSUVAOall <- lm(O$SUVA254_L_mgm~
                  O$Station_Indicator+
                  O$Percent_Clay+
@@ -1269,7 +1283,7 @@ plot(residuals(lmSUVABall))
 qqnorm(resid(lmSUVABall))
 shapiro.test(resid(lmSUVABall))
 
-#5.5.4 HIX ------------------------------
+###5.5.4 HIX ------------------------------
 lmHIXOall <- lm(O$HIX~
                    O$Station_Indicator+
                    O$Percent_Clay+
@@ -1352,8 +1366,8 @@ fviz_nbclust(data, kmeans, method = "silhouette")
 fviz_nbclust(data, kmeans, method = "wss")
 #two is best, 4 second best for optimizing number of clusters
 
-#6.1 SUVA vs FI ------------------------------------
-#6.1.1 Spring---------------------------------------
+##6.1 SUVA vs FI ------------------------------------
+###6.1.1 Spring---------------------------------------
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
@@ -1381,7 +1395,7 @@ clusplot(data,k2$cluster,color=T,shade=T,labels=2)
 #Step 4 determine optical number of clusters
 fviz_nbclust(data, kmeans, method = "silhouette")
 
-#6.1.2 Autumn-------------------------------------
+###6.1.2 Autumn-------------------------------------
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
@@ -1405,8 +1419,8 @@ p5 <- fviz_cluster(k5,data=data)
 #Step 4 determine optical number of clusters
 fviz_nbclust(data, kmeans, method = "silhouette")
 
-#6.2 HIX vs FI -------------------------------------
-#6.2.1 Spring---------------------------------------
+##6.2 HIX vs FI -------------------------------------
+###6.2.1 Spring---------------------------------------
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
@@ -1430,7 +1444,7 @@ p5 <- fviz_cluster(k5,data=data)
 #Step 4 determine optical number of clusters
 fviz_nbclust(data, kmeans, method = "silhouette")
 
-#6.2.2 Autumn-------------------------------------
+###6.2.2 Autumn-------------------------------------
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
@@ -1454,8 +1468,8 @@ p5 <- fviz_cluster(k5,data=data)
 #Step 4 determine optical number of clusters
 fviz_nbclust(data, kmeans, method = "silhouette")
 
-#6.3 FI vs EOC --------------------------------------
-#6.3.1 Spring---------------------------------------
+##6.3 FI vs EOC --------------------------------------
+###6.3.1 Spring---------------------------------------
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
@@ -1479,7 +1493,7 @@ p5 <- fviz_cluster(k5,data=data)
 #Step 4 determine optical number of clusters
 fviz_nbclust(data, kmeans, method = "silhouette")
 
-#6.3.2 Autumn-------------------------------------
+###6.3.2 Autumn-------------------------------------
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
@@ -1503,8 +1517,8 @@ p5 <- fviz_cluster(k5,data=data)
 #Step 4 determine optical number of clusters
 fviz_nbclust(data, kmeans, method = "silhouette")
 
-#6.4 SUVA vs EOC---------------------------------------
-#6.4.1 Spring---------------------------------------
+##6.4 SUVA vs EOC---------------------------------------
+###6.4.1 Spring---------------------------------------
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
@@ -1528,7 +1542,7 @@ p5 <- fviz_cluster(k5,data=data)
 #Step 4 determine optical number of clusters
 fviz_nbclust(data, kmeans, method = "silhouette")
 
-#6.4.2 Autumn-------------------------------------
+###6.4.2 Autumn-------------------------------------
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
