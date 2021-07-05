@@ -1353,23 +1353,201 @@ fviz_nbclust(data, kmeans, method = "wss")
 #two is best, 4 second best for optimizing number of clusters
 
 #6.1 SUVA vs FI ------------------------------------
-
 #6.1.1 Spring---------------------------------------
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
-data <- JanMar %>% select(FI,SUVA254_L_mgm)
+data <- JanMar %>% select(Generic_Horizon,FI,SUVA254_L_mgm)
 data <- drop_na(data)
-
 #scale data (only columns with numeric values)
 data <- scale(data)
+data[c(2,3)] <- scale(data[c(2,3)])
+
+
+#Step 2 K-means algorithm
+k2 <- kmeans(data,centers=2,nstart=25);k2
+k3 <- kmeans(data,centers=3,nstart=25);k3
+k4 <- kmeans(data,centers=4,nstart=25);k4
+k5 <- kmeans(data,centers=5,nstart=25);k5
+
+#Step 3 view results
+p2 <- fviz_cluster(k2,data=data)
+p3 <- fviz_cluster(k3,data=data)
+p4 <- fviz_cluster(k4,data=data)
+p5 <- fviz_cluster(k5,data=data)
+
+clusplot(data,k2$cluster,color=T,shade=T,labels=2)
+
+#Step 4 determine optical number of clusters
+fviz_nbclust(data, kmeans, method = "silhouette")
 
 #6.1.2 Autumn-------------------------------------
 
+#Step 1 select and scale data
+#select only data you want in cluster analysis, ensure no NA's
+data <- Sept %>% select(FI,SUVA254_L_mgm)
+data <- drop_na(data)
+#scale data (only columns with numeric values)
+data <- scale(data)
+
+#Step 2 K-means algorithm
+k2 <- kmeans(data,centers=2,nstart=25);k2
+k3 <- kmeans(data,centers=3,nstart=25);k3
+k4 <- kmeans(data,centers=4,nstart=25);k4
+k5 <- kmeans(data,centers=5,nstart=25);k5
+
+#Step 3 view results
+p2 <- fviz_cluster(k2,data=data)
+p3 <- fviz_cluster(k3,data=data)
+p4 <- fviz_cluster(k4,data=data)
+p5 <- fviz_cluster(k5,data=data)
+
+#Step 4 determine optical number of clusters
+fviz_nbclust(data, kmeans, method = "silhouette")
 
 #6.2 HIX vs FI -------------------------------------
+#6.2.1 Spring---------------------------------------
+
+#Step 1 select and scale data
+#select only data you want in cluster analysis, ensure no NA's
+data <- JanMar %>% select(FI,HIX)
+data <- drop_na(data)
+#scale data (only columns with numeric values)
+data <- scale(data)
+
+#Step 2 K-means algorithm
+k2 <- kmeans(data,centers=2,nstart=25);k2
+k3 <- kmeans(data,centers=3,nstart=25);k3
+k4 <- kmeans(data,centers=4,nstart=25);k4
+k5 <- kmeans(data,centers=5,nstart=25);k5
+
+#Step 3 view results
+p2 <- fviz_cluster(k2,data=data)
+p3 <- fviz_cluster(k3,data=data)
+p4 <- fviz_cluster(k4,data=data)
+p5 <- fviz_cluster(k5,data=data)
+
+#Step 4 determine optical number of clusters
+fviz_nbclust(data, kmeans, method = "silhouette")
+
+#6.2.2 Autumn-------------------------------------
+
+#Step 1 select and scale data
+#select only data you want in cluster analysis, ensure no NA's
+data <- Sept %>% select(FI,HIX)
+data <- drop_na(data)
+#scale data (only columns with numeric values)
+data <- scale(data)
+
+#Step 2 K-means algorithm
+k2 <- kmeans(data,centers=2,nstart=25);k2
+k3 <- kmeans(data,centers=3,nstart=25);k3
+k4 <- kmeans(data,centers=4,nstart=25);k4
+k5 <- kmeans(data,centers=5,nstart=25);k5
+
+#Step 3 view results
+p2 <- fviz_cluster(k2,data=data)
+p3 <- fviz_cluster(k3,data=data)
+p4 <- fviz_cluster(k4,data=data)
+p5 <- fviz_cluster(k5,data=data)
+
+#Step 4 determine optical number of clusters
+fviz_nbclust(data, kmeans, method = "silhouette")
 
 #6.3 FI vs EOC --------------------------------------
+#6.3.1 Spring---------------------------------------
+
+#Step 1 select and scale data
+#select only data you want in cluster analysis, ensure no NA's
+data <- JanMar %>% select(FI,EOC_mgC_L)
+data <- drop_na(data)
+#scale data (only columns with numeric values)
+data <- scale(data)
+
+#Step 2 K-means algorithm
+k2 <- kmeans(data,centers=2,nstart=25);k2
+k3 <- kmeans(data,centers=3,nstart=25);k3
+k4 <- kmeans(data,centers=4,nstart=25);k4
+k5 <- kmeans(data,centers=5,nstart=25);k5
+
+#Step 3 view results
+p2 <- fviz_cluster(k2,data=data)
+p3 <- fviz_cluster(k3,data=data)
+p4 <- fviz_cluster(k4,data=data)
+p5 <- fviz_cluster(k5,data=data)
+
+#Step 4 determine optical number of clusters
+fviz_nbclust(data, kmeans, method = "silhouette")
+
+#6.3.2 Autumn-------------------------------------
+
+#Step 1 select and scale data
+#select only data you want in cluster analysis, ensure no NA's
+data <- Sept %>% select(FI,EOC_mgC_L)
+data <- drop_na(data)
+#scale data (only columns with numeric values)
+data <- scale(data)
+
+#Step 2 K-means algorithm
+k2 <- kmeans(data,centers=2,nstart=25);k2
+k3 <- kmeans(data,centers=3,nstart=25);k3
+k4 <- kmeans(data,centers=4,nstart=25);k4
+k5 <- kmeans(data,centers=5,nstart=25);k5
+
+#Step 3 view results
+p2 <- fviz_cluster(k2,data=data)
+p3 <- fviz_cluster(k3,data=data)
+p4 <- fviz_cluster(k4,data=data)
+p5 <- fviz_cluster(k5,data=data)
+
+#Step 4 determine optical number of clusters
+fviz_nbclust(data, kmeans, method = "silhouette")
 
 #6.4 SUVA vs EOC---------------------------------------
+#6.4.1 Spring---------------------------------------
 
+#Step 1 select and scale data
+#select only data you want in cluster analysis, ensure no NA's
+data <- JanMar %>% select(SUVA254_L_mgm,EOC_mgC_L)
+data <- drop_na(data)
+#scale data (only columns with numeric values)
+data <- scale(data)
+
+#Step 2 K-means algorithm
+k2 <- kmeans(data,centers=2,nstart=25);k2
+k3 <- kmeans(data,centers=3,nstart=25);k3
+k4 <- kmeans(data,centers=4,nstart=25);k4
+k5 <- kmeans(data,centers=5,nstart=25);k5
+
+#Step 3 view results
+p2 <- fviz_cluster(k2,data=data)
+p3 <- fviz_cluster(k3,data=data)
+p4 <- fviz_cluster(k4,data=data)
+p5 <- fviz_cluster(k5,data=data)
+
+#Step 4 determine optical number of clusters
+fviz_nbclust(data, kmeans, method = "silhouette")
+
+#6.4.2 Autumn-------------------------------------
+
+#Step 1 select and scale data
+#select only data you want in cluster analysis, ensure no NA's
+data <- Sept %>% select(SUVA254_L_mgm,EOC_mgC_L)
+data <- drop_na(data)
+#scale data (only columns with numeric values)
+data <- scale(data)
+
+#Step 2 K-means algorithm
+k2 <- kmeans(data,centers=2,nstart=25);k2
+k3 <- kmeans(data,centers=3,nstart=25);k3
+k4 <- kmeans(data,centers=4,nstart=25);k4
+k5 <- kmeans(data,centers=5,nstart=25);k5
+
+#Step 3 view results
+p2 <- fviz_cluster(k2,data=data)
+p3 <- fviz_cluster(k3,data=data)
+p4 <- fviz_cluster(k4,data=data)
+p5 <- fviz_cluster(k5,data=data)
+
+#Step 4 determine optical number of clusters
+fviz_nbclust(data, kmeans, method = "silhouette")
