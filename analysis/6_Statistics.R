@@ -1330,18 +1330,17 @@ library(factoextra) #clustering algorithms & visualization
 library(fpc)        #cluster statistics
 library(mclust)     #hierarchical model clustering
 
+#Practice
 #Step 1 scale data
 #using extraction results: Wetlands no leaf litter (WetlandsNoLL) separated by month
 
-#trial run using all the variables (I think this leads to PCA)
+#trial run using all the variables (using more than 2 = PCA)
 #select only data you want in cluster analysis, ensure no NA's
-data <- WetlandsNoLL %>% select(#Month,wetland,station,Generic_Horizon,
-                                 EOC_mgC_L,FI,HIX,SUVA254_L_mgm)
+data <- WetlandsNoLL %>% select(EOC_mgC_L,FI,HIX,SUVA254_L_mgm)
 data <- drop_na(data)
 
 #scale data (only columns with numeric values)
 data[c(5,9)] <- scale(data[c(5,9)])
-
 #scale using data only (no wetland or horizon name)
 data <- scale(data)
 
@@ -1410,9 +1409,24 @@ results %>% as_tibble() %>%
          Horizon = results$JanMar.Generic_Horizon) %>% 
   ggplot(aes(JanMar.FI,JanMar.SUVA254_L_mgm,
              color=factor(cluster),
-             label=Horizon))+
-  geom_text()+
-  theme_bw()
+             shape=Horizon,
+             size=3))+
+  geom_point()+
+  ylab("SUVA254 (L/mg-m)")+
+  xlab("FI")+
+  ggtitle("Spring SUVA vs FI Cluster Analysis")+
+  ylim(0,3.5)+
+  xlim(1.3,1.9)+
+  theme_bw()+  
+  theme(legend.text = element_text(size=16),
+        legend.title= element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  guides(colour = guide_legend(override.aes = list(size=5)),
+         shape = guide_legend(override.aes = list(size=5)))
 
 
 ###6.1.2 Autumn-------------------------------------
@@ -1424,20 +1438,42 @@ data <- drop_na(data)
 #scale data (only columns with numeric values)
 data <- scale(data)
 
-#Step 2 K-means algorithm
-k2 <- kmeans(data,centers=2,nstart=25);k2
-k3 <- kmeans(data,centers=3,nstart=25);k3
-k4 <- kmeans(data,centers=4,nstart=25);k4
-k5 <- kmeans(data,centers=5,nstart=25);k5
-
-#Step 3 view results
-p2 <- fviz_cluster(k2,data=data)
-p3 <- fviz_cluster(k3,data=data)
-p4 <- fviz_cluster(k4,data=data)
-p5 <- fviz_cluster(k5,data=data)
-
-#Step 4 determine optical number of clusters
+#Step 2 Determine optimal number of clusters
 fviz_nbclust(data, kmeans, method = "silhouette")
+
+#Step 3 K-means algorithm based on optimal cluster number
+k2 <- kmeans(data,centers=2,nstart=25);k2
+
+#Step 4 View results
+#Method 1
+fviz_cluster(k2,data=data)
+#Method 2
+results <- data.frame(Sept$Generic_Horizon,k2$cluster,Sept$FI,Sept$SUVA254_L_mgm)
+
+results %>% as_tibble() %>% 
+  mutate(cluster=k2$cluster,
+         Horizon = results$Sept.Generic_Horizon) %>% 
+  ggplot(aes(Sept.FI,Sept.SUVA254_L_mgm,
+             color=factor(cluster),
+             shape=Horizon,
+             size=3))+
+  geom_point()+
+  ylab("SUVA254 (L/mg-m)")+
+  xlab("FI")+
+  ggtitle("Autumn SUVA vs FI Cluster Analysis")+
+  ylim(0,3.5)+
+  xlim(1.3,1.9)+
+  theme_bw()+  
+  theme(legend.text = element_text(size=16),
+        legend.title= element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  guides(colour = guide_legend(override.aes = list(size=5)),
+         shape = guide_legend(override.aes = list(size=5)))
+
 
 ##6.2 HIX vs FI -------------------------------------
 ###6.2.1 Spring---------------------------------------
@@ -1449,20 +1485,43 @@ data <- drop_na(data)
 #scale data (only columns with numeric values)
 data <- scale(data)
 
-#Step 2 K-means algorithm
-k2 <- kmeans(data,centers=2,nstart=25);k2
-k3 <- kmeans(data,centers=3,nstart=25);k3
-k4 <- kmeans(data,centers=4,nstart=25);k4
-k5 <- kmeans(data,centers=5,nstart=25);k5
-
-#Step 3 view results
-p2 <- fviz_cluster(k2,data=data)
-p3 <- fviz_cluster(k3,data=data)
-p4 <- fviz_cluster(k4,data=data)
-p5 <- fviz_cluster(k5,data=data)
-
-#Step 4 determine optical number of clusters
+#Step 2 Determine optimal number of clusters
 fviz_nbclust(data, kmeans, method = "silhouette")
+
+#Step 3 K-means algorithm based on optimal cluster number
+k2 <- kmeans(data,centers=2,nstart=25);k2
+
+#Step 4 View results
+#Method 1
+fviz_cluster(k2,data=data)
+#Method 2
+results <- data.frame(JanMar$Generic_Horizon,k2$cluster,JanMar$FI,JanMar$HIX)
+
+results %>% as_tibble() %>% 
+  mutate(cluster=k2$cluster,
+         Horizon = results$JanMar.Generic_Horizon) %>% 
+  ggplot(aes(JanMar.FI,JanMar.HIX,
+             color=factor(cluster),
+             shape=Horizon,
+             size=3))+
+  geom_point()+
+  ylab("HIX")+
+  xlab("FI")+
+  ggtitle("Spring HIX vs FI Cluster Analysis")+
+  ylim(0.35,0.6)+
+  xlim(1.3,1.9)+
+  theme_bw()+  
+  theme(legend.text = element_text(size=16),
+        legend.title= element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  guides(colour = guide_legend(override.aes = list(size=5)),
+         shape = guide_legend(override.aes = list(size=5)))
+
+
 
 ###6.2.2 Autumn-------------------------------------
 
@@ -1473,20 +1532,43 @@ data <- drop_na(data)
 #scale data (only columns with numeric values)
 data <- scale(data)
 
-#Step 2 K-means algorithm
-k2 <- kmeans(data,centers=2,nstart=25);k2
-k3 <- kmeans(data,centers=3,nstart=25);k3
-k4 <- kmeans(data,centers=4,nstart=25);k4
-k5 <- kmeans(data,centers=5,nstart=25);k5
-
-#Step 3 view results
-p2 <- fviz_cluster(k2,data=data)
-p3 <- fviz_cluster(k3,data=data)
-p4 <- fviz_cluster(k4,data=data)
-p5 <- fviz_cluster(k5,data=data)
-
-#Step 4 determine optical number of clusters
+#Step 2 Determine optimal number of clusters
 fviz_nbclust(data, kmeans, method = "silhouette")
+
+#Step 3 K-means algorithm based on optimal cluster number
+k2 <- kmeans(data,centers=2,nstart=25);k2
+
+#Step 4 View results
+#Method 1
+fviz_cluster(k2,data=data)
+#Method 2
+results <- data.frame(Sept$Generic_Horizon,k2$cluster,Sept$FI,Sept$HIX)
+
+results %>% as_tibble() %>% 
+  mutate(cluster=k2$cluster,
+         Horizon = results$Sept.Generic_Horizon) %>% 
+  ggplot(aes(Sept.FI,Sept.HIX,
+             color=factor(cluster),
+             shape=Horizon,
+             size=3))+
+  geom_point()+
+  ylab("HIX")+
+  xlab("FI")+
+  ggtitle("Autumn HIX vs FI Cluster Analysis")+
+  ylim(0.35,0.6)+
+  xlim(1.3,1.9)+
+  theme_bw()+  
+  theme(legend.text = element_text(size=16),
+        legend.title= element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  guides(colour = guide_legend(override.aes = list(size=5)),
+         shape = guide_legend(override.aes = list(size=5)))
+
+
 
 ##6.3 FI vs EOC --------------------------------------
 ###6.3.1 Spring---------------------------------------
@@ -1498,20 +1580,43 @@ data <- drop_na(data)
 #scale data (only columns with numeric values)
 data <- scale(data)
 
-#Step 2 K-means algorithm
-k2 <- kmeans(data,centers=2,nstart=25);k2
-k3 <- kmeans(data,centers=3,nstart=25);k3
-k4 <- kmeans(data,centers=4,nstart=25);k4
-k5 <- kmeans(data,centers=5,nstart=25);k5
-
-#Step 3 view results
-p2 <- fviz_cluster(k2,data=data)
-p3 <- fviz_cluster(k3,data=data)
-p4 <- fviz_cluster(k4,data=data)
-p5 <- fviz_cluster(k5,data=data)
-
-#Step 4 determine optical number of clusters
+#Step 2 Determine optimal number of clusters (said 2-3, went with 3)
 fviz_nbclust(data, kmeans, method = "silhouette")
+
+#Step 3 K-means algorithm based on optimal cluster number
+k3 <- kmeans(data,centers=3,nstart=25);k3
+
+#Step 4 View results
+#Method 1
+fviz_cluster(k2,data=data)
+#Method 2
+results <- data.frame(JanMar$Generic_Horizon,k3$cluster,JanMar$FI,JanMar$EOC_mgC_L)
+
+results %>% as_tibble() %>% 
+  mutate(cluster=k3$cluster,
+         Horizon = results$JanMar.Generic_Horizon) %>% 
+  ggplot(aes(JanMar.EOC_mgC_L,JanMar.FI,
+             color=factor(cluster),
+             shape=Horizon,
+             size=3))+
+  geom_point()+
+  ylab("FI")+
+  xlab("EOC (mg C/L)")+
+  ggtitle("Spring FI vs EOC Cluster Analysis")+
+  ylim(1.3,1.9)+
+  xlim(0,30)+
+  theme_bw()+  
+  theme(legend.text = element_text(size=16),
+        legend.title= element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  guides(colour = guide_legend(override.aes = list(size=5)),
+         shape = guide_legend(override.aes = list(size=5)))
+
+
 
 ###6.3.2 Autumn-------------------------------------
 
@@ -1522,20 +1627,43 @@ data <- drop_na(data)
 #scale data (only columns with numeric values)
 data <- scale(data)
 
-#Step 2 K-means algorithm
-k2 <- kmeans(data,centers=2,nstart=25);k2
-k3 <- kmeans(data,centers=3,nstart=25);k3
-k4 <- kmeans(data,centers=4,nstart=25);k4
-k5 <- kmeans(data,centers=5,nstart=25);k5
-
-#Step 3 view results
-p2 <- fviz_cluster(k2,data=data)
-p3 <- fviz_cluster(k3,data=data)
-p4 <- fviz_cluster(k4,data=data)
-p5 <- fviz_cluster(k5,data=data)
-
-#Step 4 determine optical number of clusters
+#Step 2 Determine optimal number of clusters (said 2-3, went with 3)
 fviz_nbclust(data, kmeans, method = "silhouette")
+
+#Step 3 K-means algorithm based on optimal cluster number
+k3 <- kmeans(data,centers=3,nstart=25);k3
+
+#Step 4 View results
+#Method 1
+fviz_cluster(k3,data=data)
+#Method 2
+results <- data.frame(Sept$Generic_Horizon,k3$cluster,Sept$FI,Sept$EOC_mgC_L)
+
+results %>% as_tibble() %>% 
+  mutate(cluster=k3$cluster,
+         Horizon = results$Sept.Generic_Horizon) %>% 
+  ggplot(aes(Sept.EOC_mgC_L,Sept.FI,
+             color=factor(cluster),
+             shape=Horizon,
+             size=3))+
+  geom_point()+
+  ylab("FI")+
+  xlab("EOC (mg C/L)")+
+  ggtitle("Autumn FI vs EOC Cluster Analysis")+
+  ylim(1.3,1.9)+
+  xlim(0,30)+
+  theme_bw()+  
+  theme(legend.text = element_text(size=16),
+        legend.title= element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  guides(colour = guide_legend(override.aes = list(size=5)),
+         shape = guide_legend(override.aes = list(size=5)))
+
+
 
 ##6.4 SUVA vs EOC---------------------------------------
 ###6.4.1 Spring---------------------------------------
@@ -1547,20 +1675,43 @@ data <- drop_na(data)
 #scale data (only columns with numeric values)
 data <- scale(data)
 
-#Step 2 K-means algorithm
-k2 <- kmeans(data,centers=2,nstart=25);k2
-k3 <- kmeans(data,centers=3,nstart=25);k3
-k4 <- kmeans(data,centers=4,nstart=25);k4
-k5 <- kmeans(data,centers=5,nstart=25);k5
-
-#Step 3 view results
-p2 <- fviz_cluster(k2,data=data)
-p3 <- fviz_cluster(k3,data=data)
-p4 <- fviz_cluster(k4,data=data)
-p5 <- fviz_cluster(k5,data=data)
-
-#Step 4 determine optical number of clusters
+#Step 2 Determine optimal number of clusters (said 2-3, went with 3)
 fviz_nbclust(data, kmeans, method = "silhouette")
+
+#Step 3 K-means algorithm based on optimal cluster number
+k3 <- kmeans(data,centers=3,nstart=25);k3
+
+#Step 4 View results
+#Method 1
+fviz_cluster(k2,data=data)
+#Method 2
+results <- data.frame(JanMar$Generic_Horizon,k3$cluster,JanMar$SUVA254_L_mgm,JanMar$EOC_mgC_L)
+
+results %>% as_tibble() %>% 
+  mutate(cluster=k3$cluster,
+         Horizon = results$JanMar.Generic_Horizon) %>% 
+  ggplot(aes(JanMar.EOC_mgC_L,JanMar.SUVA254_L_mgm,
+             color=factor(cluster),
+             shape=Horizon,
+             size=3))+
+  geom_point()+
+  ylab("SUVA254 (L/mg-m)")+
+  xlab("EOC (mg C/L)")+
+  ggtitle("Spring SUVA254 vs EOC Cluster Analysis")+
+  ylim(0,3.5)+
+  xlim(0,30)+
+  theme_bw()+  
+  theme(legend.text = element_text(size=16),
+        legend.title= element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  guides(colour = guide_legend(override.aes = list(size=5)),
+         shape = guide_legend(override.aes = list(size=5)))
+
+
 
 ###6.4.2 Autumn-------------------------------------
 
@@ -1571,17 +1722,40 @@ data <- drop_na(data)
 #scale data (only columns with numeric values)
 data <- scale(data)
 
-#Step 2 K-means algorithm
-k2 <- kmeans(data,centers=2,nstart=25);k2
-k3 <- kmeans(data,centers=3,nstart=25);k3
-k4 <- kmeans(data,centers=4,nstart=25);k4
-k5 <- kmeans(data,centers=5,nstart=25);k5
-
-#Step 3 view results
-p2 <- fviz_cluster(k2,data=data)
-p3 <- fviz_cluster(k3,data=data)
-p4 <- fviz_cluster(k4,data=data)
-p5 <- fviz_cluster(k5,data=data)
-
-#Step 4 determine optical number of clusters
+#Step 2 Determine optimal number of clusters (said 2-3, went with 3)
 fviz_nbclust(data, kmeans, method = "silhouette")
+
+#Step 3 K-means algorithm based on optimal cluster number
+k3 <- kmeans(data,centers=3,nstart=25);k3
+
+#Step 4 View results
+#Method 1
+fviz_cluster(k3,data=data)
+#Method 2
+results <- data.frame(Sept$Generic_Horizon,k3$cluster,Sept$SUVA254_L_mgm,Sept$EOC_mgC_L)
+
+results %>% as_tibble() %>% 
+  mutate(cluster=k3$cluster,
+         Horizon = results$Sept.Generic_Horizon) %>% 
+  ggplot(aes(Sept.EOC_mgC_L,Sept.SUVA254_L_mgm,
+             color=factor(cluster),
+             shape=Horizon,
+             size=3))+
+  geom_point()+
+  ylab("SUVA254 (L/mg-m)")+
+  xlab("EOC (mg C/L)")+
+  ggtitle("Autumn SUVA254 vs EOC Cluster Analysis")+
+  ylim(0,3.5)+
+  xlim(0,30)+
+  theme_bw()+  
+  theme(legend.text = element_text(size=16),
+        legend.title= element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  guides(colour = guide_legend(override.aes = list(size=5)),
+         shape = guide_legend(override.aes = list(size=5)))
+
+
