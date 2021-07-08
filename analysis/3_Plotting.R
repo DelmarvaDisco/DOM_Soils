@@ -23,8 +23,9 @@ depth<-read_csv("data//waterLevel_at_sampling_location.csv")
 depth<-depth %>% drop_na(y_n)
 metrics<-read_csv("data//annual_metrics_2017-2020_threshold.csv")
 #2020 water year only
-#depth <- read_csv("data//waterLevel_2020only.csv") 
-#metrics<-read_csv("data//annual_metrics_2020_threshold.csv")
+depth <- read_csv("data//waterLevel_2020only.csv") 
+depth<-depth %>% drop_na(y_n)
+metrics<-read_csv("data//annual_metrics_2020_threshold.csv")
 
 #Remove SC-A because it was inundaded and not samples
 #depth<-depth %>% filter(!(station == 'KW-4U' & wetland == 'QB'))
@@ -36,7 +37,8 @@ metrics<-read_csv("data//annual_metrics_2017-2020_threshold.csv")
 #2.1 Hydrograph---------------------------------------------
 df<-depth %>% 
   #Convert to cm
-  mutate(waterLevel= y_n*100) %>% 
+  #mutate(waterLevel= y_n*100) %>% 
+  mutate(waterLevel= y_n) %>% 
   #seleect wetland well data
   filter(str_detect(station, 'KW')) %>% 
   #create Hydrologic Zone col
@@ -50,11 +52,10 @@ df<-depth %>%
     upr    = mean + sd(waterLevel, na.rm = T)/sqrt(n()))
 
 #Subset by Hydrologic Zone
-Wetland<-df %>% filter(loc=='1')
-Edge<-df %>% filter(loc=='2')
-Transition<-df %>% filter(loc=='3')
-Upland<-df %>% filter(loc=='4')
-#e<-df %>% filter(loc=="E")
+Wetland<-df %>% filter(loc=='1') %>% drop_na(lwr)
+Edge<-df %>% filter(loc=='2') %>% drop_na(lwr)
+Transition<-df %>% filter(loc=='3') %>% drop_na(lwr)
+Upland<-df %>% filter(loc=='4') %>% drop_na(lwr)
 
 #Define ribbon tranparency
 ribbon_alpha<-0.90
@@ -64,8 +65,7 @@ cols<-c(
   'Wetland' = '#045a8d', 
   'Edge' = '#2b8cbe', 
   'Transition' = '#74a9cf', 
-  'Upland' = '#bdc9e1') #,
-  #'E' = '#f1eef6')
+  'Upland' = '#bdc9e1')
 
 line_col<-"grey50"
 
@@ -73,53 +73,68 @@ line_col<-"grey50"
 hyd<-ggplot() + 
   geom_rect(
     aes(
-      xmin = as.Date('2017-09-30'), 
-      xmax = as.Date('2020-10-18'), 
-      ymin = -50, 
+      xmin = as.Date('2019-09-30'), 
+      xmax = as.Date('2020-10-01'), 
+      ymin = -0.5, 
       ymax = 0), 
-    fill='grey70', alpha = 0.9) +
- 
-  #E
-  #geom_ribbon(aes(ymin = e$lwr, ymax = e$upr, x = e$day, fill='E'), 
-  #col='grey90', lwd=0.25) +
-  #geom_line(aes(x=e$day, y=e$mean), 
-  #col=line_col) +
+      fill='grey80', 
+      alpha = 0.9) +
    
   #Upland
-  geom_ribbon(aes(ymin = Upland$lwr, ymax = Upland$upr, x = Upland$Timestamp, fill='Upland'),
-              alpha=ribbon_alpha) +
-  geom_line(aes(x=Upland$Timestamp, y=Upland$mean), 
-            col=line_col) +
+  geom_ribbon(aes(ymin = Upland$lwr, 
+                  ymax = Upland$upr, 
+                  x = Upland$Timestamp, 
+                  fill='Upland'),
+                  alpha=ribbon_alpha) +
+  geom_line(aes(x=Upland$Timestamp, 
+                y=Upland$mean), 
+                col=line_col) +
   
   #Transition
-  geom_ribbon(aes(ymin = Transition$lwr, ymax = Transition$upr, x = Transition$Timestamp, fill='Transition'),
-              alpha=ribbon_alpha) +
-  geom_line(aes(x=Transition$Timestamp, y=Transition$mean), 
-            col=line_col) +
+  geom_ribbon(aes(ymin = Transition$lwr, 
+                  ymax = Transition$upr, 
+                  x = Transition$Timestamp, 
+                  fill='Transition'),
+                  alpha=ribbon_alpha) +
+  geom_line(aes(x=Transition$Timestamp, 
+                y=Transition$mean), 
+                col=line_col) +
   #Edge
-  geom_ribbon(aes(ymin = Edge$lwr, ymax = Edge$upr, x = Edge$Timestamp, fill='Edge'), 
-              alpha=ribbon_alpha) +
-  geom_line(aes(x=Edge$Timestamp, y=Edge$mean), 
-            col=line_col) +
+  geom_ribbon(aes(ymin = Edge$lwr, 
+                  ymax = Edge$upr, 
+                  x = Edge$Timestamp, fill='Edge'), 
+                  alpha=ribbon_alpha) +
+  geom_line(aes(x=Edge$Timestamp, 
+                y=Edge$mean), 
+                col=line_col) +
   #Wetland
-  geom_ribbon(aes(ymin = Wetland$lwr, ymax = Wetland$upr, x = Wetland$Timestamp, fill='Wetland'),
-              alpha=ribbon_alpha) +
-  geom_line(aes(x=Wetland$Timestamp, y=Wetland$mean), 
-            col=line_col) +
+  geom_ribbon(aes(ymin = Wetland$lwr, 
+                  ymax = Wetland$upr, 
+                  x = Wetland$Timestamp, 
+                  fill='Wetland'),
+                  alpha=ribbon_alpha) +
+  geom_line(aes(x=Wetland$Timestamp, 
+                y=Wetland$mean), 
+                col=line_col) +
+  
   #Legend/color
   scale_fill_manual(name=NULL, values=cols) +
+  
   #Clip to water year
-  coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
-  #coord_cartesian(xlim=as.Date(c("2019-09-30", "2020-10-01"))) +
+  #coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
+  coord_cartesian(xlim=as.Date(c("2019-09-30", "2020-10-01"))) +
+  
   #theme options
   theme_bw() + 
-  ylab("Water Level [cm]") + 
-  xlab(NULL) + 
-  scale_x_date(date_labels = "%b") +
+  ylab("Water Level [m]") + 
+  xlab("Date") + 
+  ylim(-2,1)+
+  #scale_x_date(date_labels = "%b") +
   theme(axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12),
+        axis.text = element_text(size = 14),
         legend.position = c("bottom"), 
-        legend.margin = margin(t=-2, unit="lines")) +
+        legend.margin = margin(t=-0.5, unit="lines"),
+        legend.text = element_text(size=12)) +
   plot_annotation(tag_levels = 'A', tag_suffix = ".  ")
 
 hyd
@@ -137,9 +152,9 @@ dep<-depth %>%
   #summarise(d_n = mean(d_n, na.rm=T), na.rm=T) %>% 
   #Summarise by transect
   group_by(transect) %>% 
-  summarise(mean = mean(y_n, na.rm=T)*100, 
-            upr    = (mean(y_n, na.rm=T) + sd(y_n, na.rm = T)/sqrt(n()))*100,
-            lwr    = (mean(y_n, na.rm=T) - sd(y_n, na.rm = T)/sqrt(n()))*100) %>% 
+  summarise(mean = mean(y_n, na.rm=T), 
+            upr    = (mean(y_n, na.rm=T) + sd(y_n, na.rm = T)/sqrt(n())),
+            lwr    = (mean(y_n, na.rm=T) - sd(y_n, na.rm = T)/sqrt(n()))) %>% 
   #plot!
   ggplot() + 
   geom_hline(aes(yintercept=0), lty=2,lwd=1.25, col="grey30")+
@@ -148,15 +163,15 @@ dep<-depth %>%
                 col='grey30') + 
   geom_point(aes(x = transect, y = mean), 
              pch=c(21,22,23,24),
-             cex=4,
+             cex=6,
              col = 'grey30', 
-             fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3'), 
+             fill = c('#045a8d', '#2b8cbe','#74a9cf','#bdc9e1'), 
              alpha = 70) + 
   theme_bw() + 
-  ylab("Water Elevation [cm]") + 
-  xlab("Hydrologic Zone") + 
+  ylab("Mean Water Elevation [m]") + 
+  xlab("Transect Point") + 
   theme(axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12)) 
+        axis.text = element_text(size = 14)) 
 
 dep
 #2.3 Duration ----------------------------------------------
@@ -179,15 +194,15 @@ dur<-metrics %>%
                 col='grey30') + 
   geom_point(aes(x = transect, y = mean), 
              pch=c(21,22,23,24),
-             cex=4,
+             cex=6,
              col = 'grey30', 
-             fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3'),
+             fill = c('#045a8d', '#2b8cbe','#74a9cf','#bdc9e1'),
              alpha = 70) + 
   theme_bw() +
-  ylab("Saturation Duration [Days]") + 
-  xlab('Hydrologic Zone') + 
+  ylab("Mean Saturation Duration [Days]") + 
+  xlab('Transect Point') + 
   theme(axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12)) 
+        axis.text = element_text(size = 14)) 
 
 dur
 
@@ -210,15 +225,15 @@ freq<-metrics %>%
                 col='grey30') + 
   geom_point(aes(x = transect, y = mean), 
              pch=c(21,22,23,24),
-             cex=4,
+             cex=6,
              col = 'grey30', 
-             fill = c('#e41a1c', '#377eb8','#4daf4a','#984ea3'),
+             fill = c('#045a8d', '#2b8cbe','#74a9cf','#bdc9e1'),
              alpha = 70) + 
   theme_bw() + 
-  ylab("Saturation Frequency [Events]") + 
-  xlab("Hydrologic Zone") + 
+  ylab("Mean Number of Saturation Events") + 
+  xlab("Transect Point") + 
   theme(axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12)) 
+        axis.text = element_text(size = 14)) 
 freq
 
 #2.5 Print plot---------------------------------------------
@@ -236,13 +251,13 @@ hyd + dep + dur + freq
 # 3.0 Hydrologic Regime Plots by transect point --------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#3.1.1 Bring in soil horiz elev to calculate mean depth (convert to cm)
+#3.1.1 Bring in soil horiz elev to calculate mean depth 
 elev <- read_csv("data//20210516_KW_SoilHorizElev.csv")
 mean_elev <- elev %>% 
                 group_by(station) %>% 
-                summarize(O_mean_elev = mean(O_lower,na.rm=T)*100,
-                          A_mean_elev = mean(A_lower,na.rm=T)*100,
-                          B_mean_elev = mean(B_lower,na.rm=T)*100)
+                summarize(O_mean_elev = mean(O_lower,na.rm=T),
+                          A_mean_elev = mean(A_lower,na.rm=T),
+                          B_mean_elev = mean(B_lower,na.rm=T))
     
 KWW <- mean_elev %>% filter(station=='KW-1W')
 KWE <- mean_elev %>% filter(station=='KW-2E')
@@ -251,9 +266,9 @@ KWU <- mean_elev %>% filter(station=='KW-4U')
 
 #3.1.2 Set up water level data
 df<-depth %>% 
-  #Convert to cm
-  mutate(waterLevel= y_n*100) %>% 
-  #seleect wetland well data
+  #Leave as m
+  mutate(waterLevel= y_n) %>% 
+  #select wetland well data
   filter(str_detect(station, 'KW')) %>% 
   #create Hydrologic Zone col
   mutate(loc = substr(station, 4,4)) %>% 
@@ -270,7 +285,6 @@ Wetland<-df %>% filter(loc=='1')
 Edge<-df %>% filter(loc=='2')
 Transition<-df %>% filter(loc=='3')
 Upland<-df %>% filter(loc=='4')
-#e<-df %>% filter(loc=="E")
 
 #Define ribbon tranparency
 ribbon_alpha<-0.90
@@ -288,33 +302,39 @@ line_col<-"grey50"
 #Start ggplot
 wet <-ggplot() + 
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWW$O_mean_elev, 
         ymax = 0), 
-        fill='tan4') +
+        fill='#3D2F21FF') +
   
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWW$A_mean_elev, 
         ymax = KWW$O_mean_elev), 
-    fill='tan3') +
+    fill='#38302AFF') +
   
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWW$B_mean_elev, 
         ymax = KWW$A_mean_elev), 
-    fill='tan2') +
+    fill='#686057FF') +
 
   #Wetland
-  geom_ribbon(aes(ymin = Wetland$lwr, ymax = Wetland$upr, x = Wetland$Timestamp, fill='Wetland'),
-              alpha=ribbon_alpha,col='#045a8d') +
-  geom_line(aes(x=Wetland$Timestamp, y=Wetland$mean), col='black') +
+  geom_ribbon(aes(ymin = Wetland$lwr, 
+                  ymax = Wetland$upr, 
+                  x = Wetland$Timestamp, 
+                  fill='Wetland'),
+                  alpha=ribbon_alpha) +
+  geom_line(aes(x=Wetland$Timestamp, 
+                y=Wetland$mean), 
+                col='black',
+                size=1.25) +
   
   #Legend/color
-  #scale_fill_manual(name=NULL, values=cols) +
+  scale_fill_manual(name=NULL, values=cols) +
   
   #Clip to water year
   #coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
@@ -322,12 +342,12 @@ wet <-ggplot() +
   
   #theme options
   theme_bw() + 
-  ylab("Water Level [cm]") + 
-  xlab(NULL) +
+  ylab("Water Level [m]") + 
+  xlab("Date") +
   ggtitle("Wetland")+
-  scale_x_date(date_labels = "%b") +
+  #scale_x_date(date_labels = "%b") +
   theme(axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12),
+        axis.text = element_text(size = 14),
         legend.position = "none")
         #legend.margin = margin(t=-2, unit="lines")) +
   #plot_annotation(tag_levels = '1', tag_suffix = ".  ")
@@ -337,34 +357,40 @@ wet
 #3.3 Edge -------------------------------------------
 edge <-ggplot() + 
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWE$O_mean_elev, 
         ymax = 0), 
-    fill='tan4') +
+    fill='#3D2F21FF') +
   
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWE$A_mean_elev, 
         ymax = KWE$O_mean_elev), 
-    fill='tan3') +
+    fill='#38302AFF') +
   
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWE$B_mean_elev, 
         ymax = KWE$A_mean_elev), 
-    fill='tan2') +
+    fill='#50473FFF') +
   
  
   #Edge
-  geom_ribbon(aes(ymin = Edge$lwr, ymax = Edge$upr, x = Edge$Timestamp, fill='Edge'), 
-              alpha=ribbon_alpha,col='#045a8d') +
-  geom_line(aes(x=Edge$Timestamp, y=Edge$mean),col='grey4') +
+  geom_ribbon(aes(ymin = Edge$lwr, 
+                  ymax = Edge$upr,
+                  x = Edge$Timestamp, 
+                  fill='Edge'), 
+                  alpha=ribbon_alpha) +
+  geom_line(aes(x=Edge$Timestamp, 
+                y=Edge$mean),
+                col='black',
+                size=1.25) +
 
   #Legend/color
-  #scale_fill_manual(name=NULL, values=cols) +
+  scale_fill_manual(name=NULL, values=cols) +
   
   #Clip to water year
   #coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
@@ -372,12 +398,12 @@ edge <-ggplot() +
   
   #theme options
   theme_bw() + 
-  ylab("Water Level [cm]") + 
-  xlab(NULL) + 
+  ylab("Water Level [m]") + 
+  xlab("Date") + 
   ggtitle("Edge")+
-  scale_x_date(date_labels = "%b") +
+  #scale_x_date(date_labels = "%b") +
   theme(axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12),
+        axis.text = element_text(size = 14),
         legend.position = "none")
         #legend.margin = margin(t=-2, unit="lines")) +
   #plot_annotation(tag_levels = '2', tag_suffix = ".  ")
@@ -388,33 +414,39 @@ edge
 #3.4 Transition -------------------------------------------
 trans <-ggplot() + 
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWT$O_mean_elev, 
         ymax = 0), 
-    fill='tan4') +
+    fill='#3F2E23FF') +
   
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWT$A_mean_elev, 
         ymax = KWT$O_mean_elev), 
-    fill='tan3') +
+    fill='#38302AFF') +
   
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWT$B_mean_elev, 
         ymax = KWT$A_mean_elev), 
-    fill='tan2') +
+    fill='#947650FF') +
   
   #Transition
-  geom_ribbon(aes(ymin = Transition$lwr, ymax = Transition$upr, x = Transition$Timestamp, fill='Transition'),
-              alpha=ribbon_alpha,col='#045a8d') +
-  geom_line(aes(x=Transition$Timestamp, y=Transition$mean), col='grey4') +
+  geom_ribbon(aes(ymin = Transition$lwr, 
+                  ymax = Transition$upr, 
+                  x = Transition$Timestamp, 
+                  fill='Transition'),
+                  alpha=ribbon_alpha) +
+  geom_line(aes(x=Transition$Timestamp, 
+                y=Transition$mean), 
+                col='black',
+                size=1.25) +
   
   #Legend/color
-  #scale_fill_manual(name=NULL, values=cols) +
+  scale_fill_manual(name=NULL, values=cols) +
   
   #Clip to water year
   #coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
@@ -422,12 +454,12 @@ trans <-ggplot() +
   
   #theme options
   theme_bw() + 
-  ylab("Water Level [cm]") + 
-  xlab(NULL) + 
+  ylab("Water Level [m]") + 
+  xlab("Date") + 
   ggtitle("Transition")+
-  scale_x_date(date_labels = "%b") +
+  #scale_x_date(date_labels = "%b") +
   theme(axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12),
+        axis.text = element_text(size = 14),
         legend.position = "none")
   #legend.margin = margin(t=-2, unit="lines")) +
   #plot_annotation(tag_levels = 'C', tag_suffix = ".  ")
@@ -438,33 +470,38 @@ trans
 
 upland <-ggplot() + 
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWU$O_mean_elev, 
         ymax = 0), 
-    fill='tan4') +
+    fill='#3F2E23FF') +
   
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWU$A_mean_elev, 
         ymax = KWU$O_mean_elev), 
-    fill='tan3') +
+    fill='#39302BFF') +
   
   geom_rect(
-    aes(xmin = as.Date('2017-09-30'), 
-        xmax = as.Date('2020-10-18'), 
+    aes(xmin = as.Date('2019-09-30'), 
+        xmax = as.Date('2020-10-01'), 
         ymin = KWU$B_mean_elev, 
         ymax = KWU$A_mean_elev), 
-    fill='tan2') +
+    fill='#A99264FF') +
   
   #Upland
-  geom_ribbon(aes(ymin = Upland$lwr, ymax = Upland$upr, x = Upland$Timestamp,fill='Upland'),
-              alpha=ribbon_alpha,col='#045a8d') +
-  geom_line(aes(x=Upland$Timestamp, y=Upland$mean), col='grey4') +
+  geom_ribbon(aes(ymin = Upland$lwr, 
+                  ymax = Upland$upr, 
+                  x = Upland$Timestamp,fill='Upland'),
+                  alpha=ribbon_alpha) +
+  geom_line(aes(x=Upland$Timestamp,
+                y=Upland$mean),
+                col='black',
+                size = 1.25) +
   
   #Legend/color
-  #scale_fill_manual(name=NULL, values=cols) +
+  scale_fill_manual(name=NULL, values=cols) +
   
   #Clip to water year
   #coord_cartesian(xlim=as.Date(c("2017-09-30", "2020-10-18"))) +
@@ -472,12 +509,12 @@ upland <-ggplot() +
   
   #theme options
   theme_bw() + 
-  ylab("Water Level [cm]") + 
-  xlab(NULL) + 
+  ylab("Water Level [m]") + 
+  xlab("Date") + 
   ggtitle("Upland")+
-  scale_x_date(date_labels = "%b") +
+  #scale_x_date(date_labels = "%b") +
   theme(axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12),
+        axis.text = element_text(size = 14),
         legend.position = "none")
         #legend.margin = margin(t=-2, unit="lines")) +
   #plot_annotation(tag_levels = '4', tag_suffix = ".  ")
