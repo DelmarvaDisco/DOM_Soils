@@ -40,13 +40,19 @@ library(rgdal)
 #2.0 Basic profile plots--------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#now work on plots
+#Get soil color
 ND$soil_color <- with(ND,munsell2rgb(ND$Hue,ND$Value,ND$Chroma))
 QB$soil_color <- with(QB,munsell2rgb(QB$Hue,QB$Value,QB$Chroma))
 TB$soil_color <- with(TB,munsell2rgb(TB$Hue,TB$Value,TB$Chroma))
 DB$soil_color <- with(DB,munsell2rgb(DB$Hue,DB$Value,DB$Chroma))
 
-#Follow example from https://ncss-tech.github.io/AQP/aqp/aqp-intro.html
+write.csv(ND, "data/ND_SoilColor.csv")
+write.csv(QB, "data/QB_SoilColor.csv")
+write.csv(TB, "data/TB_SoilColor.csv")
+write.csv(DB, "data/DB_SoilColor.csv")
+
+#Online examples
+#https://ncss-tech.github.io/AQP/aqp/aqp-intro.html
 #http://rstudio-pubs-static.s3.amazonaws.com/63186_f5856ca97f7e4956bbf93e2eaa39412f.html
 
 str(ND)
@@ -61,7 +67,8 @@ print(ND)
 par(mar=c(5,5,1,3))
 plot(ND,name='Horizon',color='soil_color',
      id.style='top',cex.names=1,
-     cex.id = 1, axis.line.offset = -2)
+     cex.id = 1, axis.line.offset = -2,
+     max.depth=70)
 axis(1,at=1:length(ND),label=c(10.8,16.3,22.7,30.3),cex.axis=1)
 mtext(1,line=2.25,text='Distance from Wetland Center Well (m)',cex=1)
 title(main="ND",line=-3)
@@ -72,7 +79,8 @@ str(QB)
 depths(QB) <- station ~ Horizon_Start_cm + Horizon_End_cm
 plot(QB,name='Horizon',color='soil_color',
      id.style='top',cex.names=1,
-     cex.id = 1, axis.line.offset = -2)
+     cex.id = 1, axis.line.offset = -2,
+     max.depth=70)
 axis(1,at=1:length(QB),label=c(19.0,25.8,35.3,44.9),cex.axis=1)
 mtext(1,line=2.25,text='Distance from Wetland Center Well (m)',cex=1)
 title(main="QB",line=-3)
@@ -82,7 +90,8 @@ str(DB)
 depths(DB) <- station ~ Horizon_Start_cm + Horizon_End_cm
 plot(DB,name='Horizon',color='soil_color',
      id.style='top',cex.names=1,
-     cex.id = 1, axis.line.offset = -2)
+     cex.id = 1, axis.line.offset = -2,
+     max.depth=70)
 axis(1,at=1:length(DB),label=c(8.8,13.4,19.2,25.8),cex.axis=1)
 mtext(1,line=2.25,text='Distance from Wetland Center Well (m)',cex=1)
 title(main="DB",line=-3)
@@ -92,7 +101,8 @@ str(TB)
 depths(TB) <- station ~ Horizon_Start_cm + Horizon_End_cm
 plot(TB,name='Horizon',color='soil_color',
      id.style='top',cex.names=1,
-     cex.id = 1, axis.line.offset = -2)
+     cex.id = 1, axis.line.offset = -2,
+     max.depth=70)
 axis(1,at=1:length(TB),label=c(32.6,36.3,40.7,47.3),cex.axis=1)
 mtext(1,line=2.25,text='Distance from Wetland Center Well (m)',cex=1)
 title(main="TB",line=-3)
