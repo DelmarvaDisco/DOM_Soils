@@ -121,25 +121,31 @@ write.csv(df, "data/waterLevel_at_sampling_location.csv")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 Plots!!!-------------------------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#option to filter to 2020 water year
+df <- df %>% filter(Timestamp > "2019-09-30" & Timestamp < "2020-10-01") 
+
 #Quintesential Bay
 QB<-df %>% 
   filter(wetland =="QB") %>% 
   pivot_wider(names_from = station, values_from = y_n) %>% 
   ggplot(aes(x=Timestamp)) + 
-  geom_line(aes(y=`KW-1W`), col='blue1') +
-  geom_line(aes(y=`KW-2E`), col='blue2') +
-  geom_line(aes(y=`KW-3T`), col='blue3') +
-  geom_line(aes(y=`KW-4U`), col='blue4') +
+  geom_line(aes(y=`KW-1W`), col='#045a8d',size=1.5) +
+  geom_line(aes(y=`KW-2E`), col='#2b8cbe',size=1.5) +
+  geom_line(aes(y=`KW-3T`), col='#74a9cf',size=1.5) +
+  geom_line(aes(y=`KW-4U`), col='#bdc9e1',size=1.5) +
   geom_hline(yintercept=0,linetype="dashed")+
-  geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
-  ggtitle("QB Wetland") +
+  #geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
+  ggtitle("Wetland 2 (QB)") +
+  ylim(-2.25,1)+
   theme_bw() +
   theme(
-    axis.title.y = element_text(size = 14), 
-    axis.text.y  = element_text(size = 10),
+    axis.title.y = element_text(size = 14),
+    axis.title.x = element_text(size = 14),
+    axis.text.y  = element_text(size = 12),
+    axis.text.x  = element_text(size = 12)
   ) + 
   #Add labels
-  xlab(NULL) + 
+  xlab("Date") +
   ylab("Water Level [m]") 
 
 #Tiger B
@@ -147,40 +153,48 @@ TB<-df %>%
   filter(wetland =="TB") %>% 
   pivot_wider(names_from = station, values_from = y_n) %>% 
   ggplot(aes(x=Timestamp)) + 
-  geom_line(aes(y=`KW-1W`), col='blue1') +
-  geom_line(aes(y=`KW-2E`), col='blue2') +
-  geom_line(aes(y=`KW-3T`), col='blue3') +
-  geom_line(aes(y=`KW-4U`), col='blue4') +
+  geom_line(aes(y=`KW-1W`), col='#045a8d',size=1.5) +
+  geom_line(aes(y=`KW-2E`), col='#2b8cbe',size=1.5) +
+  geom_line(aes(y=`KW-3T`), col='#74a9cf',size=1.5) +
+  geom_line(aes(y=`KW-4U`), col='#bdc9e1',size=1.5) +
   geom_hline(yintercept=0,linetype="dashed")+
-  geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
-  ggtitle("TB Wetland") +
+  #geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
+  ggtitle("Wetland 3 (TB)") +
   theme_bw() +
+  ylim(-2.25,1)+
   theme(
-    axis.title.y = element_text(size = 14), 
-    axis.text.y  = element_text(size = 10)
+    axis.title.y = element_text(size = 14),
+    axis.title.x = element_text(size = 14),
+    axis.text.y  = element_text(size = 12),
+    axis.text.x  = element_text(size = 12),    
+    legend.position = c("bottom")
   ) + 
   #Add labels
-  xlab(NULL) + 
+  xlab("Date") + 
   ylab("Water Level [m]") 
 #Dark Bay
 DB<-df %>% 
   filter(wetland =="DB") %>% 
   pivot_wider(names_from = station, values_from = y_n) %>% 
   ggplot(aes(x=Timestamp)) + 
-  geom_line(aes(y=`KW-1W`), col='blue1') +
-  geom_line(aes(y=`KW-2E`), col='blue2') +
-  geom_line(aes(y=`KW-3T`), col='blue3') +
-  geom_line(aes(y=`KW-4U`), col='blue4') +
+  geom_line(aes(y=`KW-1W`), col='#045a8d',size=1.5) +
+  geom_line(aes(y=`KW-2E`), col='#2b8cbe',size=1.5) +
+  geom_line(aes(y=`KW-3T`), col='#74a9cf',size=1.5) +
+  geom_line(aes(y=`KW-4U`), col='#bdc9e1',size=1.5) +
   geom_hline(yintercept=0,linetype="dashed")+
-  geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
-  ggtitle("DB Wetland") +
+  #geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
+  ggtitle("Wetland 4 (DB)") +
   theme_bw() +
+  ylim(-2.25,1)+
   theme(
-    axis.title.y = element_text(size = 14), 
-    axis.text.y  = element_text(size = 10)
+    axis.title.y = element_text(size = 14),
+    axis.title.x = element_text(size = 14),
+    axis.text.y  = element_text(size = 12),
+    axis.text.x  = element_text(size = 12)
+    
   ) + 
   #Add labels
-  xlab(NULL) + 
+  xlab("Date") + 
   ylab("Water Level [m]") 
 
 #North Dogbone
@@ -188,21 +202,25 @@ ND<-df %>%
   filter(wetland =="ND") %>% 
   pivot_wider(names_from = station, values_from = y_n) %>% 
   ggplot(aes(x=Timestamp)) + 
-  geom_line(aes(y=`KW-1W`), col='blue1') +
-  geom_line(aes(y=`KW-2E`), col='blue2') +
-  geom_line(aes(y=`KW-3T`), col='blue3') +
-  geom_line(aes(y=`KW-4U`), col='blue4') +
+  geom_line(aes(y=`KW-1W`), col='#045a8d',size=1.5) +
+  geom_line(aes(y=`KW-2E`), col='#2b8cbe',size=1.5) +
+  geom_line(aes(y=`KW-3T`), col='#74a9cf',size=1.5) +
+  geom_line(aes(y=`KW-4U`), col='#bdc9e1',size=1.5) +
   geom_hline(yintercept=0,linetype="dashed")+
-  geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
-  ggtitle("ND Wetland") +
+  #geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
+  ggtitle("Wetland 1 (ND)") +
   theme_bw() +
+  ylim(-2.25,1)+
   theme(
-    axis.title.y = element_text(size = 14), 
-    axis.text.y  = element_text(size = 10)
+    axis.title.y = element_text(size = 14),
+    axis.title.x = element_text(size = 14),
+    axis.text.y  = element_text(size = 12),
+    axis.text.x  = element_text(size = 12)
+    
   ) + 
   #Add labels
-  xlab(NULL) + 
+  xlab("Date") + 
   ylab("Water Level [m]") 
 
 #plot
-QB + TB + DB + ND 
+ND + QB + TB + DB  
