@@ -1656,16 +1656,32 @@ ggplot(JanMar,aes(x=Point,y=FI,fill=Generic_Horizon)) +
   xlab("Transect Point") +
   ylab("FI")+
   ylim(1.4,2.1)+
+  scale_fill_brewer(palette = "Dark2")+
   ggtitle("Spring FI") +
-  theme_bw()
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+                  legend.key.size = unit(2, 'cm'),
+                  axis.text.y   = element_text(size=16),
+                  axis.text.x   = element_text(size=16),
+                  axis.title.y  = element_text(size=16),
+                  axis.title.x  = element_text(size=16),
+                  panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 #Autumn
 ggplot(Sept,aes(x=Point,y=FI,fill=Generic_Horizon)) + 
   geom_boxplot() +
   xlab("Transect Point") +
   ylab("FI")+
+  scale_fill_brewer(palette = "Dark2")+
   ylim(1.4,2.1)+
   ggtitle("Autumn FI") +
-  theme_bw()
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(2, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #FI vs Month boxplot by transect point
 ggplot(WetSynoptic,aes(x=Point,y=FI,fill=Generic_Horizon)) + 
