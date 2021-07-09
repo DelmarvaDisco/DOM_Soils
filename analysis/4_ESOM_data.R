@@ -77,35 +77,70 @@ ggplot(WetlandsNoLL,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   ggtitle("EOC by Horizon and Transect Spot")
 #no leaf litter by month
 #spring
-ggplot(JanMar,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
+ggplot(JanMar,aes(EOC_mgC_gsoil,Number_Name,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
-  xlab("mg EOC/L") + 
-  xlim(0,25)+
+  xlab("mg EOC/g soil") + 
+  xlim(0,0.15)+
   ylab("Transect Point and Soil Horizon") + 
   ggtitle("Spring EOC by Horizon and Transect Spot")+
+  scale_fill_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 #autumn
-ggplot(Sept,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
+ggplot(Sept,aes(EOC_mgC_gsoil,Number_Name,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
-  xlab("mg EOC/L") + 
-  xlim(0,25)+
+  xlab("mg EOC/g soil") + 
+  xlim(0,0.15)+
   ylab("Transect Point and Soil Horizon") + 
   ggtitle("Autumn EOC by Horizon and Transect Spot")+
+  scale_fill_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
-
-
+# new 07/09/21
+#spring
+ggplot(JanMar,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("mg EOC/g soil") + 
+  ylim(0,0.15)+
+  xlab("Transect Point") + 
+  ggtitle("Spring EOC by Horizon and Transect Spot")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#autumn
+ggplot(Sept,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("mg EOC/g soil") + 
+  ylim(0,0.15)+
+  xlab("Transect Point") + 
+  ggtitle("Autumn EOC by Horizon and Transect Spot")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #2.2 FI------------------------------------------
 #FI by Horizon - All wetland sites, no LL
@@ -115,6 +150,7 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   xlab("EOC (mg/L)") +
   ylab("FI") + 
   ggtitle("All Sites FI")+ 
+  scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -132,6 +168,7 @@ ggplot(JanMar, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   ylim(1.3,1.9)+
   xlim(0,26)+ 
   ggtitle("Spring FI vs EOC")+ 
+  scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -149,6 +186,7 @@ ggplot(Sept, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   ylim(1.3,1.9)+
   xlim(0,26)+
   ggtitle("Autumn FI vs EOC")+ 
+  scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -220,6 +258,7 @@ ggplot(JanMar, aes(Point,FI,fill=Generic_Horizon)) +
   ylab("FI") + 
   ylim(1.3,1.9)+
   ggtitle("Spring FI - All Sites")+ 
+  scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -234,6 +273,7 @@ ggplot(Sept, aes(Point,FI,fill=Generic_Horizon)) +
   ylab("FI") + 
   ylim(1.3,1.9)+
   ggtitle("Autumn FI - All Sites")+ 
+  scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -409,8 +449,9 @@ ggplot(JanMar, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
   ylim(0,3.5)+
   ggtitle("Spring SUVA254") + 
   theme_bw() +
+  scale_fill_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
-        axis.text.y   = element_text(size=16),
+        axis.text.y   = element_text(size=20),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
@@ -422,9 +463,10 @@ ggplot(Sept, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
   ylab("SUVA254") + 
   ggtitle("Autumn SUVA254") + 
   theme_bw() +
-  ylim(0,3.5)+
+  ylim(0,3.5)+ 
+  scale_fill_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
-        axis.text.y   = element_text(size=16),
+        axis.text.y   = element_text(size=20),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
@@ -551,7 +593,8 @@ ggplot(JanMar, aes(Point,HIX,fill=Generic_Horizon)) +
   xlab("Point") +
   ylab("HIX") + 
   ylim(0.35,0.6)+
-  ggtitle("Spring HIX") + 
+  ggtitle("Spring HIX") +
+  scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -565,7 +608,8 @@ ggplot(Sept, aes(Point,HIX,fill=Generic_Horizon)) +
   xlab("Point") +
   ylab("HIX") + 
   ylim(0.35,0.6)+
-  ggtitle("Autumn HIX") + 
+  ggtitle("Autumn HIX") +
+  scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -644,6 +688,7 @@ ggplot(JanMar, aes(Point,SSR,fill=Generic_Horizon)) +
   ylab("SSR") + 
   ylim(1,4.5)+
   ggtitle("Spring SSR") + 
+  scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -658,7 +703,8 @@ ggplot(Sept, aes(Point,SSR,fill=Generic_Horizon)) +
   xlab("Point") +
   ylab("SSR") +
   ylim(1,4.5) +
-  ggtitle("Autumn SSR") + 
+  ggtitle("Autumn SSR") +
+  scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -802,40 +848,40 @@ boxplot(WetlandsNoLL$C1,
 #by sampling period
 #loadings across all sites
 #spring
-boxplot(JanMar$C1, 
-        JanMar$C2_Q2, 
-        JanMar$C3, 
-        JanMar$C4_HQ, 
-        JanMar$C5_SQ1, 
-        JanMar$C6,
-        JanMar$C7_SQ2, 
-        JanMar$C8_Trypto, 
-        JanMar$C9_SQ3, 
-        JanMar$C10,
-        JanMar$C11_Q1,
-        JanMar$C12_Q3,
-        JanMar$C13_Tyrosine,
-        ylim=c(0,0.6),
+boxplot(JanMar$C1*100, 
+        JanMar$C2_Q2*100, 
+        JanMar$C3*100, 
+        JanMar$C4_HQ*100, 
+        JanMar$C5_SQ1*100, 
+        JanMar$C6*100,
+        JanMar$C7_SQ2*100, 
+        JanMar$C8_Trypto*100, 
+        JanMar$C9_SQ3*100, 
+        JanMar$C10*100,
+        JanMar$C11_Q1*100,
+        JanMar$C12_Q3*100,
+        JanMar$C13_Tyrosine*100,
+        ylim=c(0,60),
         main="Spring Percent Loading of Each Component",
         names=c("C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13"),
         ylab="Loading (%)",
         xlab="Component")
 
 #autumn
-boxplot(Sept$C1, 
-        Sept$C2_Q2, 
-        Sept$C3, 
-        Sept$C4_HQ, 
-        Sept$C5_SQ1, 
-        Sept$C6,
-        Sept$C7_SQ2, 
-        Sept$C8_Trypto, 
-        Sept$C9_SQ3, 
-        Sept$C10,
-        Sept$C11_Q1,
-        Sept$C12_Q3,
-        Sept$C13_Tyrosine,
-        ylim=c(0,0.6),
+boxplot(Sept$C1*100, 
+        Sept$C2_Q2*100, 
+        Sept$C3*100, 
+        Sept$C4_HQ*100, 
+        Sept$C5_SQ1*100, 
+        Sept$C6*100,
+        Sept$C7_SQ2*100, 
+        Sept$C8_Trypto*100, 
+        Sept$C9_SQ3*100, 
+        Sept$C10*100,
+        Sept$C11_Q1*100,
+        Sept$C12_Q3*100,
+        Sept$C13_Tyrosine*100,
+        ylim=c(0,60),
         main="Autumn Percent Loading of Each Component",
         names=c("C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13"),
         ylab="Loading (%)",
@@ -845,113 +891,192 @@ boxplot(Sept$C1,
 
 #boxplot of most notable components broken out by horizon
 CM_C2 <- ggplot(data=WetlandsNoLL) +
-  geom_boxplot(aes(x=Point,y=C2_Q2,fill=Generic_Horizon)) +
+  geom_boxplot(aes(x=Point,y=C2_Q2*100,fill=Generic_Horizon)) +
   xlab("Point") +
   ylab("%C2")+
+  ylim(0,30)+
+  scale_fill_brewer(palette = "Dark2")+
   ggtitle("%C2 by Point")+
   theme_bw()
 CM_C4 <- ggplot(data=WetlandsNoLL) +
-  geom_boxplot(aes(x=Point,y=C4_HQ,fill=Generic_Horizon)) +
+  geom_boxplot(aes(x=Point,y=C4_HQ*100,fill=Generic_Horizon)) +
   xlab("Point") +
   ylab("%C4")+
+  scale_fill_brewer(palette = "Dark2")+
   ggtitle("%C4 by Point")+
   theme_bw()
-CM_C8 <- ggplot(data=WetlandsNoLL) +
-  geom_boxplot(aes(x=Point,y=C8_Trypto,fill=Generic_Horizon)) +
-  xlab("Point") +
-  ylab("%C8")+
-  ggtitle("%C8 by Point")+
-  theme_bw()
 CM_C12 <- ggplot(data=WetlandsNoLL) +
-  geom_boxplot(aes(x=Point,y=C12_Q3,fill=Generic_Horizon)) +
+  geom_boxplot(aes(x=Point,y=C12_Q3*100,fill=Generic_Horizon)) +
   xlab("Point") +
   ylab("%C12")+
+  scale_fill_brewer(palette = "Dark2")+
   ggtitle("%C12 by Point")+
   theme_bw()
 CM_C13 <- ggplot(data=WetlandsNoLL) +
-  geom_boxplot(aes(x=Point,y=C13_Tyrosine,fill=Generic_Horizon)) +
+  geom_boxplot(aes(x=Point,y=Percent_Protein*100,fill=Generic_Horizon)) +
   xlab("Point") +
   ylab("%C13")+
+  scale_fill_brewer(palette = "Dark2")+
   ggtitle("%C13 by Point")+
   theme_bw()
   
 CM_Boxplot <- ggarrange( CM_C2, 
-                         CM_C4, 
-                         CM_C8, 
+                         CM_C4,
+                         CM_C8,
                          CM_C12,
-                         CM_C13,
+                         CM_C813,
                          ncol = 2, nrow = 3)
 
 #boxplot of most notable components broken out by horizon - Spring
 CM_C2 <- ggplot(data=JanMar) +
-  geom_boxplot(aes(x=Point,y=C2_Q2,fill=Generic_Horizon)) +
-  xlab("Point") +
+  geom_boxplot(aes(x=Point,y=C2_Q2*100,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
   ylab("%C2")+
-  ggtitle("%C2 by Point")+
-  theme_bw()
+  ylim(0,30)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C2 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 CM_C4 <- ggplot(data=JanMar) +
-  geom_boxplot(aes(x=Point,y=C4_HQ,fill=Generic_Horizon)) +
-  xlab("Point") +
+  geom_boxplot(aes(x=Point,y=C4_HQ*100,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
   ylab("%C4")+
-  ggtitle("%C4 by Point")+
-  theme_bw()
+  ylim(0,45)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C4 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 CM_C8 <- ggplot(data=JanMar) +
-  geom_boxplot(aes(x=Point,y=C8_Trypto,fill=Generic_Horizon)) +
-  xlab("Point") +
+  geom_boxplot(aes(x=Point,y=C8_Trypto*100,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
   ylab("%C8")+
-  ggtitle("%C8 by Point")+
-  theme_bw()
+  ylim(0,20)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C8 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 CM_C12 <- ggplot(data=JanMar) +
-  geom_boxplot(aes(x=Point,y=C12_Q3,fill=Generic_Horizon)) +
-  xlab("Point") +
+  geom_boxplot(aes(x=Point,y=C12_Q3*100,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
   ylab("%C12")+
-  ggtitle("%C12 by Point")+
-  theme_bw()
+  ylim(0,80)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C12 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 CM_C13 <- ggplot(data=JanMar) +
-  geom_boxplot(aes(x=Point,y=C13_Tyrosine,fill=Generic_Horizon)) +
-  xlab("Point") +
+  geom_boxplot(aes(x=Point,y=C13_Tyrosine*100,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
   ylab("%C13")+
-  ggtitle("%C13 by Point")+
-  theme_bw()
+  ylim(0,6)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C13 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 CM_Boxplot <- ggarrange( CM_C2, 
                          CM_C4, 
-                         CM_C8, 
+                         CM_C8,
                          CM_C12,
                          CM_C13,
                          ncol = 2, nrow = 3)
 
 #boxplot of most notable components broken out by horizon - Fall
 CM_C2 <- ggplot(data=Sept) +
-  geom_boxplot(aes(x=Point,y=C2_Q2,fill=Generic_Horizon)) +
-  xlab("Point") +
+  geom_boxplot(aes(x=Point,y=C2_Q2*100,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
   ylab("%C2")+
-  ggtitle("%C2 by Point")+
-  theme_bw()
+  ylim(0,30)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C2 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 CM_C4 <- ggplot(data=Sept) +
-  geom_boxplot(aes(x=Point,y=C4_HQ,fill=Generic_Horizon)) +
-  xlab("Point") +
+  geom_boxplot(aes(x=Point,y=C4_HQ*100,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
   ylab("%C4")+
-  ggtitle("%C4 by Point")+
-  theme_bw()
+  ylim(0,45)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C4 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 CM_C8 <- ggplot(data=Sept) +
-  geom_boxplot(aes(x=Point,y=C8_Trypto,fill=Generic_Horizon)) +
-  xlab("Point") +
+  geom_boxplot(aes(x=Point,y=C8_Trypto*100,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
   ylab("%C8")+
-  ggtitle("%C8 by Point")+
-  theme_bw()
+  ylim(0,20)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C8 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 CM_C12 <- ggplot(data=Sept) +
-  geom_boxplot(aes(x=Point,y=C12_Q3,fill=Generic_Horizon)) +
-  xlab("Point") +
+  geom_boxplot(aes(x=Point,y=C12_Q3*100,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
   ylab("%C12")+
-  ggtitle("%C12 by Point")+
-  theme_bw()
+  ylim(0,80)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C12 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 CM_C13 <- ggplot(data=Sept) +
-  geom_boxplot(aes(x=Point,y=C13_Tyrosine,fill=Generic_Horizon)) +
-  xlab("Point") +
+  geom_boxplot(aes(x=Point,y=C13_Tyrosine*100,fill=Generic_Horizon)) +
+  xlab("Transect Point") +
   ylab("%C13")+
-  ggtitle("%C13 by Point")+
-  theme_bw()
+  ylim(0,6)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C13 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 CM_Boxplot <- ggarrange( CM_C2, 
                          CM_C4, 
@@ -982,29 +1107,34 @@ ggplot(data=WetlandsNoLL) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 #Spring - C2 vs SUVA
 ggplot(data=JanMar) +
-  geom_point(aes(x=SUVA254_L_mgm,y=C2_Q2,col=Generic_Horizon),size=3) +
+  geom_point(aes(x=SUVA254_L_mgm,y=C2_Q2*100,col=Generic_Horizon),size=5) +
   xlab("SUVA254 (L/mg-m)") +
   ylab("%C2")+
-  ggtitle("Spring %C2 vs SUVA254")+
+  #ggtitle("Spring %C2 vs SUVA254")+
   xlim(0,3.25)+
   theme_bw()+
+  scale_color_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
-        axis.text.y   = element_text(size=16),
-        axis.text.x   = element_text(size=16),
+        legend.key.size = unit(2, 'cm'),
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 #Autumn - C2 vs SUVA
 ggplot(data=Sept) +
-  geom_point(aes(x=SUVA254_L_mgm,y=C2_Q2,col=Generic_Horizon),size=3) +
+  geom_point(aes(x=SUVA254_L_mgm,y=C2_Q2*100,col=Generic_Horizon),size=5) +
   xlab("SUVA254 (L/mg-m)") +
   ylab("%C2")+
-  ggtitle("Autumn %C2 vs SUVA254")+
+  #ggtitle("Autumn %C2 vs SUVA254")+
   theme_bw()+
   xlim(0,3.25)+
+  ylim(0,30)+
+  scale_color_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
-        axis.text.y   = element_text(size=16),
-        axis.text.x   = element_text(size=16),
+        legend.key.size = unit(2, 'cm'),
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
@@ -1127,21 +1257,21 @@ boxplot(WetlandsNoLL$DMV_C1,
         ylab="Loading (%)",
         xlab="Component")
 #spring
-boxplot(JanMar$DMV_C1, 
-        JanMar$DMV_C2, 
-        JanMar$DMV_C3, 
-        JanMar$DMV_C4,
-        ylim=c(0,0.75),
+boxplot(JanMar$DMV_C1*100, 
+        JanMar$DMV_C2*100, 
+        JanMar$DMV_C3*100, 
+        JanMar$DMV_C4*100,
+        ylim=c(0,75),
         main="Spring Percent Loading of Each Component",
         names=c("C1","C2","C3","C4"),
         ylab="Loading (%)",
         xlab="Component")
 #autumn
-boxplot(Sept$DMV_C1, 
-        Sept$DMV_C2, 
-        Sept$DMV_C3, 
-        Sept$DMV_C4,
-        ylim=c(0,0.75),
+boxplot(Sept$DMV_C1*100, 
+        Sept$DMV_C2*100, 
+        Sept$DMV_C3*100, 
+        Sept$DMV_C4*100,
+        ylim=c(0,75),
         main="Autumn Percent Loading of Each Component",
         names=c("C1","C2","C3","C4"),
         ylab="Loading (%)",
@@ -1193,29 +1323,125 @@ DMV_Boxplot <- ggarrange(Box_C1,
 
 #loading by horizon - spring
 Box_C1 <- ggplot(data=JanMar)+
-  geom_boxplot(aes(x=Point,y=DMV_C1,fill=Generic_Horizon))+ 
+  geom_boxplot(aes(x=Point,y=DMV_C1*100,fill=Generic_Horizon))+ 
   xlab("Transect Point") +
   ylab("%C1")+
-  ggtitle("%C1 by Point")+
-  theme_bw()
+  ylim(0,45)+
+  #ggtitle("%C1 by Point")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw()+
+  theme(legend.position = "",
+                   axis.text.y   = element_text(size=18),
+                   axis.text.x   = element_text(size=18),
+                   axis.title.y  = element_text(size=20),
+                   axis.title.x  = element_text(size=20),
+                   panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 Box_C2 <- ggplot(data=JanMar)+
-  geom_boxplot(aes(x=Point,y=DMV_C2,fill=Generic_Horizon))+
+  geom_boxplot(aes(x=Point,y=DMV_C2*100,fill=Generic_Horizon))+
   xlab("Transect Point") +
   ylab("%C2")+
-  ggtitle("%C2 by Point")+
-  theme_bw()
+  ylim(0,40)+
+  #ggtitle("%C2 by Point")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 Box_C3 <- ggplot(data=JanMar)+
-  geom_boxplot(aes(x=Point,y=DMV_C3,fill=Generic_Horizon))+
+  geom_boxplot(aes(x=Point,y=DMV_C3*100,fill=Generic_Horizon))+
   xlab("Transect Point") +
   ylab("%C3")+
-  ggtitle("%C3 by Point")+
-  theme_bw()
+  ylim(0,25)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C3 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 Box_C4 <- ggplot(data=JanMar)+
-  geom_boxplot(aes(x=Point,y=DMV_C4,fill=Generic_Horizon))+
+  geom_boxplot(aes(x=Point,y=DMV_C4*100,fill=Generic_Horizon))+
   xlab("Transect Point") +
   ylab("%C4")+
-  ggtitle("%C4 by Point")+
-  theme_bw()
+  ylim(0,76)+
+  scale_fill_brewer(palette = "Dark2")+
+  #ggtitle("%C4 by Point")+
+  theme_bw()+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+DMV_Boxplot <- ggarrange(Box_C1, 
+                         Box_C2, 
+                         Box_C3, 
+                         Box_C4,
+                         labels = c("1", "2","3","4"),
+                         ncol = 2, nrow = 2)
+#loading by horizon - autumn
+Box_C1 <- ggplot(data=Sept)+
+  geom_boxplot(aes(x=Point,y=DMV_C1*100,fill=Generic_Horizon))+ 
+  xlab("Transect Point") +
+  ylab("%C1")+
+  #ggtitle("%C1 by Point")+
+  theme_bw()+
+  ylim(0,45)+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+Box_C2 <- ggplot(data=Sept)+
+  geom_boxplot(aes(x=Point,y=DMV_C2*100,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C2")+
+  #ggtitle("%C2 by Point")+
+  ylim(0,40)+
+  theme_bw()+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+Box_C3 <- ggplot(data=Sept)+
+  geom_boxplot(aes(x=Point,y=DMV_C3*100,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C3")+
+  #ggtitle("%C3 by Point")+
+  ylim(0,25)+
+  theme_bw()+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+Box_C4 <- ggplot(data=Sept)+
+  geom_boxplot(aes(x=Point,y=DMV_C4*100,fill=Generic_Horizon))+
+  xlab("Transect Point") +
+  ylab("%C4")+
+  ylim(0,76)+
+  #ggtitle("%C4 by Point")+
+  theme_bw()+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.position = "",
+        axis.text.y   = element_text(size=18),
+        axis.text.x   = element_text(size=18),
+        axis.title.y  = element_text(size=20),
+        axis.title.x  = element_text(size=20),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 DMV_Boxplot <- ggarrange(Box_C1, 
                          Box_C2, 
@@ -1261,38 +1487,7 @@ DMV_Boxplot <- ggarrange(DMV_C1,
                          labels = c("C1", "C2","C3","C4"),
                          ncol = 2, nrow = 2)
 
-#loading by horizon - spring
-Box_C1 <- ggplot(data=Sept)+
-  geom_boxplot(aes(x=Point,y=DMV_C1,fill=Generic_Horizon))+ 
-  xlab("Transect Point") +
-  ylab("%C1")+
-  ggtitle("%C1 by Point")+
-  theme_bw()
-Box_C2 <- ggplot(data=Sept)+
-  geom_boxplot(aes(x=Point,y=DMV_C2,fill=Generic_Horizon))+
-  xlab("Transect Point") +
-  ylab("%C2")+
-  ggtitle("%C2 by Point")+
-  theme_bw()
-Box_C3 <- ggplot(data=Sept)+
-  geom_boxplot(aes(x=Point,y=DMV_C3,fill=Generic_Horizon))+
-  xlab("Transect Point") +
-  ylab("%C3")+
-  ggtitle("%C3 by Point")+
-  theme_bw()
-Box_C4 <- ggplot(data=Sept)+
-  geom_boxplot(aes(x=Point,y=DMV_C4,fill=Generic_Horizon))+
-  xlab("Transect Point") +
-  ylab("%C4")+
-  ggtitle("%C4 by Point")+
-  theme_bw()
 
-DMV_Boxplot <- ggarrange(Box_C1, 
-                         Box_C2, 
-                         Box_C3, 
-                         Box_C4,
-                         labels = c("1", "2","3","4"),
-                         ncol = 2, nrow = 2)
 
 #Components vs fluorescence metrics
 ggplot(data=WetlandsNoLL)+
@@ -1418,9 +1613,10 @@ ggplot(JanMar, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   ylab("FI") +  
   xlim(0,40)+
   ylim(1.4,2.0)+
-  ggtitle("Spring All Sites FI")+ 
+  #ggtitle("Spring All Sites FI")+ 
   theme_bw() +
   theme(legend.text = element_text(size=16),
+        legend.key.size = unit(2, 'cm'),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -1435,10 +1631,10 @@ ggplot(Sept, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   ylab("FI") + 
   xlim(0,40)+
   ylim(1.4,2.0)+
-  #stat_ellipse()+
-  ggtitle("Autumn All Sites FI")+ 
+  #ggtitle("Autumn All Sites FI")+ 
   theme_bw() +
   theme(legend.text = element_text(size=16),
+        legend.key.size = unit(2, 'cm'),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -1547,35 +1743,39 @@ ggplot(WetlandsNoLL,aes(x=FI,y=Percent_Protein,col=Generic_Horizon)) +
   ggtitle("%Protein vs FI") +
   theme_bw()+
   theme(legend.text = element_text(size=16),
+        legend.key.size = unit(2, 'cm'),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 #FI vs %Protein - Spring
-ggplot(JanMar,aes(x=FI,y=Percent_Protein,col=Generic_Horizon)) + 
-  geom_point(size=3) +
+ggplot(JanMar,aes(x=FI,y=Percent_Protein*100,col=Generic_Horizon)) + 
+  geom_point(size=5) +
   xlab("FI")+
-  ylab("%Protein") +
-  ggtitle("Spring %Protein vs FI") +
+  ylab("%Protein (%C8 + %C13)") +
+  #ggtitle("Spring %Protein vs FI") +
   theme_bw()+
-  ylim(0,0.2)+
+  ylim(0,20)+
   xlim(1.4,1.9)+
+  scale_color_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
+        legend.key.size = unit(2, 'cm'),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 #FI vs %Protein - Autumn
-ggplot(Sept,aes(x=FI,y=Percent_Protein,col=Generic_Horizon)) + 
-  geom_point(size=3) +
+ggplot(Sept,aes(x=FI,y=Percent_Protein*100,col=Generic_Horizon)) + 
+  geom_point(size=5) +
   xlab("FI")+
-  ylab("%Protein") +
-  ggtitle("Autumn %Protein vs FI") +
+  ylab("%Protein (%C8 + %C13)") +
+  #ggtitle("Autumn %Protein vs FI") +
   theme_bw()+
-  ylim(0,0.2)+
+  ylim(0,20)+
   xlim(1.4,1.9)+
+  scale_color_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
@@ -1653,6 +1853,71 @@ ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=SUVA254_L_mgm,color=Generic_Horizon)) +
   ggtitle("SUVA254 vs %Clay") +
   theme_bw()+
   theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+## Nitrogen ###
+# TDN
+#spring
+ggplot(JanMar,aes(ETDN_mgN_gsoil,Number_Name,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  xlab("mg ETDN/g soil") + 
+  xlim(0,0.01)+
+  ylab("Transect Point and Soil Horizon") + 
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1.5, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#autumn
+ggplot(Sept,aes(ETDN_mgN_gsoil,Number_Name,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  xlab("mg ETDN/g soil") + 
+  xlim(0,0.01)+
+  ylab("Transect Point and Soil Horizon") + 
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+# NO3
+#spring
+ggplot(JanMar,aes(ENO3_mgN_gsoil,Number_Name,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  xlab("mg ENO3/g soil") + 
+  xlim(0,0.002)+
+  ylab("Transect Point and Soil Horizon") + 
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1.5, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#autumn
+ggplot(Sept,aes(ENO3_mgN_gsoil,Number_Name,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  xlab("mg ENO3/g soil") + 
+  xlim(0,0.002)+
+  ylab("Transect Point and Soil Horizon") + 
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
