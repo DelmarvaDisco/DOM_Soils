@@ -160,9 +160,9 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #spring
-ggplot(JanMar, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
+ggplot(JanMar, aes(EOC_mgC_L,FI,col=Generic_Horizon,shape=wetland)) +
   geom_point(size=2.5) +
-  stat_ellipse()+
+  #stat_ellipse()+
   xlab("EOC (mg/L)") +
   ylab("FI") + 
   ylim(1.3,1.9)+
@@ -178,9 +178,9 @@ ggplot(JanMar, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #autumn
-ggplot(Sept, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
+ggplot(Sept, aes(EOC_mgC_L,FI,col=Generic_Horizon,shape=wetland)) +
   geom_point(size=2.5) +
-  stat_ellipse()+
+  #stat_ellipse()+
   xlab("EOC (mg/L)") +
   ylab("FI") +
   ylim(1.3,1.9)+
@@ -196,9 +196,9 @@ ggplot(Sept, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #FI by point - All wetland sites, no LL
-ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Point)) +
+ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Point,shape=wetland)) +
   geom_point(size=2.5) +
-  stat_ellipse()+
+  #stat_ellipse()+
   xlab("EOC (mg/L)") +
   ylab("FI") + 
   ggtitle("All Sites FI")+ 
