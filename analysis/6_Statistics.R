@@ -57,12 +57,30 @@ threshold_annual <- left_join(threshold_annual,elev,by=c("wetland","station"))
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ###ESOM DATA###
+#Summarize by horizon and station
+#Use Sept to get soil horizon thickness
+Sept_ESOM_HorizStation_Summary <- Sept %>% 
+  group_by(Generic_Horizon,station) %>% 
+  summarise( MeanEOC = mean(EOC_mgC_gsoil),
+             sdEOC = sd(EOC_mgC_gsoil),
+             MeanFI = mean(FI),
+             sdFI = sd(FI),
+             MeanSUVA = mean(SUVA254_L_mgm),
+             sdSUVA = sd(SUVA254_L_mgm),
+             MeanHIX = mean(HIX),
+             sdHIX = sd(HIX),
+             MeanSSR = mean(SSR,na.rm=T),
+             sdSSR = sd(SSR,na.rm = T),
+             MeanThick = mean(Layer_Thickness_cm,na.rm=T),
+             sdThick = sd(Layer_Thickness_cm,na.rm=T),
+             nobserv=length(Layer_Thickness_cm))
+
 #Summarize data
 #By horizon all data
 ESOM_Horizon_Summary <- WetlandsNoLL %>% 
         group_by(Generic_Horizon) %>% 
-        summarise( MeanEOC = mean(EOC_mgC_L),
-                   sdEOC = sd(EOC_mgC_L),
+        summarise( MeanEOC = mean(EOC_mgC_gsoil),
+                   sdEOC = sd(EOC_mgC_gsoil),
                    MeanFI = mean(FI),
                    sdFI = sd(FI),
                    MeanSUVA = mean(SUVA254_L_mgm),
@@ -70,12 +88,14 @@ ESOM_Horizon_Summary <- WetlandsNoLL %>%
                    MeanHIX = mean(HIX),
                    sdHIX = sd(HIX),
                    MeanSSR = mean(SSR,na.rm=T),
-                   sdSSR = sd(SSR,na.rm = T))
+                   sdSSR = sd(SSR,na.rm = T),
+                   MeanThick = mean(Layer_Thickness_cm,na.rm=T),
+                   sdThick = sd(Layer_Thickness_cm,na.rm=T))
 
 Spring_ESOM_Horizon_Summary <- JanMar %>% 
   group_by(Generic_Horizon) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_L),
-             sdEOC = sd(EOC_mgC_L),
+  summarise( MeanEOC = mean(EOC_mgC_gsoil),
+             sdEOC = sd(EOC_mgC_gsoil),
              MeanFI = mean(FI),
              sdFI = sd(FI),
              MeanSUVA = mean(SUVA254_L_mgm),
@@ -88,8 +108,8 @@ Spring_ESOM_Horizon_Summary <- JanMar %>%
 
 Autumn_ESOM_Horizon_Summary <- Sept %>% 
   group_by(Generic_Horizon) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_L),
-             sdEOC = sd(EOC_mgC_L),
+  summarise( MeanEOC = mean(EOC_mgC_gsoil),
+             sdEOC = sd(EOC_mgC_gsoil),
              MeanFI = mean(FI),
              sdFI = sd(FI),
              MeanSUVA = mean(SUVA254_L_mgm),
@@ -103,8 +123,8 @@ Autumn_ESOM_Horizon_Summary <- Sept %>%
 #By station - all data
 ESOM_Station_Summary <- WetlandsNoLL %>% 
   group_by(station) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_L),
-             sdEOC = sd(EOC_mgC_L),
+  summarise( MeanEOC = mean(EOC_mgC_gsoil),
+             sdEOC = sd(EOC_mgC_gsoil),
              MeanFI = mean(FI),
              sdFI = sd(FI),
              MeanSUVA = mean(SUVA254_L_mgm),
@@ -116,8 +136,8 @@ ESOM_Station_Summary <- WetlandsNoLL %>%
 
 Spring_ESOM_Station_Summary <- JanMar %>% 
   group_by(station) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_L),
-             sdEOC = sd(EOC_mgC_L),
+  summarise( MeanEOC = mean(EOC_mgC_gsoil),
+             sdEOC = sd(EOC_mgC_gsoil),
              MeanFI = mean(FI),
              sdFI = sd(FI),
              MeanSUVA = mean(SUVA254_L_mgm),
@@ -130,8 +150,8 @@ Spring_ESOM_Station_Summary <- JanMar %>%
 
 Autumn_ESOM_Station_Summary <- Sept %>% 
   group_by(station) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_L),
-             sdEOC = sd(EOC_mgC_L),
+  summarise( MeanEOC = mean(EOC_mgC_gsoil),
+             sdEOC = sd(EOC_mgC_gsoil),
              MeanFI = mean(FI),
              sdFI = sd(FI),
              MeanSUVA = mean(SUVA254_L_mgm),
@@ -227,7 +247,7 @@ soil_summary <- soil_annual %>% group_by(station) %>%
 ### 3.1.1 ALL EOC --------------------------------------------------
 Station <- WetlandsNoLL$station
 Horizon <- WetlandsNoLL$Generic_Horizon
-logEOC <- log10(WetlandsNoLL$EOC_mgC_L)
+logEOC <- log10(WetlandsNoLL$EOC_mgC_gsoil)
 
 #Step 1 Check equal variance
 bartlett.test(logEOC~Station) #Barlett test doesn't meet equal variance assumptions but barely, Dr G says ok to proceed 
@@ -261,7 +281,7 @@ shapiro.test(resid(logEOC.sta.aov)) #pass
 ###3.1.2 Spring EOC ------------------------------------------
 Station <- JanMar$station
 Horizon <- JanMar$Generic_Horizon
-SpEOC <- JanMar$EOC_mgC_L
+SpEOC <- JanMar$EOC_mgC_gsoil
 logSpEOC <- log10(SpEOC)
 
 #Step 1 Check equal variance
@@ -269,6 +289,12 @@ bartlett.test(logSpEOC~Station) #Barlett works for both horz and stat on log tra
 bartlett.test(logSpEOC~Horizon) 
 leveneTest(logSpEOC,Station,center=median) #Levene test works 
 leveneTest(logSpEOC,Horizon,center=median)
+
+bartlett.test(SpEOC~Station)
+bartlett.test(SpEOC~Horizon)
+leveneTest(SpEOC,Station,center=median)
+leveneTest(SpEOC,Horizon,center=median)
+bf.test(EOC_mgC_gsoil~Generic_Horizon,data=JanMar) 
 
 #Step 2 Run ANOVA/TukeyHSD or other tests
 #EOC by horizon 
@@ -295,7 +321,7 @@ shapiro.test(resid(logSpEOC.sta.aov))
 ###3.1.3 Autumn EOC------------------------------------------
 Station <- Sept$station
 Horizon <- Sept$Generic_Horizon
-AuEOC <- Sept$EOC_mgC_L
+AuEOC <- Sept$EOC_mgC_gsoil
 logAuEOC <- log10(AuEOC)
 
 #Step 1 Check equal variance
@@ -303,6 +329,11 @@ bartlett.test(logAuEOC~Station) #Barlett works for both horz and stat on log tra
 bartlett.test(logAuEOC~Horizon) 
 leveneTest(logAuEOC,Station,center=median) #Levene test works 
 leveneTest(logAuEOC,Horizon,center=median)
+bf.test(EOC_mgC_gsoil~Generic_Horizon,data=Sept)
+bartlett.test(AuEOC~Station) #Barlett works for both horz and stat on log transformed EOC
+bartlett.test(AuEOC~Horizon) 
+leveneTest(AuEOC,Station,center=median) #Levene test works 
+leveneTest(AuEOC,Horizon,center=median)
 
 #Step 2 Run ANOVA/TukeyHSD or other tests
 #EOC by horizon 
@@ -384,6 +415,8 @@ bartlett.test(logSpFI~Station) #Works for stat
 bartlett.test(logSpFI~Horizon) #misses but sd within 2x of eachother - allow it
 leveneTest(logSpFI,Station,center=median) #Levene test works 
 leveneTest(logSpFI,Horizon,center=median)
+bf.test(logSpFI~Generic_Horizon,data=JanMar)
+bf.test(FI~Station,data=JanMar)
 
 #Step 2 Run ANOVA/TukeyHSD or other tests
 #EOC by horizon 
@@ -923,7 +956,7 @@ Adur.KW <- kruskal.test(Adur~station);Adur.KW #significant
 #B
 #N events
 bartlett.test(Bev~station) #fail
-leveneTest(Bev,station,center=median)
+leveneTest(Bev,station,center=median) #pass
 Bev.aov <-    aov(Bev~station);summary(Bev.aov)
 Bev.HSD <- TukeyHSD(Bev.aov);Bev.HSD
 Bev.HSD <- HSD.test(Bev.aov,"station",group=T);Bev.HSD
@@ -932,8 +965,8 @@ shapiro.test(resid(Bev.aov)) #fail
 Bnevent.KW <- kruskal.test(Bev~station);Bnevent.KW #significant
 #Duration
 bartlett.test(Bdur~station) #fail
-leveneTest(Bdur,station,center=median) #fail
-bf.test(B_dur_day ~ station, data=soil_annual) #pass
+leveneTest(Bdur,station,center=median) #pass
+bf.test(B_dur_day ~ station, data=soil_annual) #fail
 Bdur.aov <-  aov(Bdur~station);summary(Bdur.aov)
 Bdur.HSD <- TukeyHSD(Bdur.aov);Bdur.HSD
 Bdur.HSD <- HSD.test(Bdur.aov,"station",group=T);Bdur.HSD
