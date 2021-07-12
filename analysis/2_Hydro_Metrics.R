@@ -18,7 +18,12 @@ library(raster)
 
 #Read data
 df<-read_csv('data/waterLevel_at_sampling_location.csv')
-soil <- read_csv('data/20210516_KW_SoilHorizElev.csv')
+df <- df %>% drop_na()
+soil <- read_csv('data/20210516_KW_SoilHorizElev.csv') 
+#note that QB KW-1W, KW-2E and TB KW-1W, KW-2E didn't have a lower
+#B horiz elevation, so I added -0.5 since it falls within the generic sampling zone
+#Also was getting some results where B had lower inundation dur than A did, which doesn't make sense
+#because if A is wet, then B is too
 
 #Filter to desired water year
 df <- df %>% filter(Timestamp > "2019-09-30" & Timestamp < "2020-10-01")
@@ -157,12 +162,18 @@ soil_annual_metrics<-soil_annual %>%
 #Group by station only
 soil_station_horizon <- soil_annual_metrics %>% 
   group_by(station) %>% 
-  summarise(mean_O_dur_day           = mean(O_dur_day),
-            mean_O_n_events          = mean(O_n_events),
-            mean_A_dur_day           = mean(A_dur_day),
-            mean_A_n_events          = mean(A_n_events),
-            mean_B_dur_day           = mean(B_dur_day),
-            mean_B_n_events          = mean(B_n_events))
+  summarise(mean_O_dur_day  = mean(O_dur_day),
+            sd_O_dur_day    = sd(O_dur_day),
+            mean_O_n_events = mean(O_n_events),
+            sd_O_n_events   = sd(O_n_events),
+            mean_A_dur_day  = mean(A_dur_day),
+            sd_A_dur_day    = sd(A_dur_day),
+            mean_A_n_events = mean(A_n_events),
+            sd_A_n_events   = sd(A_n_events),
+            mean_B_dur_day  = mean(B_dur_day),
+            sd_B_dur_day    = sd(B_dur_day),
+            mean_B_n_events = mean(B_n_events),
+            sd_B_n_events   = sd(B_n_events),)
 
 #2.4 Threshold Event Duration Calc------------------------------------------------
 #using all 3 years of data and generic threshold for now
