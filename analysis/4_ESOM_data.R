@@ -58,7 +58,7 @@ write_csv(EOC_Summary,"data//EOC_Summary.csv")
 #2.0 Plots-----------------------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#2.1  EOC ---------------------------------------
+##2.1  EOC ---------------------------------------
 
 #EOC Boxplot along Transect Points
 #Including leaf litter
@@ -142,7 +142,7 @@ ggplot(Sept,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-#2.2 FI------------------------------------------
+##2.2 FI------------------------------------------
 #FI by Horizon - All wetland sites, no LL
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -298,7 +298,7 @@ ggplot(WetlandsNoLL, aes(Point,FI,fill=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-#2.3 SUVA254 -------------------------------------------
+##2.3 SUVA254 -------------------------------------------
 #SUVA by Horizon - All wetland sites, No LL
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,SUVA254_L_mgm,col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -502,7 +502,7 @@ ggplot(WetlandsNoLL, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-# 2.4 Random ------------------------------------
+## 2.4 Random ------------------------------------
 #EOC vs ETDN
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,ETDN_mgN_L,col=Generic_Horizon)) +
   geom_point(size=2.5) +
@@ -573,7 +573,7 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,M,col=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-# 2.5 HIX ----------------------------------------
+## 2.5 HIX ----------------------------------------
 #HIX boxplot by Point - All wetland sites, No LL
 ggplot(WetlandsNoLL, aes(Point,HIX,fill=Point)) +
   geom_boxplot()+
@@ -653,7 +653,7 @@ ggplot(Sept, aes(FI,HIX,col=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-# 2.6 SSR -------------------------------------
+## 2.6 SSR -------------------------------------
 ggplot(WetlandsNoLL, aes(Point,SSR,fill=Point)) +
   geom_boxplot()+
   xlab("Point") +
@@ -714,9 +714,9 @@ ggplot(Sept, aes(Point,SSR,fill=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 
-#2.7 Compare months --------------------------------------------------
+##2.7 Compare months --------------------------------------------------
 
-#2.7.1 QB only -------------------------
+###2.7.1 QB only -------------------------
 #QB EOC over the 3 sampling campaigns
 ggplot(data=QB,aes(x=Generic_Horizon,y=EOC_mgC_L,fill=Generic_Horizon)) + 
   geom_boxplot()+
@@ -781,7 +781,7 @@ ggplot(data=QB,aes(x=Point,y=Percent_Soil_Moisture_notin,color=Generic_Horizon))
   theme_bw() + 
   facet_wrap(~Month)
 
-#2.7.2 All sites ---------------------------
+###2.7.2 All sites ---------------------------
 #SUVA
 ND_SUVA <- ggplot(data=ND,aes(x=Point,y=SUVA254_L_mgm,col=Generic_Horizon,shape=Generic_Horizon)) + 
   geom_point(size=3) +
@@ -825,7 +825,7 @@ SUVA_Wetland <- ggarrange( ND_SUVA,
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 3.0 PARAFAC Results--------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 3.1 Cory and McKnight Model ----------------------------------------
+## 3.1 Cory and McKnight Model ----------------------------------------
 #loadings across all sites
 boxplot(WetlandsNoLL$C1, 
         WetlandsNoLL$C2_Q2, 
@@ -1246,7 +1246,7 @@ ggplot(data=WetlandsNoLL) +
   ylab("%C13")+
   ggtitle("%C13 vs FI")
 
-#3.2 Delmarva Synoptic Model -----------------------------------------
+##3.2 Delmarva Synoptic Model -----------------------------------------
 #boxplot of loadings across all samples - no leaf litter
 boxplot(WetlandsNoLL$DMV_C1, 
         WetlandsNoLL$DMV_C2, 
@@ -1967,32 +1967,403 @@ corrplot(trial$r, type="upper",
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #7.0 Between Site Variation ---------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## 7.1 EOC --------------------------------------
+EOCQB <- ggplot(QB,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("mg EOC/g soil") + 
+  ylim(0,0.15)+
+  xlab("Transect Point") + 
+  ggtitle("QB")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+EOCTB <- ggplot(TB,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("mg EOC/g soil") + 
+  ylim(0,0.15)+
+  xlab("Transect Point") + 
+  ggtitle("TB")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+EOCND <- ggplot(ND,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("mg EOC/g soil") + 
+  ylim(0,0.15)+
+  xlab("Transect Point") + 
+  ggtitle("ND")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+EOCDB <- ggplot(DB,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("mg EOC/g soil") + 
+  ylim(0,0.15)+
+  xlab("Transect Point") + 
+  ggtitle("DB")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+ggarrange( EOCQB, 
+           EOCTB,
+           EOCND,
+           EOCDB,
+           ncol = 2, nrow = 2)
+
+## 7.2 FI --------------------------------------
+###7.2.1 FI vs EOC ------------------------------
+FIQB <- ggplot(QB, aes(EOC_mgC_gsoil,FI,col=Generic_Horizon,shape=station)) +
+  geom_point(size=4) +
+  xlab("EOC (mgC/gsoil)") +
+  ylab("FI") + 
+  ggtitle("QB FI vs EOC")+ 
+  theme_bw() +
+  ylim(1.4,1.85)+
+  xlim(0,0.13)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+FITB <- ggplot(TB, aes(EOC_mgC_gsoil,FI,col=Generic_Horizon,shape=station)) +
+  geom_point(size=4) +
+  xlab("EOC (mgC/gsoil)") +
+  ylab("FI") + 
+  ggtitle("TB FI vs EOC")+ 
+  theme_bw() +
+  ylim(1.4,1.85)+
+  xlim(0,0.13)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+FIND <- ggplot(ND, aes(EOC_mgC_gsoil,FI,col=Generic_Horizon,shape=station)) +
+  geom_point(size=4) +
+  xlab("EOC (mgC/gsoil)") +
+  ylab("FI") + 
+  ggtitle("ND FI vs EOC")+ 
+  theme_bw() +
+  ylim(1.4,1.85)+
+  xlim(0,0.13)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+FIDB <- ggplot(DB, aes(EOC_mgC_gsoil,FI,col=Generic_Horizon,shape=station)) +
+  geom_point(size=4) +
+  xlab("EOC (mgC/gsoil)") +
+  ylab("FI") + 
+  ggtitle("DB FI vs EOC")+ 
+  theme_bw() +
+  ylim(1.4,1.85)+
+  xlim(0,0.13)+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+ggarrange( FIQB, 
+           FITB,
+           FIND,
+           FIDB,
+           ncol = 2, nrow = 2)
 
 
+###7.2.2 FI boxplot -------------------------------------------
+FIQB <- ggplot(QB, aes(Point,FI,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Transect Point") +
+  ylab("FI") + 
+  ylim(1.3,1.9)+
+  ggtitle("QB FI")+ 
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+FITB <- ggplot(TB, aes(Point,FI,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Transect Point") +
+  ylab("FI") + 
+  ylim(1.3,1.9)+
+  ggtitle("TB FI")+ 
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+FIND <- ggplot(ND, aes(Point,FI,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Transect Point") +
+  ylab("FI") + 
+  ylim(1.3,1.9)+
+  ggtitle("ND FI")+ 
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+FIDB <- ggplot(DB, aes(Point,FI,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Transect Point") +
+  ylab("FI") + 
+  ylim(1.3,1.9)+
+  ggtitle("DB FI")+ 
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+ggarrange( FIQB, 
+           FITB,
+           FIND,
+           FIDB,
+           ncol = 2, nrow = 2)
 
+##7.3 SUVA --------------------------------------------------
 
+SUVAQB <- ggplot(QB, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SUVA254") + 
+  ylim(0,3.5)+
+  ggtitle("QB SUVA254") + 
+  theme_bw() +
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=20),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+SUVATB <- ggplot(TB, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SUVA254") + 
+  ylim(0,3.5)+
+  ggtitle("TB SUVA254") + 
+  theme_bw() +
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=20),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+SUVAND <- ggplot(ND, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SUVA254") + 
+  ylim(0,3.5)+
+  ggtitle("ND SUVA254") + 
+  theme_bw() +
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=20),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+SUVADB <- ggplot(DB, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SUVA254") + 
+  ylim(0,3.5)+
+  ggtitle("DB SUVA254") + 
+  theme_bw() +
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=20),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+ggarrange(SUVAQB, 
+          SUVATB,
+          SUVAND,
+          SUVADB,
+          ncol = 2, nrow = 2)
 
+##7.4 HIX ------------------------------------------------------------
+HIXQB <- ggplot(QB, aes(Point,HIX,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("HIX") + 
+  ylim(0.35,0.6)+
+  ggtitle("QB HIX") +
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+HIXTB <- ggplot(TB, aes(Point,HIX,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("HIX") + 
+  ylim(0.35,0.6)+
+  ggtitle("TB HIX") +
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+HIXND <- ggplot(ND, aes(Point,HIX,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("HIX") + 
+  ylim(0.35,0.6)+
+  ggtitle("ND HIX") +
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+HIXDB <- ggplot(DB, aes(Point,HIX,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("HIX") + 
+  ylim(0.35,0.6)+
+  ggtitle("DB HIX") +
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+ggarrange(HIXQB, 
+          HIXTB,
+          HIXND,
+          HIXDB,
+          ncol = 2, nrow = 2)
 
+##7.5 SSR -------------------------------------------------
+SSRQB <- ggplot(QB, aes(Point,SSR,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SSR") + 
+  ylim(1,4.5)+
+  ggtitle("QB SSR") + 
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+SSRTB <- ggplot(TB, aes(Point,SSR,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SSR") + 
+  ylim(1,4.5)+
+  ggtitle("TB SSR") + 
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+SSRND <- ggplot(ND, aes(Point,SSR,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SSR") + 
+  ylim(1,4.5)+
+  ggtitle("ND SSR") + 
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+SSRDB <- ggplot(DB, aes(Point,SSR,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SSR") + 
+  ylim(1,4.5)+
+  ggtitle("DB SSR") + 
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-
-
-
-
-
-
-
-
-
-
-
-
+ggarrange(SSRQB, 
+          SSRTB,
+          SSRND,
+          SSRDB,
+          ncol = 2, nrow = 2)
