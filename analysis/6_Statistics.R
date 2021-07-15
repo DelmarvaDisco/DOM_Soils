@@ -61,106 +61,166 @@ threshold_annual <- left_join(threshold_annual,elev,by=c("wetland","station"))
 #Use Sept to get soil horizon thickness
 Sept_ESOM_HorizStation_Summary <- Sept %>% 
   group_by(Generic_Horizon,station) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_gsoil),
-             sdEOC = sd(EOC_mgC_gsoil),
-             MeanFI = mean(FI),
-             sdFI = sd(FI),
-             MeanSUVA = mean(SUVA254_L_mgm),
-             sdSUVA = sd(SUVA254_L_mgm),
-             MeanHIX = mean(HIX),
-             sdHIX = sd(HIX),
-             MeanSSR = mean(SSR,na.rm=T),
-             sdSSR = sd(SSR,na.rm = T),
-             MeanThick = mean(Layer_Thickness_cm,na.rm=T),
-             sdThick = sd(Layer_Thickness_cm,na.rm=T),
-             nobserv=length(Layer_Thickness_cm))
+  summarise( Mean_EOC = mean(EOC_mgC_gsoil),
+             sd_EOC = sd(EOC_mgC_gsoil),
+             SE_EOC = sd(EOC_mgC_gsoil)/sqrt(length(EOC_mgC_gsoil)),
+             Mean_FI = mean(FI),
+             sd_FI = sd(FI),
+             SE_FI = sd(FI)/sqrt(length(FI)),
+             Mean_SUVA = mean(SUVA254_L_mgm),
+             sd_SUVA = sd(SUVA254_L_mgm),
+             SE_SUVA = sd(SUVA254_L_mgm)/sqrt(length(SUVA254_L_mgm)),
+             Mean_HIX = mean(HIX),
+             sd_HIX = sd(HIX),
+             SE_HIX = sd(HIX)/sqrt(length(HIX)),
+             Mean_SSR = mean(SSR,na.rm=T),
+             sd_SSR = sd(SSR,na.rm = T),
+             SE_SSR = sd(na.omit(SSR))/sqrt(length(na.omit(SSR))),
+             Mean_Layer = mean(Layer_Thickness_cm,na.rm=T),
+             sd_Layer = sd(Layer_Thickness_cm,na.rm=T),
+             SE_Layer = sd(na.omit(Layer_Thickness_cm))/sqrt(length(na.omit(Layer_Thickness_cm))),
+             n_observ = length(EOC_mgC_gsoil))
 
 #Summarize data
 #By horizon all data
 ESOM_Horizon_Summary <- WetlandsNoLL %>% 
         group_by(Generic_Horizon) %>% 
-        summarise( MeanEOC = mean(EOC_mgC_gsoil),
-                   sdEOC = sd(EOC_mgC_gsoil),
-                   MeanFI = mean(FI),
-                   sdFI = sd(FI),
-                   MeanSUVA = mean(SUVA254_L_mgm),
-                   sdSUVA = sd(SUVA254_L_mgm),
-                   MeanHIX = mean(HIX),
-                   sdHIX = sd(HIX),
-                   MeanSSR = mean(SSR,na.rm=T),
-                   sdSSR = sd(SSR,na.rm = T),
-                   MeanThick = mean(Layer_Thickness_cm,na.rm=T),
-                   sdThick = sd(Layer_Thickness_cm,na.rm=T))
+        summarise( Mean_EOC = mean(EOC_mgC_gsoil),
+                   sd_EOC = sd(EOC_mgC_gsoil),
+                   SE_EOC = sd(EOC_mgC_gsoil)/sqrt(length(EOC_mgC_gsoil)),
+                   Mean_FI = mean(FI),
+                   sd_FI = sd(FI),
+                   SE_FI = sd(FI)/sqrt(length(FI)),
+                   Mean_SUVA = mean(SUVA254_L_mgm),
+                   sd_SUVA = sd(SUVA254_L_mgm),
+                   SE_SUVA = sd(SUVA254_L_mgm)/sqrt(length(SUVA254_L_mgm)),
+                   Mean_HIX = mean(HIX),
+                   sd_HIX = sd(HIX),
+                   SE_HIX = sd(HIX)/sqrt(length(HIX)),
+                   Mean_SSR = mean(SSR,na.rm=T),
+                   sd_SSR = sd(SSR,na.rm = T),
+                   SE_SSR = sd(na.omit(SSR))/sqrt(length(na.omit(SSR))),
+                   Mean_Layer = mean(Layer_Thickness_cm,na.rm=T),
+                   sd_Layer = sd(Layer_Thickness_cm,na.rm=T),
+                   SE_Layer = sd(na.omit(Layer_Thickness_cm))/sqrt(length(na.omit(Layer_Thickness_cm))),
+                   n_observ = length(EOC_mgC_gsoil))
 
 Spring_ESOM_Horizon_Summary <- JanMar %>% 
   group_by(Generic_Horizon) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_gsoil),
-             sdEOC = sd(EOC_mgC_gsoil),
-             MeanFI = mean(FI),
-             sdFI = sd(FI),
-             MeanSUVA = mean(SUVA254_L_mgm),
-             sdSUVA = sd(SUVA254_L_mgm),
-             MeanHIX = mean(HIX),
-             sdHIX = sd(HIX),
-             MeanSSR = mean(SSR,na.rm=T),
-             sdSSR = sd(SSR,na.rm = T),
-             nobserv = length(EOC_mgC_L))
+  summarise( Mean_EOC = mean(EOC_mgC_gsoil),
+             sd_EOC = sd(EOC_mgC_gsoil),
+             SE_EOC = sd(EOC_mgC_gsoil)/sqrt(length(EOC_mgC_gsoil)),
+             Mean_FI = mean(FI),
+             sd_FI = sd(FI),
+             SE_FI = sd(FI)/sqrt(length(FI)),
+             Mean_SUVA = mean(SUVA254_L_mgm),
+             sd_SUVA = sd(SUVA254_L_mgm),
+             SE_SUVA = sd(SUVA254_L_mgm)/sqrt(length(SUVA254_L_mgm)),
+             Mean_HIX = mean(HIX),
+             sd_HIX = sd(HIX),
+             SE_HIX = sd(HIX)/sqrt(length(HIX)),
+             Mean_SSR = mean(SSR,na.rm=T),
+             sd_SSR = sd(SSR,na.rm = T),
+             SE_SSR = sd(na.omit(SSR))/sqrt(length(na.omit(SSR))),
+             Mean_Layer = mean(Layer_Thickness_cm,na.rm=T),
+             sd_Layer = sd(Layer_Thickness_cm,na.rm=T),
+             SE_Layer = sd(na.omit(Layer_Thickness_cm))/sqrt(length(na.omit(Layer_Thickness_cm))),
+             n_observ = length(EOC_mgC_gsoil))
 
 Autumn_ESOM_Horizon_Summary <- Sept %>% 
   group_by(Generic_Horizon) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_gsoil),
-             sdEOC = sd(EOC_mgC_gsoil),
-             MeanFI = mean(FI),
-             sdFI = sd(FI),
-             MeanSUVA = mean(SUVA254_L_mgm),
-             sdSUVA = sd(SUVA254_L_mgm),
-             MeanHIX = mean(HIX),
-             sdHIX = sd(HIX),
-             MeanSSR = mean(SSR,na.rm=T),
-             sdSSR = sd(SSR,na.rm = T),
-             nobserv = length(EOC_mgC_L))
+  summarise( Mean_EOC = mean(EOC_mgC_gsoil),
+             sd_EOC = sd(EOC_mgC_gsoil),
+             SE_EOC = sd(EOC_mgC_gsoil)/sqrt(length(EOC_mgC_gsoil)),
+             Mean_FI = mean(FI),
+             sd_FI = sd(FI),
+             SE_FI = sd(FI)/sqrt(length(FI)),
+             Mean_SUVA = mean(SUVA254_L_mgm),
+             sd_SUVA = sd(SUVA254_L_mgm),
+             SE_SUVA = sd(SUVA254_L_mgm)/sqrt(length(SUVA254_L_mgm)),
+             Mean_HIX = mean(HIX),
+             sd_HIX = sd(HIX),
+             SE_HIX = sd(HIX)/sqrt(length(HIX)),
+             Mean_SSR = mean(SSR,na.rm=T),
+             sd_SSR = sd(SSR,na.rm = T),
+             SE_SSR = sd(na.omit(SSR))/sqrt(length(na.omit(SSR))),
+             Mean_Layer = mean(Layer_Thickness_cm,na.rm=T),
+             sd_Layer = sd(Layer_Thickness_cm,na.rm=T),
+             SE_Layer = sd(na.omit(Layer_Thickness_cm))/sqrt(length(na.omit(Layer_Thickness_cm))),
+             n_observ = length(EOC_mgC_gsoil))
+
+write_csv(Spring_ESOM_Horizon_Summary,"data//Spring_ESOM_Horizon_MetricsSummary.csv") 
+write_csv(Autumn_ESOM_Horizon_Summary,"data//Autumn_ESOM_Horizon_MetricsSummary.csv")
 
 #By station - all data
 ESOM_Station_Summary <- WetlandsNoLL %>% 
   group_by(station) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_gsoil),
-             sdEOC = sd(EOC_mgC_gsoil),
-             MeanFI = mean(FI),
-             sdFI = sd(FI),
-             MeanSUVA = mean(SUVA254_L_mgm),
-             sdSUVA = sd(SUVA254_L_mgm),
-             MeanHIX = mean(HIX),
-             sdHIX = sd(HIX),
-             MeanSSR = mean(SSR,na.rm=T),
-             sdSSR = sd(SSR,na.rm = T))
+  summarise( Mean_EOC = mean(EOC_mgC_gsoil),
+             sd_EOC = sd(EOC_mgC_gsoil),
+             SE_EOC = sd(EOC_mgC_gsoil)/sqrt(length(EOC_mgC_gsoil)),
+             Mean_FI = mean(FI),
+             sd_FI = sd(FI),
+             SE_FI = sd(FI)/sqrt(length(FI)),
+             Mean_SUVA = mean(SUVA254_L_mgm),
+             sd_SUVA = sd(SUVA254_L_mgm),
+             SE_SUVA = sd(SUVA254_L_mgm)/sqrt(length(SUVA254_L_mgm)),
+             Mean_HIX = mean(HIX),
+             sd_HIX = sd(HIX),
+             SE_HIX = sd(HIX)/sqrt(length(HIX)),
+             Mean_SSR = mean(SSR,na.rm=T),
+             sd_SSR = sd(SSR,na.rm = T),
+             SE_SSR = sd(na.omit(SSR))/sqrt(length(na.omit(SSR))),
+             Mean_Layer = mean(Layer_Thickness_cm,na.rm=T),
+             sd_Layer = sd(Layer_Thickness_cm,na.rm=T),
+             SE_Layer = sd(na.omit(Layer_Thickness_cm))/sqrt(length(na.omit(Layer_Thickness_cm))),
+             n_observ = length(EOC_mgC_gsoil))
 
 Spring_ESOM_Station_Summary <- JanMar %>% 
   group_by(station) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_gsoil),
-             sdEOC = sd(EOC_mgC_gsoil),
-             MeanFI = mean(FI),
-             sdFI = sd(FI),
-             MeanSUVA = mean(SUVA254_L_mgm),
-             sdSUVA = sd(SUVA254_L_mgm),
-             MeanHIX = mean(HIX),
-             sdHIX = sd(HIX),
-             MeanSSR = mean(SSR,na.rm=T),
-             sdSSR = sd(SSR,na.rm = T),
-             nobserv = length(EOC_mgC_L))
+  summarise( Mean_EOC = mean(EOC_mgC_gsoil),
+             sd_EOC = sd(EOC_mgC_gsoil),
+             SE_EOC = sd(EOC_mgC_gsoil)/sqrt(length(EOC_mgC_gsoil)),
+             Mean_FI = mean(FI),
+             sd_FI = sd(FI),
+             SE_FI = sd(FI)/sqrt(length(FI)),
+             Mean_SUVA = mean(SUVA254_L_mgm),
+             sd_SUVA = sd(SUVA254_L_mgm),
+             SE_SUVA = sd(SUVA254_L_mgm)/sqrt(length(SUVA254_L_mgm)),
+             Mean_HIX = mean(HIX),
+             sd_HIX = sd(HIX),
+             SE_HIX = sd(HIX)/sqrt(length(HIX)),
+             Mean_SSR = mean(SSR,na.rm=T),
+             sd_SSR = sd(SSR,na.rm = T),
+             SE_SSR = sd(na.omit(SSR))/sqrt(length(na.omit(SSR))),
+             Mean_Layer = mean(Layer_Thickness_cm,na.rm=T),
+             sd_Layer = sd(Layer_Thickness_cm,na.rm=T),
+             SE_Layer = sd(na.omit(Layer_Thickness_cm))/sqrt(length(na.omit(Layer_Thickness_cm))),
+             n_observ = length(EOC_mgC_gsoil))
 
 Autumn_ESOM_Station_Summary <- Sept %>% 
   group_by(station) %>% 
-  summarise( MeanEOC = mean(EOC_mgC_gsoil),
-             sdEOC = sd(EOC_mgC_gsoil),
-             MeanFI = mean(FI),
-             sdFI = sd(FI),
-             MeanSUVA = mean(SUVA254_L_mgm),
-             sdSUVA = sd(SUVA254_L_mgm),
-             MeanHIX = mean(HIX),
-             sdHIX = sd(HIX),
-             MeanSSR = mean(SSR,na.rm=T),
-             sdSSR = sd(SSR,na.rm = T),
-             nobserv = length(EOC_mgC_L))
+  summarise( Mean_EOC = mean(EOC_mgC_gsoil),
+             sd_EOC = sd(EOC_mgC_gsoil),
+             SE_EOC = sd(EOC_mgC_gsoil)/sqrt(length(EOC_mgC_gsoil)),
+             Mean_FI = mean(FI),
+             sd_FI = sd(FI),
+             SE_FI = sd(FI)/sqrt(length(FI)),
+             Mean_SUVA = mean(SUVA254_L_mgm),
+             sd_SUVA = sd(SUVA254_L_mgm),
+             SE_SUVA = sd(SUVA254_L_mgm)/sqrt(length(SUVA254_L_mgm)),
+             Mean_HIX = mean(HIX),
+             sd_HIX = sd(HIX),
+             SE_HIX = sd(HIX)/sqrt(length(HIX)),
+             Mean_SSR = mean(SSR,na.rm=T),
+             sd_SSR = sd(SSR,na.rm = T),
+             SE_SSR = sd(na.omit(SSR))/sqrt(length(na.omit(SSR))),
+             Mean_Layer = mean(Layer_Thickness_cm,na.rm=T),
+             sd_Layer = sd(Layer_Thickness_cm,na.rm=T),
+             SE_Layer = sd(na.omit(Layer_Thickness_cm))/sqrt(length(na.omit(Layer_Thickness_cm))),
+             n_observ = length(EOC_mgC_gsoil))
+
+write_csv(Spring_ESOM_Station_Summary,"data//Spring_ESOM_Station_MetricsSummary.csv") 
+write_csv(Autumn_ESOM_Station_Summary,"data//Autumn_ESOM_Station_MetricsSummary.csv")
 
 ### Water Level Metrics###
 #by station
@@ -171,36 +231,38 @@ threshold_annual_summary <-threshold_annual %>%
   summarise(#elev
     mean_elev =  mean(elevation),
     sd_elev = sd(elevation),
-    se_elev = sd_elev/sqrt(4),
+    se_elev = sd(elevation)/sqrt(length(elevation)),
     #min
     mean_minWL =  mean(min_waterLevel),
     sd_minWL = sd(min_waterLevel),
-    se_minWL = sd_minWL/sqrt(4),
+    se_minWL = sd(min_waterLevel)/sqrt(length(min_waterLevel)),
     #mean
     mean_meanWL = mean(mean_waterLevel),
     sd_meanWL = sd(mean_waterLevel),
-    se_meanWL = sd_meanWL/sqrt(4),
+    se_meanWL = sd(mean_waterLevel)/sqrt(length(mean_waterLevel)),
     #median
     mean_medianWL = mean(median_waterLevel),
     sd_medianWL = sd(median_waterLevel),
-    se_medianWL = sd_medianWL/sqrt(4),
+    se_medianWL = sd(median_waterLevel)/sqrt(length(median_waterLevel)),
     #max
     mean_maxWL = mean(max_waterLevel),
     sd_maxWL = sd(max_waterLevel),
-    se_maxWL = sd_maxWL/sqrt(4),
+    se_maxWL = sd(max_waterLevel)/sqrt(length(max_waterLevel)),
     #dur_day
     mean_durday = mean(dur_day),
     sd_durday = sd(dur_day),
-    se_durday = sd_durday/sqrt(4),
+    se_durday = sd(dur_day)/sqrt(length(dur_day)),
     #n_events
     mean_nevents = mean(n_events),
     sd_nevents = sd(n_events),
-    se_nevents = sd_nevents/sqrt(4),
+    se_nevents = sd(n_events)/sqrt(length(n_events)),
     #percent sat
     mean_percentsat = mean(percent_sat),
     sd_percentsat = sd(percent_sat),
-    sd_percentsat = sd_percentsat/sqrt(4)
+    se_percentsat = sd(percent_sat)/sqrt(length(percent_sat))
   )
+
+write_csv(threshold_annual_summary ,"data//2020WY_threshold_annual_summary_bystation.csv")
 
 #filter metrics
 station <- threshold_annual$station
@@ -217,24 +279,26 @@ soil_summary <- soil_annual %>% group_by(station) %>%
   summarise(#O horizon
             O_dur_day_mean = mean(O_dur_day,na.rm=T),
             O_dur_day_sd = sd(O_dur_day,na.rm=T),
-            O_dur_day_se = O_dur_day_sd/sqrt(4),
+            O_dur_day_se = sd(O_dur_day,na.rm=T)/sqrt(length(na.omit(O_dur_day))),
             O_nevents_mean = mean(O_n_events,na.rm=T),
             O_nevents_sd = sd(O_n_events,na.rm=T),
-            O_nevents_se = O_nevents_sd/sqrt(4),
+            O_nevents_se = sd(O_n_events,na.rm=T)/sqrt(length(na.omit(O_n_events))),
             #A horizon
             A_dur_day_mean = mean(A_dur_day,na.rm=T),
             A_dur_day_sd = sd(A_dur_day,na.rm=T),
-            A_dur_day_se = A_dur_day_sd/sqrt(4),
+            A_dur_day_se = sd(A_dur_day,na.rm=T)/sqrt(length(na.omit(A_dur_day))),
             A_nevents_mean = mean(A_n_events,na.rm=T),
             A_nevents_sd = sd(A_n_events,na.rm=T),
-            A_nevents_se = A_nevents_sd/sqrt(4),
+            A_nevents_se = sd(A_n_events,na.rm=T)/sqrt(length(na.omit(A_n_events))),
             #B horizon
             B_dur_day_mean = mean(B_dur_day,na.rm=T),
             B_dur_day_sd = sd(B_dur_day,na.rm=T),
-            B_dur_day_se = B_dur_day_sd/sqrt(4),
+            B_dur_day_se = sd(B_dur_day,na.rm=T)/sqrt(length(na.omit(B_dur_day))),
             B_nevents_mean = mean(B_n_events,na.rm=T),
             B_nevents_sd = sd(B_n_events,na.rm=T),
-            B_nevents_se = B_nevents_sd/sqrt(4))
+            B_nevents_se = sd(B_n_events,na.rm=T)/sqrt(length(na.omit(B_n_events))))
+
+write_csv(soil_summary,"data//2020WY_soil_annual_summary_bystation.csv")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 ANOVA/TukeyHSD/Kruskal-Wallis/Oneway Test --------------------------------------------------
@@ -1433,7 +1497,11 @@ k2 <- kmeans(data,centers=2,nstart=25);k2
 
 #Step 4 View results
 #Method 1
-fviz_cluster(k2,data=data)
+fviz_cluster(k2,data=data,
+             palette = c("#2E9FDF", "#00AFBB"), 
+             geom = "point",
+             ellipse.type = "convex", 
+             ggtheme = theme_bw())
 #Method 2
 results <- data.frame(JanMar$Generic_Horizon,k2$cluster,JanMar$FI,JanMar$SUVA254_L_mgm)
 
@@ -1441,13 +1509,14 @@ results %>% as_tibble() %>%
   mutate(cluster=k2$cluster,
          Horizon = results$JanMar.Generic_Horizon) %>% 
   ggplot(aes(JanMar.FI,JanMar.SUVA254_L_mgm,
-             color=factor(cluster),
-             shape=Horizon,
+             color=Horizon,
+             shape=factor(cluster),
              size=3))+
   geom_point()+
   ylab("SUVA254 (L/mg-m)")+
   xlab("FI")+
   ggtitle("Spring SUVA vs FI Cluster Analysis")+
+  scale_color_brewer(palette = "Dark2")+
   ylim(0,3.5)+
   xlim(1.3,1.9)+
   theme_bw()+  
@@ -1487,13 +1556,14 @@ results %>% as_tibble() %>%
   mutate(cluster=k2$cluster,
          Horizon = results$Sept.Generic_Horizon) %>% 
   ggplot(aes(Sept.FI,Sept.SUVA254_L_mgm,
-             color=factor(cluster),
-             shape=Horizon,
+             color=Horizon,
+             shape=factor(cluster),
              size=3))+
   geom_point()+
   ylab("SUVA254 (L/mg-m)")+
   xlab("FI")+
   ggtitle("Autumn SUVA vs FI Cluster Analysis")+
+  scale_color_brewer(palette = "Dark2")+
   ylim(0,3.5)+
   xlim(1.3,1.9)+
   theme_bw()+  
@@ -1534,16 +1604,18 @@ results %>% as_tibble() %>%
   mutate(cluster=k2$cluster,
          Horizon = results$JanMar.Generic_Horizon) %>% 
   ggplot(aes(JanMar.FI,JanMar.HIX,
-             color=factor(cluster),
-             shape=Horizon,
+             color=Horizon,
+             shape=factor(cluster),
              size=3))+
   geom_point()+
   ylab("HIX")+
   xlab("FI")+
   ggtitle("Spring HIX vs FI Cluster Analysis")+
+  scale_color_brewer(palette = "Dark2")+
   ylim(0.35,0.6)+
   xlim(1.3,1.9)+
-  theme_bw()+  
+  theme_bw()+ 
+  scale_color_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
         legend.title= element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -1581,16 +1653,18 @@ results %>% as_tibble() %>%
   mutate(cluster=k2$cluster,
          Horizon = results$Sept.Generic_Horizon) %>% 
   ggplot(aes(Sept.FI,Sept.HIX,
-             color=factor(cluster),
-             shape=Horizon,
+             color=Horizon,
+             shape=factor(cluster),
              size=3))+
   geom_point()+
   ylab("HIX")+
   xlab("FI")+
   ggtitle("Autumn HIX vs FI Cluster Analysis")+
+  scale_color_brewer(palette = "Dark2")+
   ylim(0.35,0.6)+
   xlim(1.3,1.9)+
   theme_bw()+  
+  scale_color_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
         legend.title= element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -1608,54 +1682,7 @@ results %>% as_tibble() %>%
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
-data <- JanMar %>% select(FI,EOC_mgC_L)
-data <- drop_na(data)
-#scale data (only columns with numeric values)
-data <- scale(data)
-
-#Step 2 Determine optimal number of clusters (said 2-3, went with 3)
-fviz_nbclust(data, kmeans, method = "silhouette")
-
-#Step 3 K-means algorithm based on optimal cluster number
-k3 <- kmeans(data,centers=3,nstart=25);k3
-
-#Step 4 View results
-#Method 1
-fviz_cluster(k2,data=data)
-#Method 2
-results <- data.frame(JanMar$Generic_Horizon,k3$cluster,JanMar$FI,JanMar$EOC_mgC_L)
-
-results %>% as_tibble() %>% 
-  mutate(cluster=k3$cluster,
-         Horizon = results$JanMar.Generic_Horizon) %>% 
-  ggplot(aes(JanMar.EOC_mgC_L,JanMar.FI,
-             color=factor(cluster),
-             shape=Horizon,
-             size=3))+
-  geom_point()+
-  ylab("FI")+
-  xlab("EOC (mg C/L)")+
-  ggtitle("Spring FI vs EOC Cluster Analysis")+
-  ylim(1.3,1.9)+
-  xlim(0,30)+
-  theme_bw()+  
-  theme(legend.text = element_text(size=16),
-        legend.title= element_text(size=16),
-        axis.text.y   = element_text(size=16),
-        axis.text.x   = element_text(size=16),
-        axis.title.y  = element_text(size=16),
-        axis.title.x  = element_text(size=16),
-        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
-  guides(colour = guide_legend(override.aes = list(size=5)),
-         shape = guide_legend(override.aes = list(size=5)))
-
-
-
-###6.3.2 Autumn-------------------------------------
-
-#Step 1 select and scale data
-#select only data you want in cluster analysis, ensure no NA's
-data <- Sept %>% select(FI,EOC_mgC_L)
+data <- JanMar %>% select(FI,EOC_mgC_gsoil)
 data <- drop_na(data)
 #scale data (only columns with numeric values)
 data <- scale(data)
@@ -1670,22 +1697,69 @@ k3 <- kmeans(data,centers=3,nstart=25);k3
 #Method 1
 fviz_cluster(k3,data=data)
 #Method 2
-results <- data.frame(Sept$Generic_Horizon,k3$cluster,Sept$FI,Sept$EOC_mgC_L)
+results <- data.frame(JanMar$Generic_Horizon,k3$cluster,JanMar$FI,JanMar$EOC_mgC_gsoil)
+
+results %>% as_tibble() %>% 
+  mutate(cluster=k3$cluster,
+         Horizon = results$JanMar.Generic_Horizon) %>% 
+  ggplot(aes(JanMar.EOC_mgC_gsoil,JanMar.FI,
+             color=Horizon,
+             shape=factor(cluster),
+             size=3))+
+  geom_point()+
+  ylab("FI")+
+  xlab("EOC (mg C/g soil)")+
+  ggtitle("Spring FI vs EOC Cluster Analysis")+
+  scale_color_brewer(palette = "Dark2")+
+  ylim(1.3,1.9)+
+  xlim(0,0.13)+
+  theme_bw()+
+  theme(legend.text = element_text(size=16),
+        legend.title= element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  guides(colour = guide_legend(override.aes = list(size=5)),
+         shape = guide_legend(override.aes = list(size=5)))
+
+###6.3.2 Autumn-------------------------------------
+
+#Step 1 select and scale data
+#select only data you want in cluster analysis, ensure no NA's
+data <- Sept %>% select(FI,EOC_mgC_gsoil)
+data <- drop_na(data)
+#scale data (only columns with numeric values)
+data <- scale(data)
+
+#Step 2 Determine optimal number of clusters (said 2-3, went with 3)
+fviz_nbclust(data, kmeans, method = "silhouette")
+
+#Step 3 K-means algorithm based on optimal cluster number
+k3 <- kmeans(data,centers=3,nstart=25);k3
+
+#Step 4 View results
+#Method 1
+fviz_cluster(k3,data=data)
+#Method 2
+results <- data.frame(Sept$Generic_Horizon,k3$cluster,Sept$FI,Sept$EOC_mgC_gsoil)
 
 results %>% as_tibble() %>% 
   mutate(cluster=k3$cluster,
          Horizon = results$Sept.Generic_Horizon) %>% 
-  ggplot(aes(Sept.EOC_mgC_L,Sept.FI,
-             color=factor(cluster),
-             shape=Horizon,
+  ggplot(aes(Sept.EOC_mgC_gsoil,Sept.FI,
+             color=Horizon,
+             shape=factor(cluster),
              size=3))+
   geom_point()+
   ylab("FI")+
-  xlab("EOC (mg C/L)")+
+  xlab("EOC (mg C/g soil)")+
   ggtitle("Autumn FI vs EOC Cluster Analysis")+
   ylim(1.3,1.9)+
-  xlim(0,30)+
-  theme_bw()+  
+  xlim(0,0.13)+
+  theme_bw()+     
+  scale_color_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
         legend.title= element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -1703,7 +1777,7 @@ results %>% as_tibble() %>%
 
 #Step 1 select and scale data
 #select only data you want in cluster analysis, ensure no NA's
-data <- JanMar %>% select(SUVA254_L_mgm,EOC_mgC_L)
+data <- JanMar %>% select(SUVA254_L_mgm,EOC_mgC_gsoil)
 data <- drop_na(data)
 #scale data (only columns with numeric values)
 data <- scale(data)
@@ -1716,23 +1790,24 @@ k3 <- kmeans(data,centers=3,nstart=25);k3
 
 #Step 4 View results
 #Method 1
-fviz_cluster(k2,data=data)
+fviz_cluster(k3,data=data)
 #Method 2
-results <- data.frame(JanMar$Generic_Horizon,k3$cluster,JanMar$SUVA254_L_mgm,JanMar$EOC_mgC_L)
+results <- data.frame(JanMar$Generic_Horizon,k3$cluster,JanMar$SUVA254_L_mgm,JanMar$EOC_mgC_gsoil)
 
 results %>% as_tibble() %>% 
   mutate(cluster=k3$cluster,
          Horizon = results$JanMar.Generic_Horizon) %>% 
-  ggplot(aes(JanMar.EOC_mgC_L,JanMar.SUVA254_L_mgm,
-             color=factor(cluster),
-             shape=Horizon,
+  ggplot(aes(JanMar.EOC_mgC_gsoil,JanMar.SUVA254_L_mgm,
+             color=Horizon,
+             shape=factor(cluster),
              size=3))+
   geom_point()+
   ylab("SUVA254 (L/mg-m)")+
-  xlab("EOC (mg C/L)")+
+  xlab("EOC (mg C/g soil)")+
   ggtitle("Spring SUVA254 vs EOC Cluster Analysis")+
+  scale_color_brewer(palette = "Dark2")+
   ylim(0,3.5)+
-  xlim(0,30)+
+  xlim(0,0.13)+
   theme_bw()+  
   theme(legend.text = element_text(size=16),
         legend.title= element_text(size=16),
@@ -1765,21 +1840,22 @@ k3 <- kmeans(data,centers=3,nstart=25);k3
 #Method 1
 fviz_cluster(k3,data=data)
 #Method 2
-results <- data.frame(Sept$Generic_Horizon,k3$cluster,Sept$SUVA254_L_mgm,Sept$EOC_mgC_L)
+results <- data.frame(Sept$Generic_Horizon,k3$cluster,Sept$SUVA254_L_mgm,Sept$EOC_mgC_gsoil)
 
 results %>% as_tibble() %>% 
   mutate(cluster=k3$cluster,
          Horizon = results$Sept.Generic_Horizon) %>% 
-  ggplot(aes(Sept.EOC_mgC_L,Sept.SUVA254_L_mgm,
-             color=factor(cluster),
-             shape=Horizon,
+  ggplot(aes(Sept.EOC_mgC_gsoil,Sept.SUVA254_L_mgm,
+             color=Horizon,
+             shape=factor(cluster),
              size=3))+
   geom_point()+
   ylab("SUVA254 (L/mg-m)")+
-  xlab("EOC (mg C/L)")+
+  xlab("EOC (mg C/g soil)")+
   ggtitle("Autumn SUVA254 vs EOC Cluster Analysis")+
+  scale_color_brewer(palette = "Dark2")+
   ylim(0,3.5)+
-  xlim(0,30)+
+  xlim(0,0.13)+
   theme_bw()+  
   theme(legend.text = element_text(size=16),
         legend.title= element_text(size=16),
