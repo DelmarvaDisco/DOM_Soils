@@ -36,16 +36,23 @@ JanMar <- WetlandsNoLL %>% filter(Month %in% c('2020-01','2020-03'))
 Sept <- WetlandsNoLL %>% filter(Month == '2020-09')
 Nov <- WetlandsNoLL %>% filter(Month == "2020-11")
 
-#Synoptic
+#Synoptic no leaf litter
 JanMar <- WetSynopticNoLL  %>% filter(Month %in% c('2020-01','2020-03'))
 Sept <- WetSynopticNoLL  %>% filter(Month == '2020-09')
 Nov <- WetSynopticNoLL  %>% filter(Month == "2020-11")
+
+#Synoptic leaf litter
+JanMar <- WetSynoptic  %>% filter(Month %in% c('2020-01','2020-03'))
+Sept <- WetSynoptic  %>% filter(Month == '2020-09')
+Nov <- WetSynoptic  %>% filter(Month == "2020-11")
 
 #Separate wetland sites
 QB <- WetlandsNoLL %>% filter(wetland == "QB")
 TB <- WetlandsNoLL %>% filter(wetland == "TB")
 DB <- WetlandsNoLL %>% filter(wetland == "DB")
 ND <- WetlandsNoLL %>% filter(wetland == "ND")
+CH <- df %>% filter(wetland == "CH")
+FF <- df %>% filter(wetland == "FF")
 
 #General summary of EOC
 EOC_Summary <- WetlandsNoLL %>% group_by(station,Generic_Horizon) %>% 
@@ -150,7 +157,7 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
   xlab("EOC (mg/L)") +
   ylab("FI") + 
   ggtitle("All Sites FI")+ 
-  scale_fill_brewer(palette = "Dark2")+
+  scale_color_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -160,15 +167,15 @@ ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #spring
-ggplot(JanMar, aes(EOC_mgC_L,FI,col=Generic_Horizon,shape=wetland)) +
-  geom_point(size=2.5) +
+ggplot(JanMar, aes(EOC_mgC_gsoil,FI,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
   #stat_ellipse()+
-  xlab("EOC (mg/L)") +
+  xlab("EOC (mg C/g soil)") +
   ylab("FI") + 
   ylim(1.3,1.9)+
-  xlim(0,26)+ 
+  xlim(0,0.12)+ 
   ggtitle("Spring FI vs EOC")+ 
-  scale_fill_brewer(palette = "Dark2")+
+  scale_color_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -178,15 +185,15 @@ ggplot(JanMar, aes(EOC_mgC_L,FI,col=Generic_Horizon,shape=wetland)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
 #autumn
-ggplot(Sept, aes(EOC_mgC_L,FI,col=Generic_Horizon,shape=wetland)) +
-  geom_point(size=2.5) +
+ggplot(Sept, aes(EOC_mgC_gsoil,FI,col=Generic_Horizon)) +
+  geom_point(size=3.5) +
   #stat_ellipse()+
   xlab("EOC (mg/L)") +
   ylab("FI") +
   ylim(1.3,1.9)+
-  xlim(0,26)+
+  xlim(0,0.12)+
   ggtitle("Autumn FI vs EOC")+ 
-  scale_fill_brewer(palette = "Dark2")+
+  scale_color_brewer(palette = "Dark2")+
   theme_bw() +
   theme(legend.text = element_text(size=16),
         axis.text.y   = element_text(size=16),
@@ -1655,8 +1662,8 @@ ggplot(JanMar,aes(x=Point,y=FI,fill=Generic_Horizon)) +
   geom_boxplot() +
   xlab("Transect Point") +
   ylab("FI")+
-  ylim(1.4,2.1)+
-  scale_fill_brewer(palette = "Dark2")+
+  ylim(1.35,2.1)+
+  scale_fill_manual(values=c("#1b9e77","#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02"))+
   ggtitle("Spring FI") +
   theme_bw()+
   theme(legend.text = element_text(size=16),
@@ -1671,8 +1678,8 @@ ggplot(Sept,aes(x=Point,y=FI,fill=Generic_Horizon)) +
   geom_boxplot() +
   xlab("Transect Point") +
   ylab("FI")+
-  scale_fill_brewer(palette = "Dark2")+
-  ylim(1.4,2.1)+
+  scale_fill_manual(values=c("#1b9e77","#d95f02","#7570b3","#66a61e","#e6ab02"))+
+  ylim(1.35,2.1)+
   ggtitle("Autumn FI") +
   theme_bw()+
   theme(legend.text = element_text(size=16),
@@ -1683,6 +1690,7 @@ ggplot(Sept,aes(x=Point,y=FI,fill=Generic_Horizon)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+  
 #FI vs Month boxplot by transect point
 ggplot(WetSynoptic,aes(x=Point,y=FI,fill=Generic_Horizon)) + 
   geom_boxplot()+
