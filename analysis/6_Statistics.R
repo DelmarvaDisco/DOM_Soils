@@ -24,6 +24,7 @@ library(ggpmisc)
 library(performance)
 library(agricolae)
 library(onewaytests)
+library(pwr)
 
 #Read data
 df<-read_csv("data/R_Extraction_Results_All.csv")
@@ -306,6 +307,7 @@ write_csv(soil_summary,"data//2020WY_soil_annual_summary_bystation.csv")
 #Step 1 Check equal variance
 #Step 2 Run ANOVA/TukeyHSD or other tests
 #Step 3 Check normality of residuals 
+#Step 4 Power of test?
 
 ##3.1 EOC -----------------------------------------------
 ### 3.1.1 ALL EOC --------------------------------------------------
@@ -1867,4 +1869,108 @@ results %>% as_tibble() %>%
   guides(colour = guide_legend(override.aes = list(size=5)),
          shape = guide_legend(override.aes = list(size=5)))
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#7.0 Paired T-tests --------------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#arrange to pair data in t-tests
+Spring <- arrange(JanMar,wetland,station,Generic_Horizon)
+Spring <- Spring[!(Spring$Sample_Name=="ND Edge A" |
+                   Spring$Sample_Name=="ND Transition B2" |
+                   Spring$Sample_Name=="ND Upland B2" |
+                   Spring$Sample_Name=="TB Transition B2" |
+                   Spring$Sample_Name=="TB Upland B2"),]
+Spring <- Spring %>% slice(-26)
+Autumn <- arrange(Sept,wetland,station,Generic_Horizon)
+Autumn <- Autumn[!(Autumn$Sample_Name=="DB Edge B" |
+                   Autumn$Sample_Name=="ND Wetland B" |
+                   Autumn$Sample_Name=="QB Wetland A" |
+                   Autumn$Sample_Name=="QB Upland O2"|
+                   Autumn$Sample_Name=="TB Wetland A" ),]
+
+#By horizon and station
+#Wetland O
+W_O_S <- Spring %>% filter(station=="KW-1W" & Generic_Horizon=="1O") 
+W_O_A <- Autumn %>% filter(station=="KW-1W" & Generic_Horizon=="1O") 
+#Wetland A
+W_A_S <- Spring %>% filter(station=="KW-1W" & Generic_Horizon=="2A")
+W_A_A <- Autumn %>% filter(station=="KW-1W" & Generic_Horizon=="2A")
+#Wetland B
+W_B_S <- Spring %>% filter(station=="KW-1W" & Generic_Horizon=="3B")
+W_B_A <- Autumn %>% filter(station=="KW-1W" & Generic_Horizon=="3B")
+
+#Edge O
+E_O_S <- Spring %>% filter(station=="KW-2E" & Generic_Horizon=="1O")
+E_O_A <- Autumn %>% filter(station=="KW-2E" & Generic_Horizon=="1O")
+#Edge A
+E_A_S <- Spring %>% filter(station=="KW-2E" & Generic_Horizon=="2A")
+E_A_A <- Autumn %>% filter(station=="KW-2E" & Generic_Horizon=="2A")
+#Edge B
+E_B_S <- Spring %>% filter(station=="KW-2E" & Generic_Horizon=="3B")
+E_B_A <- Autumn %>% filter(station=="KW-2E" & Generic_Horizon=="3B")
+
+#Transition O
+T_O_S <- Spring %>% filter(station=="KW-3T" & Generic_Horizon=="1O")
+T_O_A <- Autumn %>% filter(station=="KW-3T" & Generic_Horizon=="1O")
+#Transition A
+T_A_S <- Spring %>% filter(station=="KW-3T" & Generic_Horizon=="2A")
+T_A_A <- Autumn %>% filter(station=="KW-3T" & Generic_Horizon=="2A")
+#Transition B
+T_B_S <- Spring %>% filter(station=="KW-3T" & Generic_Horizon=="3B")
+T_B_A <- Autumn %>% filter(station=="KW-3T" & Generic_Horizon=="3B")
+
+#Upland O
+U_O_S <- Spring %>% filter(station=="KW-4U" & Generic_Horizon=="1O")
+U_O_A <- Autumn %>% filter(station=="KW-4U" & Generic_Horizon=="1O")
+#Upland A
+U_A_S <- Spring %>% filter(station=="KW-4U" & Generic_Horizon=="2A")
+U_A_A <- Autumn %>% filter(station=="KW-4U" & Generic_Horizon=="2A")
+#Upland B
+U_B_S <- Spring %>% filter(station=="KW-4U" & Generic_Horizon=="3B")
+U_B_A <- Autumn %>% filter(station=="KW-4U" & Generic_Horizon=="3B")
+
+## 7.1 EOC --------------------------------------
+#Wetland O
+
+#Wetland A
+
+#Wetland B
+
+
+#Edge O
+
+#Edge A
+
+#Edge B
+
+
+#Transition O
+
+#Transition A
+
+#Transition B
+
+
+#Upland O
+
+#Upland A
+
+#Upland B
+
+
+
+
+
+## 7.2 FI ---------------------------------------
+
+
+## 7.3 SUVA -------------------------------------
+
+## 7.4 HIX --------------------------------------
+
+## 7.5 SSR --------------------------------------
+
+## 7.6 GW-SW FI ---------------------------------
+
+## 7.7 Cory McKnight Loadings -------------------
 
