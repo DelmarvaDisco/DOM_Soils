@@ -1892,10 +1892,10 @@ Autumn <- Autumn[!(Autumn$Sample_Name=="DB Edge B" |
 #Wetland O
 W_O_S <- Spring %>% filter(station=="KW-1W" & Generic_Horizon=="1O") 
 W_O_A <- Autumn %>% filter(station=="KW-1W" & Generic_Horizon=="1O") 
-#Wetland A
+#Wetland A - NA not enough samples for T-test
 W_A_S <- Spring %>% filter(station=="KW-1W" & Generic_Horizon=="2A")
 W_A_A <- Autumn %>% filter(station=="KW-1W" & Generic_Horizon=="2A")
-#Wetland B
+#Wetland B - NA not enough samples for T-test
 W_B_S <- Spring %>% filter(station=="KW-1W" & Generic_Horizon=="3B")
 W_B_A <- Autumn %>% filter(station=="KW-1W" & Generic_Horizon=="3B")
 
@@ -1905,7 +1905,7 @@ E_O_A <- Autumn %>% filter(station=="KW-2E" & Generic_Horizon=="1O")
 #Edge A
 E_A_S <- Spring %>% filter(station=="KW-2E" & Generic_Horizon=="2A")
 E_A_A <- Autumn %>% filter(station=="KW-2E" & Generic_Horizon=="2A")
-#Edge B
+#Edge B - NA not enough samples for T-test
 E_B_S <- Spring %>% filter(station=="KW-2E" & Generic_Horizon=="3B")
 E_B_A <- Autumn %>% filter(station=="KW-2E" & Generic_Horizon=="3B")
 
@@ -1930,47 +1930,146 @@ U_B_S <- Spring %>% filter(station=="KW-4U" & Generic_Horizon=="3B")
 U_B_A <- Autumn %>% filter(station=="KW-4U" & Generic_Horizon=="3B")
 
 ## 7.1 EOC --------------------------------------
-#Wetland O
 
-#Wetland A
+t.test(W_O_S$EOC_mgC_gsoil, W_O_A$EOC_mgC_gsoil, paired=T) #Wetland O
 
-#Wetland B
+t.test(E_O_S$EOC_mgC_gsoil, E_O_A$EOC_mgC_gsoil, paired=T) #Edge O
+t.test(E_A_S$EOC_mgC_gsoil, E_A_A$EOC_mgC_gsoil, paired=T) #Edge A
 
+t.test(T_O_S$EOC_mgC_gsoil, T_O_A$EOC_mgC_gsoil, paired=T) #Transition O
+t.test(T_A_S$EOC_mgC_gsoil, T_A_A$EOC_mgC_gsoil, paired=T) #Transition A
+t.test(T_B_S$EOC_mgC_gsoil, T_B_A$EOC_mgC_gsoil, paired=T) #Transition B
 
-#Edge O
-
-#Edge A
-
-#Edge B
-
-
-#Transition O
-
-#Transition A
-
-#Transition B
-
-
-#Upland O
-
-#Upland A
-
-#Upland B
-
-
-
-
+t.test(U_O_S$EOC_mgC_gsoil, U_O_A$EOC_mgC_gsoil, paired=T) #Upland O
+t.test(U_A_S$EOC_mgC_gsoil, U_A_A$EOC_mgC_gsoil, paired=T) #Upland A
+t.test(U_B_S$EOC_mgC_gsoil, U_B_A$EOC_mgC_gsoil, paired=T) #Upland B
 
 ## 7.2 FI ---------------------------------------
+t.test(W_O_S$FI, W_O_A$FI, paired=T) #Wetland O
 
+t.test(E_O_S$FI, E_O_A$FI, paired=T) #Edge O
+t.test(E_A_S$FI, E_A_A$FI, paired=T) #Edge A
+
+t.test(T_O_S$FI, T_O_A$FI, paired=T) #Transition O
+t.test(T_A_S$FI, T_A_A$FI, paired=T) #Transition A
+t.test(T_B_S$FI, T_B_A$FI, paired=T) #Transition B
+
+t.test(U_O_S$FI, U_O_A$FI, paired=T) #Upland O
+t.test(U_A_S$FI, U_A_A$FI, paired=T) #Upland A
+t.test(U_B_S$FI, U_B_A$FI, paired=T) #Upland B
 
 ## 7.3 SUVA -------------------------------------
+t.test(W_O_S$SUVA254_L_mgm, W_O_A$SUVA254_L_mgm, paired=T) #Wetland O
+
+t.test(E_O_S$SUVA254_L_mgm, E_O_A$SUVA254_L_mgm, paired=T) #Edge O
+t.test(E_A_S$SUVA254_L_mgm, E_A_A$SUVA254_L_mgm, paired=T) #Edge A
+
+t.test(T_O_S$SUVA254_L_mgm, T_O_A$SUVA254_L_mgm, paired=T) #Transition O
+t.test(T_A_S$SUVA254_L_mgm, T_A_A$SUVA254_L_mgm, paired=T) #Transition A
+t.test(T_B_S$SUVA254_L_mgm, T_B_A$SUVA254_L_mgm, paired=T) #Transition B
+
+t.test(U_O_S$SUVA254_L_mgm, U_O_A$SUVA254_L_mgm, paired=T) #Upland O
+t.test(U_A_S$SUVA254_L_mgm, U_A_A$SUVA254_L_mgm, paired=T) #Upland A
+t.test(U_B_S$SUVA254_L_mgm, U_B_A$SUVA254_L_mgm, paired=T) #Upland B
 
 ## 7.4 HIX --------------------------------------
+t.test(W_O_S$HIX, W_O_A$HIX, paired=T) #Wetland O
+
+t.test(E_O_S$HIX, E_O_A$HIX, paired=T) #Edge O
+t.test(E_A_S$HIX, E_A_A$HIX, paired=T) #Edge A
+
+t.test(T_O_S$HIX, T_O_A$HIX, paired=T) #Transition O
+t.test(T_A_S$HIX, T_A_A$HIX, paired=T) #Transition A
+t.test(T_B_S$HIX, T_B_A$HIX, paired=T) #Transition B
+
+t.test(U_O_S$HIX, U_O_A$HIX, paired=T) #Upland O
+t.test(U_A_S$HIX, U_A_A$HIX, paired=T) #Upland A
+t.test(U_B_S$HIX, U_B_A$HIX, paired=T) #Upland B
 
 ## 7.5 SSR --------------------------------------
+t.test(W_O_S$SSR, W_O_A$SSR, paired=T) #Wetland O
 
-## 7.6 GW-SW FI ---------------------------------
+t.test(E_O_S$SSR, E_O_A$SSR, paired=T) #Edge O
+t.test(E_A_S$SSR, E_A_A$SSR, paired=T) #Edge A
 
-## 7.7 Cory McKnight Loadings -------------------
+t.test(T_O_S$SSR, T_O_A$SSR, paired=T) #Transition O
+t.test(T_A_S$SSR, T_A_A$SSR, paired=T) #Transition A
+t.test(T_B_S$SSR, T_B_A$SSR, paired=T) #Transition B
+
+t.test(U_O_S$SSR, U_O_A$SSR, paired=T) #Upland O
+t.test(U_A_S$SSR, U_A_A$SSR, paired=T) #Upland A
+t.test(U_B_S$SSR, U_B_A$SSR, paired=T) #Upland B
+
+## 7.6 Cory McKnight Loadings -------------------
+#C2
+t.test(W_O_S$C2_Q2, W_O_A$C2_Q2, paired=T) #Wetland O
+
+t.test(E_O_S$C2_Q2, E_O_A$C2_Q2, paired=T) #Edge O
+t.test(E_A_S$C2_Q2, E_A_A$C2_Q2, paired=T) #Edge A
+
+t.test(T_O_S$C2_Q2, T_O_A$C2_Q2, paired=T) #Transition O
+t.test(T_A_S$C2_Q2, T_A_A$C2_Q2, paired=T) #Transition A
+t.test(T_B_S$C2_Q2, T_B_A$C2_Q2, paired=T) #Transition B
+
+t.test(U_O_S$C2_Q2, U_O_A$C2_Q2, paired=T) #Upland O
+t.test(U_A_S$C2_Q2, U_A_A$C2_Q2, paired=T) #Upland A
+t.test(U_B_S$C2_Q2, U_B_A$C2_Q2, paired=T) #Upland B
+
+#C4
+t.test(W_O_S$C4_HQ, W_O_A$C4_HQ, paired=T) #Wetland O
+
+t.test(E_O_S$C4_HQ, E_O_A$C4_HQ, paired=T) #Edge O
+t.test(E_A_S$C4_HQ, E_A_A$C4_HQ, paired=T) #Edge A
+
+t.test(T_O_S$C4_HQ, T_O_A$C4_HQ, paired=T) #Transition O
+t.test(T_A_S$C4_HQ, T_A_A$C4_HQ, paired=T) #Transition A
+t.test(T_B_S$C4_HQ, T_B_A$C4_HQ, paired=T) #Transition B
+
+t.test(U_O_S$C4_HQ, U_O_A$C4_HQ, paired=T) #Upland O
+t.test(U_A_S$C4_HQ, U_A_A$C4_HQ, paired=T) #Upland A
+t.test(U_B_S$C4_HQ, U_B_A$C4_HQ, paired=T) #Upland B
+
+#C8
+t.test(W_O_S$C8_Trypto, W_O_A$C8_Trypto, paired=T) #Wetland O
+
+t.test(E_O_S$C8_Trypto, E_O_A$C8_Trypto, paired=T) #Edge O
+t.test(E_A_S$C8_Trypto, E_A_A$C8_Trypto, paired=T) #Edge A
+
+t.test(T_O_S$C8_Trypto, T_O_A$C8_Trypto, paired=T) #Transition O
+t.test(T_A_S$C8_Trypto, T_A_A$C8_Trypto, paired=T) #Transition A
+t.test(T_B_S$C8_Trypto, T_B_A$C8_Trypto, paired=T) #Transition B
+
+t.test(U_O_S$C8_Trypto, U_O_A$C8_Trypto, paired=T) #Upland O
+t.test(U_A_S$C8_Trypto, U_A_A$C8_Trypto, paired=T) #Upland A
+t.test(U_B_S$C8_Trypto, U_B_A$C8_Trypto, paired=T) #Upland B
+
+#C12
+t.test(W_O_S$C12_Q3, W_O_A$C12_Q3, paired=T) #Wetland O
+
+t.test(E_O_S$C12_Q3, E_O_A$C12_Q3, paired=T) #Edge O
+t.test(E_A_S$C12_Q3, E_A_A$C12_Q3, paired=T) #Edge A
+
+t.test(T_O_S$C12_Q3, T_O_A$C12_Q3, paired=T) #Transition O
+t.test(T_A_S$C12_Q3, T_A_A$C12_Q3, paired=T) #Transition A
+t.test(T_B_S$C12_Q3, T_B_A$C12_Q3, paired=T) #Transition B
+
+t.test(U_O_S$C12_Q3, U_O_A$C12_Q3, paired=T) #Upland O
+t.test(U_A_S$C12_Q3, U_A_A$C12_Q3, paired=T) #Upland A
+t.test(U_B_S$C12_Q3, U_B_A$C12_Q3, paired=T) #Upland B
+
+#C13
+t.test(W_O_S$C13_Tyrosine, W_O_A$C13_Tyrosine, paired=T) #Wetland O
+
+t.test(E_O_S$C13_Tyrosine, E_O_A$C13_Tyrosine, paired=T) #Edge O
+t.test(E_A_S$C13_Tyrosine, E_A_A$C13_Tyrosine, paired=T) #Edge A
+
+t.test(T_O_S$C13_Tyrosine, T_O_A$C13_Tyrosine, paired=T) #Transition O
+t.test(T_A_S$C13_Tyrosine, T_A_A$C13_Tyrosine, paired=T) #Transition A
+t.test(T_B_S$C13_Tyrosine, T_B_A$C13_Tyrosine, paired=T) #Transition B
+
+t.test(U_O_S$C13_Tyrosine, U_O_A$C13_Tyrosine, paired=T) #Upland O
+t.test(U_A_S$C13_Tyrosine, U_A_A$C13_Tyrosine, paired=T) #Upland A
+t.test(U_B_S$C13_Tyrosine, U_B_A$C13_Tyrosine, paired=T) #Upland B
+
+
 
