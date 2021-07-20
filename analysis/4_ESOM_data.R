@@ -51,8 +51,11 @@ QB <- WetlandsNoLL %>% filter(wetland == "QB")
 TB <- WetlandsNoLL %>% filter(wetland == "TB")
 DB <- WetlandsNoLL %>% filter(wetland == "DB")
 ND <- WetlandsNoLL %>% filter(wetland == "ND")
-CH <- df %>% filter(wetland == "CH")
+
+#For channel and forested flats plots
+CH <- df %>% filter(wetland == "Channel")
 FF <- df %>% filter(wetland == "FF")
+CH_FF <- df %>% filter(station %in% c("KW-FF","KW-CHL"))
 
 #General summary of EOC
 EOC_Summary <- WetlandsNoLL %>% group_by(station,Generic_Horizon) %>% 
@@ -2375,3 +2378,98 @@ ggarrange(SSRQB,
           SSRND,
           SSRDB,
           ncol = 2, nrow = 2)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#8.0 FF and CH Plots ---------------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## 8.1 EOC --------------------------------------
+EOC_CH_FF <- ggplot(CH_FF,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("mg EOC/g soil") + 
+  ylim(0,0.15)+
+  xlab("Point") + 
+  #scale_x_discrete(labels=c("Channel","Forested Flat"))+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_blank(),
+        legend.position = "none",
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_blank(),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_blank(),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+## 7.2 FI --------------------------------------
+FI_CH_FF <- ggplot(CH_FF, aes(Point,FI,fill=Generic_Horizon)) +
+  geom_boxplot() +
+  xlab("Location") +
+  ylab("FI") +
+  scale_x_discrete(labels=c("Channel","Forested Flat"))+
+  theme_bw() +
+  ylim(1.4,1.85)+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_blank(),
+        legend.position = "none",
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_blank(),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_blank(),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+## 7.2 SUVA254 --------------------------------------
+SUVA_CH_FF <- ggplot(CH_FF, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
+  geom_boxplot() +
+  xlab("Location") +
+  ylab(bquote(~SUVA[254] (L ~mg^-1 ~m^-1))) +
+  scale_x_discrete(labels=c("Channel","Forested Flat"))+
+  theme_bw() +
+  ylim(0,4)+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_blank(),
+        legend.position = "none",
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_blank(),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_blank(),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+## 7.3 HIX ------------------------------------------
+HIX_CH_FF <- ggplot(CH_FF, aes(Point,HIX,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("HIX") + 
+  ylim(0.35,0.6)+
+  scale_x_discrete(labels=c("Channel","Forested Flat"))+
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+## 7.4 SSR --------------------------------------------
+SSR_CH_FF <- ggplot(CH_FF, aes(Point,SSR,fill=Generic_Horizon)) +
+  geom_boxplot()+
+  xlab("Point") +
+  ylab("SSR") + 
+  ylim(1,4.5)+
+  scale_fill_manual(name="Horizon",labels=c("O","A","B"),values=c("#1b9e77","#d95f02","#7570b3"))+
+  scale_x_discrete(labels=c("Channel","Forested Flat"))+
+  theme_bw() +
+  theme(legend.text = element_text(size=16),
+        legend.position = "none",
+        legend.title = element_text(size=16),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+ggarrange(EOC_CH_FF, 
+          FI_CH_FF,
+          SUVA_CH_FF,
+          HIX_CH_FF,
+          SSR_CH_FF,
+          ncol = 2, nrow = 3)
