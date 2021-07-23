@@ -47,7 +47,7 @@ Sept <- WetSynoptic  %>% filter(Month == '2020-09')
 Nov <- WetSynoptic  %>% filter(Month == "2020-11")
 
 #Separate wetland sites
-QB <- WetlandsNoLL %>% filter(wetland == "QB")
+QB <- WetlandsNoLL %>% filter(wetland == "QB") %>% filter(Month %in% c('2020-01','2020-03','2020-09'))
 TB <- WetlandsNoLL %>% filter(wetland == "TB")
 DB <- WetlandsNoLL %>% filter(wetland == "DB")
 ND <- WetlandsNoLL %>% filter(wetland == "ND")
@@ -1985,10 +1985,10 @@ EOCQB <- ggplot(QB,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
   ylab("mg EOC/g soil") + 
   ylim(0,0.15)+
   xlab("Transect Point") + 
-  ggtitle("QB")+
+  ggtitle("Wetland 4 (QB)")+
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
-        legend.key.size = unit(1, 'cm'),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2000,10 +2000,10 @@ EOCTB <- ggplot(TB,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
   ylab("mg EOC/g soil") + 
   ylim(0,0.15)+
   xlab("Transect Point") + 
-  ggtitle("TB")+
+  ggtitle("Wetland 3 (TB)")+
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
-        legend.key.size = unit(1, 'cm'),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2015,10 +2015,10 @@ EOCND <- ggplot(ND,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
   ylab("mg EOC/g soil") + 
   ylim(0,0.15)+
   xlab("Transect Point") + 
-  ggtitle("ND")+
+  ggtitle("Wetland 1 (ND)")+
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
-        legend.key.size = unit(1, 'cm'),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2030,20 +2030,20 @@ EOCDB <- ggplot(DB,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
   ylab("mg EOC/g soil") + 
   ylim(0,0.15)+
   xlab("Transect Point") + 
-  ggtitle("DB")+
+  ggtitle("Wetland 2 (DB)")+
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
-        legend.key.size = unit(1, 'cm'),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-ggarrange( EOCQB, 
-           EOCTB,
-           EOCND,
+ggarrange( EOCND,
            EOCDB,
+           EOCTB,
+           EOCQB,
            ncol = 2, nrow = 2)
 
 ## 7.2 FI --------------------------------------
@@ -2056,7 +2056,8 @@ FIQB <- ggplot(QB, aes(EOC_mgC_gsoil,FI,col=Generic_Horizon,shape=station)) +
   theme_bw() +
   ylim(1.4,1.85)+
   xlim(0,0.13)+
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2108,10 +2109,10 @@ FIDB <- ggplot(DB, aes(EOC_mgC_gsoil,FI,col=Generic_Horizon,shape=station)) +
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-ggarrange( FIQB, 
-           FITB,
-           FIND,
+ggarrange( FIND,
            FIDB,
+           FITB,
+           FIQB,
            ncol = 2, nrow = 2)
 
 
@@ -2121,10 +2122,11 @@ FIQB <- ggplot(QB, aes(Point,FI,fill=Generic_Horizon)) +
   xlab("Transect Point") +
   ylab("FI") + 
   ylim(1.3,1.9)+
-  ggtitle("QB FI")+ 
+  ggtitle("Wetland 4 (QB)")+ 
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2136,10 +2138,11 @@ FITB <- ggplot(TB, aes(Point,FI,fill=Generic_Horizon)) +
   xlab("Transect Point") +
   ylab("FI") + 
   ylim(1.3,1.9)+
-  ggtitle("TB FI")+ 
+  ggtitle("Wetland 3 (TB)")+ 
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2150,10 +2153,11 @@ FIND <- ggplot(ND, aes(Point,FI,fill=Generic_Horizon)) +
   xlab("Transect Point") +
   ylab("FI") + 
   ylim(1.3,1.9)+
-  ggtitle("ND FI")+ 
+  ggtitle("Wetland 1  (ND)")+ 
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2164,33 +2168,35 @@ FIDB <- ggplot(DB, aes(Point,FI,fill=Generic_Horizon)) +
   xlab("Transect Point") +
   ylab("FI") + 
   ylim(1.3,1.9)+
-  ggtitle("DB FI")+ 
+  ggtitle("Wetland 2 (DB)")+ 
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-ggarrange( FIQB, 
-           FITB,
-           FIND,
+ggarrange( FIND,
            FIDB,
+           FITB,
+           FIQB, 
            ncol = 2, nrow = 2)
 
 ##7.3 SUVA --------------------------------------------------
 
 SUVAQB <- ggplot(QB, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("SUVA254") + 
   ylim(0,3.5)+
-  ggtitle("QB SUVA254") + 
+  ggtitle("Wetland 4 (QB)") + 
   theme_bw() +
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=20),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2199,13 +2205,14 @@ SUVAQB <- ggplot(QB, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
 
 SUVATB <- ggplot(TB, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("SUVA254") + 
   ylim(0,3.5)+
-  ggtitle("TB SUVA254") + 
+  ggtitle("Wetland 3 (TB)") + 
   theme_bw() +
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=20),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2214,13 +2221,14 @@ SUVATB <- ggplot(TB, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
 
 SUVAND <- ggplot(ND, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("SUVA254") + 
   ylim(0,3.5)+
-  ggtitle("ND SUVA254") + 
+  ggtitle("Wetland 1 (ND)") + 
   theme_bw() +
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=20),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2229,35 +2237,38 @@ SUVAND <- ggplot(ND, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
 
 SUVADB <- ggplot(DB, aes(Point,SUVA254_L_mgm,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("SUVA254") + 
   ylim(0,3.5)+
-  ggtitle("DB SUVA254") + 
+  ggtitle("Wetland 2 (DB)") + 
   theme_bw() +
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=20),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-ggarrange(SUVAQB, 
-          SUVATB,
+ggarrange(
           SUVAND,
           SUVADB,
+          SUVATB,
+          SUVAQB, 
           ncol = 2, nrow = 2)
 
 ##7.4 HIX ------------------------------------------------------------
 HIXQB <- ggplot(QB, aes(Point,HIX,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("HIX") + 
   ylim(0.35,0.6)+
-  ggtitle("QB HIX") +
+  ggtitle("Wetland 4 (QB)") +
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2266,13 +2277,14 @@ HIXQB <- ggplot(QB, aes(Point,HIX,fill=Generic_Horizon)) +
 
 HIXTB <- ggplot(TB, aes(Point,HIX,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("HIX") + 
   ylim(0.35,0.6)+
-  ggtitle("TB HIX") +
+  ggtitle("Wetland 3 (TB)") +
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2281,13 +2293,14 @@ HIXTB <- ggplot(TB, aes(Point,HIX,fill=Generic_Horizon)) +
 
 HIXND <- ggplot(ND, aes(Point,HIX,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("HIX") + 
   ylim(0.35,0.6)+
-  ggtitle("ND HIX") +
+  ggtitle("Wetland 1 (ND)") +
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2296,35 +2309,37 @@ HIXND <- ggplot(ND, aes(Point,HIX,fill=Generic_Horizon)) +
 
 HIXDB <- ggplot(DB, aes(Point,HIX,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("HIX") + 
   ylim(0.35,0.6)+
-  ggtitle("DB HIX") +
+  ggtitle("Wetland 2 (DB)") +
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-ggarrange(HIXQB, 
+ggarrange(HIXND,
+          HIXDB, 
           HIXTB,
-          HIXND,
-          HIXDB,
+          HIXQB,
           ncol = 2, nrow = 2)
 
 ##7.5 SSR -------------------------------------------------
 SSRQB <- ggplot(QB, aes(Point,SSR,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("SSR") + 
   ylim(1,4.5)+
-  ggtitle("QB SSR") + 
+  ggtitle("Wetland 4 (QB)") + 
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2332,13 +2347,14 @@ SSRQB <- ggplot(QB, aes(Point,SSR,fill=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 SSRTB <- ggplot(TB, aes(Point,SSR,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("SSR") + 
   ylim(1,4.5)+
-  ggtitle("TB SSR") + 
+  ggtitle("Wetland 3 (TB)") + 
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2346,13 +2362,14 @@ SSRTB <- ggplot(TB, aes(Point,SSR,fill=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 SSRND <- ggplot(ND, aes(Point,SSR,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("SSR") + 
   ylim(1,4.5)+
-  ggtitle("ND SSR") + 
+  ggtitle("Wetland 1 (ND)") + 
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -2360,23 +2377,24 @@ SSRND <- ggplot(ND, aes(Point,SSR,fill=Generic_Horizon)) +
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 SSRDB <- ggplot(DB, aes(Point,SSR,fill=Generic_Horizon)) +
   geom_boxplot()+
-  xlab("Point") +
+  xlab("Transect Point") +
   ylab("SSR") + 
   ylim(1,4.5)+
-  ggtitle("DB SSR") + 
+  ggtitle("Wetland 2 (DB)") + 
   scale_fill_brewer(palette = "Dark2")+
   theme_bw() +
-  theme(legend.text = element_text(size=16),
+  theme(legend.position = "none",
+        plot.title = element_text(size=16),
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
-ggarrange(SSRQB, 
-          SSRTB,
-          SSRND,
+ggarrange(SSRND,
           SSRDB,
+          SSRTB,
+          SSRQB, 
           ncol = 2, nrow = 2)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

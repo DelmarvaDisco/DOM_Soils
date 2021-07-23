@@ -346,7 +346,8 @@ wet <-ggplot() +
   xlab("Date") +
   ggtitle("Wetland")+
   #scale_x_date(date_labels = "%b") +
-  theme(axis.title = element_text(size = 14),
+  theme(plot.title = element_text(size = 15),
+        axis.title = element_text(size = 14),
         axis.text = element_text(size = 14),
         legend.position = "none")
         #legend.margin = margin(t=-2, unit="lines")) +
@@ -402,7 +403,8 @@ edge <-ggplot() +
   xlab("Date") + 
   ggtitle("Edge")+
   #scale_x_date(date_labels = "%b") +
-  theme(axis.title = element_text(size = 14),
+  theme(plot.title = element_text(size = 15),
+        axis.title = element_text(size = 14),
         axis.text = element_text(size = 14),
         legend.position = "none")
         #legend.margin = margin(t=-2, unit="lines")) +
@@ -458,7 +460,8 @@ trans <-ggplot() +
   xlab("Date") + 
   ggtitle("Transition")+
   #scale_x_date(date_labels = "%b") +
-  theme(axis.title = element_text(size = 14),
+  theme(plot.title = element_text(size = 15),
+        axis.title = element_text(size = 14),
         axis.text = element_text(size = 14),
         legend.position = "none")
   #legend.margin = margin(t=-2, unit="lines")) +
@@ -513,7 +516,8 @@ upland <-ggplot() +
   xlab("Date") + 
   ggtitle("Upland")+
   #scale_x_date(date_labels = "%b") +
-  theme(axis.title = element_text(size = 14),
+  theme(plot.title = element_text(size = 15),
+        axis.title = element_text(size = 14),
         axis.text = element_text(size = 14),
         legend.position = "none")
         #legend.margin = margin(t=-2, unit="lines")) +
