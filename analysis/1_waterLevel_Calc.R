@@ -135,7 +135,7 @@ QB<-df %>%
   geom_line(aes(y=`KW-4U`), col='#bdc9e1',size=1.5) +
   geom_hline(yintercept=0,linetype="dashed")+
   #geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
-  ggtitle("Wetland 2 (QB)") +
+  ggtitle("Wetland 4 (QB)") +
   ylim(-2.25,1)+
   theme_bw() +
   theme(
@@ -183,7 +183,7 @@ DB<-df %>%
   geom_line(aes(y=`KW-4U`), col='#bdc9e1',size=1.5) +
   geom_hline(yintercept=0,linetype="dashed")+
   #geom_hline(yintercept=-0.5,linetype="dashed",col="red")+
-  ggtitle("Wetland 4 (DB)") +
+  ggtitle("Wetland 2 (DB)") +
   theme_bw() +
   ylim(-2.25,1)+
   theme(
@@ -223,4 +223,4 @@ ND<-df %>%
   ylab("Water Level [m]") 
 
 #plot
-ND + QB + TB + DB  
+ND + DB + TB + QB  
