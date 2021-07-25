@@ -87,11 +87,12 @@ ggplot(WetlandsNoLL,aes(EOC_mgC_L,Number_Name,fill=Generic_Horizon))+
   ggtitle("EOC by Horizon and Transect Spot")
 #no leaf litter by month
 #spring
-ggplot(JanMar,aes(EOC_mgC_gsoil,Number_Name,fill=Generic_Horizon))+
+ggplot(JanMar,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
-  xlab("mg EOC/g soil") + 
-  xlim(0,0.15)+
+  ylab("mg EOC/g soil") + 
+  xlab("Transect Point")+
+  ylim(0,0.15)+
   ylab("Transect Point and Soil Horizon") + 
   ggtitle("Spring EOC by Horizon and Transect Spot")+
   scale_fill_brewer(palette = "Dark2")+
@@ -103,12 +104,12 @@ ggplot(JanMar,aes(EOC_mgC_gsoil,Number_Name,fill=Generic_Horizon))+
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 #autumn
-ggplot(Sept,aes(EOC_mgC_gsoil,Number_Name,fill=Generic_Horizon))+
+ggplot(Sept,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
-  xlab("mg EOC/g soil") + 
-  xlim(0,0.15)+
-  ylab("Transect Point and Soil Horizon") + 
+  ylab("mg EOC/g soil") + 
+  ylim(0,0.15)+
+  xlab("Transect Point") + 
   ggtitle("Autumn EOC by Horizon and Transect Spot")+
   scale_fill_brewer(palette = "Dark2")+
   theme(legend.text = element_text(size=16),
