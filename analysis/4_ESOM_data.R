@@ -1890,30 +1890,28 @@ ggplot(WetlandsNoLL,aes(x=Percent_Clay,y=SUVA254_L_mgm,color=Generic_Horizon)) +
 ## Nitrogen ###
 # TDN
 #spring
-ggplot(JanMar,aes(ETDN_mgN_gsoil,Number_Name,fill=Generic_Horizon))+
+ggplot(JanMar,aes(Point,ETDN_mgN_gsoil,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
-  xlab("mg ETDN/g soil") + 
-  xlim(0,0.01)+
-  ylab("Transect Point and Soil Horizon") + 
+  ylab("mg ETDN/g soil") + 
+  ylim(0,0.01)+
+  xlab("Transect Point") + 
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
-        legend.key.size = unit(1.5, 'cm'),
+  theme(legend.position = "none",
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 #autumn
-ggplot(Sept,aes(ETDN_mgN_gsoil,Number_Name,fill=Generic_Horizon))+
+ggplot(Sept,aes(Point,ETDN_mgN_gsoil,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
-  xlab("mg ETDN/g soil") + 
-  xlim(0,0.01)+
-  ylab("Transect Point and Soil Horizon") + 
+  ylab("mg ETDN/g soil") + 
+  ylim(0,0.01)+
+  xlab("Transect Point") + 
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
-        legend.key.size = unit(1, 'cm'),
+  theme(legend.position = "none",
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
@@ -1922,30 +1920,28 @@ ggplot(Sept,aes(ETDN_mgN_gsoil,Number_Name,fill=Generic_Horizon))+
 
 # NO3
 #spring
-ggplot(JanMar,aes(ENO3_mgN_gsoil,Number_Name,fill=Generic_Horizon))+
+ggplot(JanMar,aes(Point,ENO3_mgN_gsoil,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
-  xlab("mg ENO3/g soil") + 
-  xlim(0,0.002)+
-  ylab("Transect Point and Soil Horizon") + 
+  ylab("mg ENO3/g soil") + 
+  ylim(0,0.002)+
+  xlab("Transect Point") + 
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
-        legend.key.size = unit(1.5, 'cm'),
+  theme(legend.position = "none",
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 #autumn
-ggplot(Sept,aes(ENO3_mgN_gsoil,Number_Name,fill=Generic_Horizon))+
+ggplot(Sept,aes(Point,ENO3_mgN_gsoil,fill=Generic_Horizon))+
   geom_boxplot()+
   theme_bw()+
-  xlab("mg ENO3/g soil") + 
-  xlim(0,0.002)+
-  ylab("Transect Point and Soil Horizon") + 
+  ylab("mg ENO3/g soil") + 
+  ylim(0,0.002)+
+  xlab("Transect Point") + 
   scale_fill_brewer(palette = "Dark2")+
-  theme(legend.text = element_text(size=16),
-        legend.key.size = unit(1, 'cm'),
+  theme(legend.position = "none",
         axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
