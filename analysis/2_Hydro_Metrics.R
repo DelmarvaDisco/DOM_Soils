@@ -20,6 +20,7 @@ library(raster)
 df<-read_csv('data/waterLevel_at_sampling_location.csv')
 df <- df %>% drop_na()
 soil <- read_csv('data/20210516_KW_SoilHorizElev.csv') 
+soil_TB <- read_csv('data/20210516_KW_SoilHorizElev_TBedit.csv') 
 #note that QB KW-1W, KW-2E and TB KW-1W, KW-2E didn't have a lower
 #B horiz elevation, so I added -0.5 since it falls within the generic sampling zone
 #Also was getting some results where B had lower inundation dur than A did, which doesn't make sense
@@ -105,6 +106,7 @@ monthly<-monthly %>% mutate(n_events = if_else(dur_day>0 & n_events==0, 1, n_eve
 
 #Join together water level data and soil horizon elevations
 join <- left_join(df,soil,by=c("wetland","station"))
+join <- left_join(df,soil_TB,by=c("wetland","station"))
 
 #Sort based on site & station
 soil_annual <- join %>% arrange(wetland, station, Timestamp) %>% drop_na(y_n)
