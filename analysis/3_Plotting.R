@@ -126,7 +126,7 @@ hyd<-ggplot() +
   
   #theme options
   theme_bw() + 
-  ylab("Water Level [m]") + 
+  ylab("Mean Water Level [m]") + 
   xlab("Date") + 
   ylim(-2,1)+
   #scale_x_date(date_labels = "%b") +
@@ -168,7 +168,7 @@ dep<-depth %>%
              fill = c('#045a8d', '#2b8cbe','#74a9cf','#bdc9e1'), 
              alpha = 70) + 
   theme_bw() + 
-  ylab("Mean Water Elevation [m]") + 
+  ylab("Mean Water Level [m]") + 
   xlab("Transect Point") + 
   theme(axis.title = element_text(size = 14),
         axis.text = element_text(size = 14)) 
