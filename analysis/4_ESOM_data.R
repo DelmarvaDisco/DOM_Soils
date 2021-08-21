@@ -153,6 +153,40 @@ ggplot(Sept,aes(Point,EOC_mgC_gsoil,fill=Generic_Horizon))+
         axis.title.x  = element_text(size=16),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
 
+#EOC scaled to horizon thickness and Anna bulk density
+#spring
+ggplot(JanMar,aes(Point,Bulk_EOC_gEOC_m2,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("ESOM (g EOC/sq m)") + 
+  ylim(0,17)+
+  xlab("Transect Point") + 
+  ggtitle("Spring")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+#autumn
+ggplot(Sept,aes(Point,Bulk_EOC_gEOC_m2,fill=Generic_Horizon))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("ESOM (g EOC/sq m)") + 
+  ylim(0,17)+
+  xlab("Transect Point") + 
+  ggtitle("Autumn")+
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.text = element_text(size=16),
+        legend.key.size = unit(1, 'cm'),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 ##2.2 FI------------------------------------------
 #FI by Horizon - All wetland sites, no LL
 ggplot(WetlandsNoLL, aes(EOC_mgC_L,FI,col=Generic_Horizon)) +
