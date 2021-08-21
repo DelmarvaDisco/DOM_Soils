@@ -59,8 +59,34 @@ threshold_annual <- left_join(threshold_annual,elev,by=c("wetland","station"))
 
 ###ESOM DATA###
 #Summarize by horizon and station
+#Spring
+Spring_ESOM_HorizStation_Summary <- JanMar %>% 
+  group_by(Generic_Horizon,station) %>% 
+  summarise( Mean_EOC = mean(EOC_mgC_gsoil),
+             sd_EOC = sd(EOC_mgC_gsoil),
+             SE_EOC = sd(EOC_mgC_gsoil)/sqrt(length(EOC_mgC_gsoil)),
+             Mean_FI = mean(FI),
+             sd_FI = sd(FI),
+             SE_FI = sd(FI)/sqrt(length(FI)),
+             Mean_SUVA = mean(SUVA254_L_mgm),
+             sd_SUVA = sd(SUVA254_L_mgm),
+             SE_SUVA = sd(SUVA254_L_mgm)/sqrt(length(SUVA254_L_mgm)),
+             Mean_HIX = mean(HIX),
+             sd_HIX = sd(HIX),
+             SE_HIX = sd(HIX)/sqrt(length(HIX)),
+             Mean_SSR = mean(SSR,na.rm=T),
+             sd_SSR = sd(SSR,na.rm = T),
+             SE_SSR = sd(na.omit(SSR))/sqrt(length(na.omit(SSR))),
+             Mean_Layer = mean(Layer_Thickness_cm,na.rm=T),
+             sd_Layer = sd(Layer_Thickness_cm,na.rm=T),
+             SE_Layer = sd(na.omit(Layer_Thickness_cm))/sqrt(length(na.omit(Layer_Thickness_cm))),
+             Mean_BUlkD = mean(Anna_bd_gpercm3,na.rm=T),
+             sd_BulkD = sd(Anna_bd_gpercm3,na.rm=T),
+             SE_BulkD = sd(na.omit(Anna_bd_gpercm3))/sqrt(length(na.omit(Anna_bd_gpercm3))),
+             n_observ = length(EOC_mgC_gsoil))
+#Autumn
 #Use Sept to get soil horizon thickness
-Sept_ESOM_HorizStation_Summary <- Sept %>% 
+Autumn_ESOM_HorizStation_Summary <- Sept %>% 
   group_by(Generic_Horizon,station) %>% 
   summarise( Mean_EOC = mean(EOC_mgC_gsoil),
              sd_EOC = sd(EOC_mgC_gsoil),
