@@ -43,7 +43,6 @@ plot(tm,predic.DOC,type="l",ylab="DOC (mg C/g soil)",xlab="Time (d)",
 points(time, DOC, pch=19)
 
 #Chow 2006
-#Christ and David 1996
 DOC <- Chow$DOC_mgC_gSoil
 time <- Chow$Time_d
 CD.fit <- nls(DOC ~ C0*exp(-k*time),
