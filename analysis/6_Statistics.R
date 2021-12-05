@@ -331,8 +331,10 @@ write_csv(soil_summary,"data//2020WY_soil_annual_summary_bystation.csv")
 #3.0 ANOVA/TukeyHSD/Kruskal-Wallis/Oneway Test --------------------------------------------------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Step 1 Check equal variance
+  #If this doesn't pass, log transform data
 #Step 2 Run ANOVA/TukeyHSD or other tests
-#Step 3 Check normality of residuals 
+#Step 3 Check normality of ANOVA residuals 
+  #If normality fails, use kruskal-wallace
 #Step 4 Power of test?
 
 ##3.1 EOC -----------------------------------------------
@@ -340,18 +342,28 @@ write_csv(soil_summary,"data//2020WY_soil_annual_summary_bystation.csv")
 Station <- WetlandsNoLL$station
 Horizon <- WetlandsNoLL$Generic_Horizon
 logEOC <- log10(WetlandsNoLL$EOC_mgC_gsoil)
+EOC <- WetlandsNoLL$EOC_mgC_gsoil
 
 #Step 1 Check equal variance
 bartlett.test(logEOC~Station) #Barlett test doesn't meet equal variance assumptions but barely, Dr G says ok to proceed 
-bartlett.test(logEOC~Horizon) 
+bartlett.test(logEOC~Horizon)
+
+bartlett.test(EOC~Station) #Barlett test doesn't meet equal variance assumptions but barely, Dr G says ok to proceed 
+bartlett.test(EOC~Horizon)
+
 leveneTest(logEOC,Station,center=median) #Levene test doesn't meet equal variance assumptions
 leveneTest(logEOC,Horizon,center=median)
+
+leveneTest(EOC,Station,center=median) #Levene test doesn't meet equal variance assumptions
+leveneTest(EOC,Horizon,center=median)
 
 #Step 2 ANOVA
 #EOC by horizon 
 logEOC.horiz.aov <- aov(logEOC~Horizon);summary(logEOC.horiz.aov)
 logEOC.horiz.HSD <- TukeyHSD(logEOC.horiz.aov);logEOC.horiz.HSD
 logEOCL.HSD <- HSD.test(logEOC.horiz.aov,"Horizon",group=T);logEOCL.HSD 
+
+EOC.horiz.aov <- aov(EOC~Horizon);summary(EOC.horiz.aov)
 
 #EOC by station
 logEOC.sta.aov <- aov(logEOC~Station);summary(logEOC.sta.aov)
@@ -368,13 +380,17 @@ qqnorm(logEOC)
 shapiro.test(logEOC) #Log of values is normally distributed
 shapiro.test(resid(logEOC.horiz.aov)) #pass
 shapiro.test(resid(logEOC.sta.aov)) #pass
-
+qqnorm(EOC)
+shapiro.test(resid(EOC.horiz.aov)) #fail
 
 ###3.1.2 Spring EOC ------------------------------------------
 Station <- JanMar$station
 Horizon <- JanMar$Generic_Horizon
 SpEOC <- JanMar$EOC_mgC_gsoil
 logSpEOC <- log10(SpEOC)
+
+qqnorm(SpEOC)
+qqnorm(logSpEOC)
 
 #Step 1 Check equal variance
 bartlett.test(logSpEOC~Station) #Barlett works for both horz and stat on log transformed EOC
@@ -393,6 +409,9 @@ bf.test(EOC_mgC_gsoil~Generic_Horizon,data=JanMar)
 logSpEOC.horiz.aov <- aov(logSpEOC~Horizon);summary(logSpEOC.horiz.aov)
 logSpEOC.horiz.HSD <- TukeyHSD(logSpEOC.horiz.aov);logSpEOC.horiz.HSD
 logSpEOC.HSD <- HSD.test(logSpEOC.horiz.aov,"Horizon",group=T);logSpEOC.HSD 
+#untransformed data
+SpEOC.horiz.aov <- aov(SpEOC~Horizon);summary(SpEOC.horiz.aov)
+SpEOC.horiz.KW <- kruskal.test(SpEOC~Horizon);SpEOC.horiz.KW
 
 #EOC by station
 logSpEOC.sta.aov <- aov(logSpEOC~Station);summary(logSpEOC.sta.aov)
@@ -408,6 +427,7 @@ logSpEOC.both.HSD <- HSD.test(logSpEOC.both.aov,trt = c("Horizon", "Station"),gr
 qqnorm(logSpEOC)
 shapiro.test(logSpEOC) #Log of values is normally distributed
 shapiro.test(resid(logSpEOC.horiz.aov))
+shapiro.test(resid(SpEOC.horiz.aov)) #log of untransformed data is not normally distributed
 shapiro.test(resid(logSpEOC.sta.aov))
 
 ###3.1.3 Autumn EOC------------------------------------------
@@ -503,6 +523,8 @@ SpFI <- JanMar$FI
 logSpFI <- log10(SpFI)
 
 #Step 1 Check equal variance
+bartlett.test(SpFI~Station) #Works for stat
+bartlett.test(SpFI~Horizon) #doesn't work for horiz
 bartlett.test(logSpFI~Station) #Works for stat
 bartlett.test(logSpFI~Horizon) #misses but sd within 2x of eachother - allow it
 leveneTest(logSpFI,Station,center=median) #Levene test works 
@@ -522,6 +544,8 @@ logSpFI.sta.HSD <- TukeyHSD(logSpFI.sta.aov);logSpFI.sta.HSD
 logSpFI.sta.HSD <- HSD.test(logSpFI.sta.aov,"Station",group=T);logSpFI.sta.HSD 
 logSpFI.sta.KW <- kruskal.test(logSpFI~Station);logSpFI.sta.KW
 
+SpFI.sta.aov <- aov(SpFI~Station);summary(SpFI.sta.aov)
+
 #ANCOVA
 logSpFI.both.aov <- aov(logSpFI~Horizon*Station);summary(logSpFI.both.aov)
 logSpFI.both.HSD <- TukeyHSD(logSpFI.both.aov);logSpFI.both.HSD  
@@ -532,6 +556,7 @@ qqnorm(logSpFI)
 shapiro.test(logSpFI) #fail
 shapiro.test(resid(logSpFI.horiz.aov)) #only slightly under - let it slide?
 shapiro.test(resid(logSpFI.sta.aov)) #only slightly under - let it slide?
+shapiro.test(resid(SpFI.sta.aov)) #fail
 
 ###3.2.2 Autumn FI ------------------------------------------
 Station <- Sept$station
@@ -546,12 +571,12 @@ leveneTest(logAuFI,Station,center=median) #Levene test works
 leveneTest(logAuFI,Horizon,center=median)
 
 #Step 2 Run ANOVA/TukeyHSD or other tests
-#EOC by horizon 
+#FI by horizon 
 logAuFI.horiz.aov <- aov(logAuFI~Horizon);summary(logAuFI.horiz.aov)
 logAuFI.horiz.HSD <- TukeyHSD(logAuFI.horiz.aov);logAuFI.horiz.HSD
 logAuFI.HSD <- HSD.test(logAuFI.horiz.aov,"Horizon",group=T);logAuFI.HSD 
 
-#EOC by station
+#FI by station
 logAuFI.sta.aov <- aov(logAuFI~Station);summary(logAuFI.sta.aov)
 logAuFI.sta.HSD <- TukeyHSD(logAuFI.sta.aov);logAuFI.sta.HSD 
 logAuFI.sta.HSD <- HSD.test(logAuFI.sta.aov,"Station",group=T);logAuFI.sta.HSD 
