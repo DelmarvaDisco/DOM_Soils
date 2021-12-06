@@ -60,6 +60,7 @@ threshold_annual <- left_join(threshold_annual,elev,by=c("wetland","station"))
 ###ESOM DATA###
 #Summarize by horizon and station
 #Spring
+#Reminder we're using Spring data to get soil horizon thickness and WSOM for release model
 Spring_ESOM_HorizStation_Summary <- JanMar %>% 
   group_by(Generic_Horizon,station) %>% 
   summarise( Mean_EOC = mean(EOC_mgC_gsoil),
@@ -85,7 +86,6 @@ Spring_ESOM_HorizStation_Summary <- JanMar %>%
              SE_BulkD = sd(na.omit(Anna_bd_gpercm3))/sqrt(length(na.omit(Anna_bd_gpercm3))),
              n_observ = length(EOC_mgC_gsoil))
 #Autumn
-#Use Sept to get soil horizon thickness
 Autumn_ESOM_HorizStation_Summary <- Sept %>% 
   group_by(Generic_Horizon,station) %>% 
   summarise( Mean_EOC = mean(EOC_mgC_gsoil),
