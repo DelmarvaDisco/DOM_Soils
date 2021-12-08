@@ -4,7 +4,7 @@
 #Created: 2021-12-02
 #Updated: 
 #Purpose: Gather Choptank Mean Daily Discharge data to determine if the 2020
-#         water year was a typical water water year
+#         water year was a typical water water year, code adapted from USGS (https://waterdata.usgs.gov/blog/data-munging/)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -166,3 +166,21 @@ ggplot(MeanQ_WY_1948_2020, aes(waterYear,Mean_Daily_Q,col=ranks))+
        axis.title.y  = element_text(size=16),
        axis.title.x  = element_text(size=16),
        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+#Cumulative discharge plot
+cumulative_dat <- group_by(allQ, waterYear) %>%
+  mutate(cumulative_dis = cumsum(Flow), 
+         wy_doy = seq(1:n()))
+
+ggplot(cumulative_dat, aes(x = wy_doy, y = cumulative_dis, group = waterYear)) +
+  geom_line(aes(color = waterYear)) +
+  scale_color_viridis_c() +
+  scale_x_continuous(breaks = c(1, 93, 184, 275), labels = c("Oct 1", "Jan 1", "Apr 1", "July 1")) +
+  theme_bw() +
+  ggtitle("Cumulative Discharge by Water Year 1948-2020")+
+  labs(color = "Water Year", x = "", y = "Cumulative Discharge (cfs)")+
+  theme(axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=16),
+        axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
