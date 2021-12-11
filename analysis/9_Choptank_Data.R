@@ -27,6 +27,7 @@ library(dataRetrieval)
 library(dplyr)
 library(ggplot2)
 library(lubridate)
+library(viridis)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #2.0 Pull data from USGS -----------------------------------------------------------
@@ -68,6 +69,27 @@ MeanQ_allQ <- mean(MeanQ_WY_all$Mean_Daily_Q)
 MeanQ_all <- mean(allQ$Flow,na.rm=T)
 MedianQ_all <- median(MeanQ_WY_all$Mean_Daily_Q,na.rm=T)
 
+#Characterizing flow rank during sampling dates
+#Jan 17, 2020
+#Mar 10, 2020
+#Sep 21, 2020
+
+#Pull specific dates over entire record
+allQ$Mon_Day <- as.Date(allQ$Date)
+allQ$Mon_Day <- format(allQ$Mon_Day,format= "%m-%d")
+Jan <- allQ %>% filter(Mon_Day == "01-17")
+Mar <- allQ %>% filter(Mon_Day == "03-10")
+Sept <- allQ %>% filter(Mon_Day == "09-21")
+
+#Rank flow for those specific dates
+Jan <- Jan %>% mutate(ranks = rank(Flow), percent_exceeded = 100*(ranks/(length(Flow)+1))) %>% arrange(ranks)  
+Mar <- Mar %>% mutate(ranks = rank(Flow), percent_exceeded = 100*(ranks/(length(Flow)+1))) %>% arrange(ranks)
+Sept <- Sept %>% mutate(ranks = rank(Flow), percent_exceeded = 100*(ranks/(length(Flow)+1))) %>% arrange(ranks)
+
+#What percentile are the flows on those given dates compared to the entire record?
+Jan172020 <- filter(Jan,waterYear=="2020") #26%
+Mar102020 <- filter(Mar,waterYear=="2020") #30%
+Sept212020 <- filter(Sept,waterYear=="2020") #89%
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #3.0 Plot data -----------------------------------------------------------
@@ -171,6 +193,8 @@ ggplot(MeanQ_WY_1948_2020, aes(waterYear,Mean_Daily_Q,col=ranks))+
 cumulative_dat <- group_by(allQ, waterYear) %>%
   mutate(cumulative_dis = cumsum(Flow), 
          wy_doy = seq(1:n()))
+         
+cum_WY_2020 <- filter(cumulative_dat,waterYear=="2020")
 
 ggplot(cumulative_dat, aes(x = wy_doy, y = cumulative_dis, group = waterYear)) +
   geom_line(aes(color = waterYear)) +
@@ -178,9 +202,27 @@ ggplot(cumulative_dat, aes(x = wy_doy, y = cumulative_dis, group = waterYear)) +
   scale_x_continuous(breaks = c(1, 93, 184, 275), labels = c("Oct 1", "Jan 1", "Apr 1", "July 1")) +
   theme_bw() +
   ggtitle("Cumulative Discharge by Water Year 1948-2020")+
-  labs(color = "Water Year", x = "", y = "Cumulative Discharge (cfs)")+
+  labs(color = "Water Year", x = "", y = "Cumulative Daily Discharge (cfs)")+
   theme(axis.text.y   = element_text(size=16),
         axis.text.x   = element_text(size=16),
         axis.title.y  = element_text(size=16),
         axis.title.x  = element_text(size=16),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+ggplot()+
+  geom_line(data = cumulative_dat, aes(x = wy_doy, y = cumulative_dis, group = waterYear,color=waterYear),size=0.75)+
+  scale_color_continuous(trans = 'reverse') +
+  geom_line(data = cum_WY_2020, aes(x = wy_doy, y = cumulative_dis),size=2.5,color="Black")+
+  scale_x_continuous(breaks = c(1, 93, 184, 275,366), labels = c("Oct 1", "Jan 1", "Apr 1", "July 1","Oct 1")) +
+  #geom_vline(xintercept=109, linetype="dashed", color = "black",size=1)+
+  #geom_vline(xintercept=162, linetype="dashed", color = "black",size=1)+
+  #geom_vline(xintercept=357, linetype="dashed", color = "black",size=1)+
+  theme_bw() +
+  labs(color = "Water Year", x = "Date", y = "Cumulative Daily Discharge (cfs)")+
+  theme(legend.text   = element_text(size=12),
+        legend.title  = element_text(size=14),
+        axis.text.y   = element_text(size=16),
+        axis.text.x   = element_text(size=16),
+        axis.title.y  = element_text(size=18),
+        axis.title.x  = element_text(size=18),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))
