@@ -11,4 +11,4 @@ The goal of this repository is to estimate water level at each of Wardinski's sa
 The *data* folder contains both water level data (*waterLevel.csv*) and cross section elevation data (*xs_survey.csv*). The *analysis* folder contains analyses divided into steps denoted by Roman numeral prefixes. Header files in each script describe their specific purpose. 
 
 ### Manuscript Citation
->Wardinski K., Scott D, Mclaughlin DL, Hotchkiss ER, Desmond K, Jones CN, Palmer M. Dissolved Organic Matter Sources from Soil Horizons with Varying Hydrology and Distance from Wetland Edge. Planned submission: Fall 2021.
+>Wardinski K, Scott D, Mclaughlin DL, Hotchkiss ER, Jones CN, Strahm, BD. Water soluble organic matter from soils at the terrestrial-aquatic interface in wetland-dominated landscapes. Planned submission: Spring 2022.
